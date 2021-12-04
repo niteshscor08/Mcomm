@@ -1,16 +1,18 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 30
     buildToolsVersion '30.0.3'
 
     defaultConfig {
         applicationId "com.mvine.mcomm"
         minSdkVersion 24
-        targetSdkVersion 31
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
@@ -33,13 +35,60 @@ android {
 }
 
 dependencies {
+    // region Kotlin
+    implementation(Dependencies.kotlin_library)
+    implementation(Dependencies.core_ktx)
+    // endregion Kotlin
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.5.0'
-    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
-    testImplementation 'junit:junit:4.+'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    // region UI
+    implementation(Dependencies.app_compat)
+    implementation(Dependencies.material)
+    implementation(Dependencies.constraint_layout)
+    implementation(Dependencies.lifecycleCommon)
+    implementation(Dependencies.lifeCycleRunTime)
+    implementation(Dependencies.liveData)
+    implementation(Dependencies.glide)
+    implementation(Dependencies.navigation_fragment)
+    implementation(Dependencies.navigation_ui)
+    implementation(Dependencies.fragment_ktx)
+    // endregion UI
+
+    // region Network Layer
+    implementation(Dependencies.retrofit)
+    implementation(Dependencies.gson)
+    implementation(Dependencies.gson_converter)
+    implementation(Dependencies.okhttp3_interceptor)
+    // endregion Network Layer
+
+    // region Asynchronous Programming
+    implementation(Dependencies.coroutines)
+    // endregion Asynchronous Programming
+
+    // region Local Database
+    implementation(Dependencies.room)
+    implementation(Dependencies.room_compiler)
+    kapt(Dependencies.room_ktx)
+    // endregion Local Database
+
+    // region Dependency Injection
+    implementation(Dependencies.hilt_version)
+    kapt(Dependencies.hilt_compiler)
+    implementation(Dependencies.hilt_viewmodels)
+    kapt(Dependencies.hilt_viewmodels_compiler)
+    // endregion Dependency Injection
+
+    // region testing
+    testImplementation(Dependencies.junit)
+    androidTestImplementation(Dependencies.test_ext)
+    androidTestImplementation(Dependencies.espresso_core)
+    androidTestImplementation(Dependencies.espresso_contrib)
+    testImplementation(Dependencies.mockwebserver)
+    androidTestImplementation(Dependencies.android_test)
+    androidTestImplementation(Dependencies.hilt_android_testing)
+    debugImplementation(Dependencies.fragment_test)
+    kaptAndroidTest(Dependencies.hilt_compiler)
+    testImplementation(Dependencies.truth)
+    testImplementation(Dependencies.arch_core_testing)
+    testImplementation(Dependencies.coroutines_testing)
+    // endregion testing
 }
