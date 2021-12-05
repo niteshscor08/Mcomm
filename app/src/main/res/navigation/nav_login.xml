@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_login"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.mvine.mcomm.presentation.login.view.LoginFragment"
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_loginMenuFragment"
+            app:destination="@id/loginMenuFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginMenuFragment"
+        android:name="com.mvine.mcomm.presentation.login.view.LoginMenuFragment"
+        android:label="LoginMenuFragment"
+        tools:layout="@layout/fragment_login_menu">
+        <action
+            android:id="@+id/action_loginMenuFragment_to_changePasswordFragment"
+            app:destination="@id/changePasswordFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.mvine.mcomm.presentation.login.view.ChangePasswordFragment"
+        android:label="ChangePasswordFragment"
+        tools:layout="@layout/fragment_change_password"/>
+</navigation>
