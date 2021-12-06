@@ -19,6 +19,21 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    def BASE_URL = "BASE_URL"
+
+    flavorDimensions "development"
+
+    productFlavors {
+        dev {
+            dimension "development"
+            buildConfigField("String", BASE_URL , '"https://commdev.mvine.com/"')
+        }
+        uat {
+            dimension "development"
+            buildConfigField("String", BASE_URL, '"https://portalUat.mvine.com/"')
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -67,6 +82,7 @@ dependencies {
     // region Local Database
     implementation(Dependencies.room)
     implementation(Dependencies.room_compiler)
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     kapt(Dependencies.room_ktx)
     // endregion Local Database
 

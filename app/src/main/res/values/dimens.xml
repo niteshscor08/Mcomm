@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="space_x">4dp</dimen>
+    <dimen name="space_2x">8dp</dimen>
+    <dimen name="space_3x">12dp</dimen>
+    <dimen name="space_4x">16dp</dimen>
+    <dimen name="space_8x">32dp</dimen>
+    <dimen name="space_16x">64dp</dimen>
+    <dimen name="space_24x">96dp</dimen>
+    <dimen name="space_32x">128dp</dimen>
+    <dimen name="space_64x">256dp</dimen>
+
+
+    <dimen name="size_x">4sp</dimen>
+    <dimen name="size_2x">8sp</dimen>
+    <dimen name="size_3x">12sp</dimen>
+    <dimen name="size_4x">16sp</dimen>
+</resources>
