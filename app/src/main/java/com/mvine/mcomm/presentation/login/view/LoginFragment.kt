@@ -1,6 +1,7 @@
 package com.mvine.mcomm.presentation.login.view
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.FragmentLoginBinding
 import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.domain.util.Resource.Success
+import com.mvine.mcomm.presentation.home.HomeActivity
 import com.mvine.mcomm.presentation.login.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -53,7 +55,9 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                             editor.putString(LOGIN_TOKEN, response.data)
                             editor.apply()
                         }
-                        Toast.makeText(activity, "Login Successful with Token ${response.data}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(activity, "Login Successful!", Toast.LENGTH_LONG).show()
+                        val intent = Intent(activity, HomeActivity::class.java)
+                        startActivity(intent)
                     }
                     is Resource.Error -> {
                         fragmentLoginBinding.loginProgress.visibility = View.GONE
