@@ -3,6 +3,8 @@ package com.mvine.mcomm.data.repository.dataSourceImpl
 import com.mvine.mcomm.data.api.LoginApiService
 import com.mvine.mcomm.data.repository.dataSource.LoginRemoteRepo
 import com.mvine.mcomm.data.utils.LoginUtils
+import okhttp3.ResponseBody
+import retrofit2.Response
 import javax.inject.Inject
 
 /**
@@ -13,7 +15,7 @@ import javax.inject.Inject
 class LoginRemoteRepoImpl @Inject constructor(
     private val loginApiService: LoginApiService
 ): LoginRemoteRepo {
-    override suspend fun login(username: String, password: String) {
-        loginApiService.login(LoginUtils.prepareLoginRequestBody(username, password))
+    override suspend fun login(username: String, password: String): Response<ResponseBody> {
+         return loginApiService.login(LoginUtils.prepareLoginRequestBody(username, password))
     }
 }

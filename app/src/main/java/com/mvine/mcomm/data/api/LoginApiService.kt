@@ -1,7 +1,10 @@
 package com.mvine.mcomm.data.api
 
 import com.mvine.mcomm.data.model.LoginRequest
+import okhttp3.ResponseBody
+import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.Headers
 import retrofit2.http.POST
 
 /**
@@ -9,6 +12,7 @@ import retrofit2.http.POST
  */
 interface LoginApiService {
 
+    @Headers("Content-Type: application/x-www-form-urlencoded")
     @POST("MVinelogin")
-    fun login(@Body loginRequest: LoginRequest)
+    suspend fun login(@Body loginRequest: LoginRequest): Response<ResponseBody>
 }

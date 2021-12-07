@@ -1,5 +1,7 @@
 package com.mvine.mcomm.domain.repository
 
+import com.mvine.mcomm.domain.util.Resource
+
 /**
  * Base Domain Interface to handle login functionalities
  */
@@ -11,5 +13,5 @@ interface LoginRepository {
      * @param username The username of the user
      * @param password The password of the user
      */
-    suspend fun login(username: String, password: String)
+    suspend fun login(username: String, password: String): Resource<String?>
 }
