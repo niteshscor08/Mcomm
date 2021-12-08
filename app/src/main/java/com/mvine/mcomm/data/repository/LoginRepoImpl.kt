@@ -16,7 +16,11 @@ class LoginRepoImpl @Inject constructor(
     private val loginRemoteRepo: LoginRemoteRepo
 ): LoginRepository {
     override suspend fun login(username: String, password: String): Resource<String?> {
-        val response =  loginRemoteRepo.login(username, password)
+        val response =  try {
+            loginRemoteRepo.login(username, password)
+        } catch (exception: Exception) {
+            return Resource.Error(message = "Error in Logging in")
+        }
         return if (response.isSuccessful) {
             Resource.Success(data = response.headers()["Set-Cookie"])
         } else Resource.Error(message = "Error in Logging in")

@@ -14,7 +14,7 @@ import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.FragmentLoginBinding
 import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.domain.util.Resource.Success
-import com.mvine.mcomm.presentation.home.HomeActivity
+import com.mvine.mcomm.presentation.home.view.HomeActivity
 import com.mvine.mcomm.presentation.login.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
 

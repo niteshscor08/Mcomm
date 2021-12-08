@@ -1,4 +1,4 @@
-package com.mvine.mcomm.presentation.home
+package com.mvine.mcomm.presentation.home.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

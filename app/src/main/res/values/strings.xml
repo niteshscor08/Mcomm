@@ -10,4 +10,9 @@
     <string name="change_password">Change Password</string>
     <string name="logout">Logout</string>
     <string name="submit">Submit</string>
+
+    <!-- Home -->
+    <string name="chats">Chats</string>
+    <string name="calls">Calls</string>
+    <string name="contacts">Contacts</string>
 </resources>
