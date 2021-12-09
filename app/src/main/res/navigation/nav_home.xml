@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_home"
+    app:startDestination="@id/chatsFragment">
+
+    <fragment
+        android:id="@+id/callsFragment"
+        android:name="com.mvine.mcomm.presentation.home.view.CallsFragment"
+        android:label="CallsFragment" />
+    <fragment
+        android:id="@+id/chatsFragment"
+        android:name="com.mvine.mcomm.presentation.home.view.ChatsFragment"
+        android:label="ChatsFragment" />
+    <fragment
+        android:id="@+id/contactsFragment"
+        android:name="com.mvine.mcomm.presentation.home.view.ContactsFragment"
+        android:label="ContactsFragment" />
+</navigation>

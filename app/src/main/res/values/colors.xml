@@ -8,4 +8,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="mcomm_blue">#0C2438</color>
+    <color name="mcomm_green">#4DB966</color>
 </resources>
