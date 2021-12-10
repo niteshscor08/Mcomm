@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/mcomm_blue"
+    android:padding="@dimen/space_2x">
+
+    <ImageView
+        android:id="@+id/iv_profilePic_call"
+        android:layout_width="@dimen/size_10x"
+        android:layout_height="@dimen/size_10x"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="contentDescription"
+        tools:src="@drawable/ic_launcher_background" />
+
+    <TextView
+        android:id="@+id/tv_name_call"
+        style="@style/text_open_sans_medium"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_x"
+        android:layout_marginTop="@dimen/size_x"
+        android:layout_marginEnd="@dimen/size_3x"
+        android:layout_marginBottom="@dimen/size_x"
+        app:layout_constraintEnd_toStartOf="@id/iv_videoCall_call"
+        app:layout_constraintStart_toEndOf="@id/iv_profilePic_call"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Yordan Uzunova" />
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/spinner_history_call"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_x"
+        android:layout_marginTop="@dimen/size_x"
+        android:layout_marginEnd="@dimen/size_3x"
+        android:layout_marginBottom="@dimen/size_x"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toStartOf="@id/iv_videoCall_call"
+        app:layout_constraintStart_toEndOf="@id/iv_profilePic_call"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name_call"
+        tools:listitem="@layout/item_spinner_call" />
+
+    <ImageView
+        android:id="@+id/iv_voiceCall_call"
+        android:layout_width="@dimen/space_14x"
+        android:layout_height="@dimen/space_14x"
+        android:src="@drawable/ic_voice_call"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="contentDescription" />
+
+    <ImageView
+        android:id="@+id/iv_videoCall_call"
+        android:layout_width="@dimen/space_14x"
+        android:layout_height="@dimen/space_14x"
+        android:src="@drawable/ic_video_call"
+        app:layout_constraintEnd_toStartOf="@id/iv_voiceCall_call"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="contentDescription" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

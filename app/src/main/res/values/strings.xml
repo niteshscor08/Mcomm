@@ -8,11 +8,13 @@
     <string name="reenter_new_password">Re-enter New Password</string>
     <string name="login">Login</string>
     <string name="change_password">Change Password</string>
-    <string name="logout">Logout</string>
+    <string name="logout">Log Out</string>
     <string name="submit">Submit</string>
+    <string name="powered_by">Powered by</string>
 
     <!-- Home -->
     <string name="chats">Chats</string>
     <string name="calls">Calls</string>
     <string name="contacts">Contacts</string>
+
 </resources>

@@ -3,6 +3,9 @@ package com.mvine.mcomm.di
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.mvine.mcomm.BuildConfig
+import com.mvine.mcomm.data.api.CallsApiService
+import com.mvine.mcomm.data.api.ChatsApiService
+import com.mvine.mcomm.data.api.ContactsApiService
 import com.mvine.mcomm.data.api.LoginApiService
 import dagger.Module
 import dagger.Provides
@@ -43,6 +46,24 @@ object RetrofitModule {
     @Provides
     fun provideLoginApi(retrofit: Retrofit.Builder): LoginApiService {
         return retrofit.build().create(LoginApiService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideContactsApi(retrofit: Retrofit.Builder): ContactsApiService {
+        return retrofit.build().create(ContactsApiService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideChatsApi(retrofit: Retrofit.Builder): ChatsApiService {
+        return retrofit.build().create(ChatsApiService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideCallsApi(retrofit: Retrofit.Builder): CallsApiService {
+        return retrofit.build().create(CallsApiService::class.java)
     }
 
 }

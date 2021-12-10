@@ -11,22 +11,38 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/space_4x"
+        android:background="@color/mcomm_blue_light_tint"
         tools:context=".presentation.LoginActivity">
+
+        <ImageView
+            android:id="@+id/iv_login_logo"
+            tools:ignore = "contentDescription"
+            android:layout_marginTop="@dimen/space_4x"
+            android:layout_width="@dimen/space_64x"
+            android:layout_height="@dimen/space_24x"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_mcomm_logo"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tl_email"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_32x"
+            android:layout_marginTop="@dimen/space_16x"
+            app:boxStrokeColor="@color/mtrl_textinput_default_box_stroke_color"
+            app:hintTextColor="@color/white"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/iv_login_logo">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_email"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="textEmailAddress"
+                style="@style/text_open_sans_medium"
+                android:textColorHint="@color/white"
                 android:hint="@string/email" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -35,6 +51,8 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_marginTop="@dimen/space_4x"
+            app:boxStrokeColor="@color/mtrl_textinput_default_box_stroke_color"
+            app:hintTextColor="@color/white"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tl_email">
@@ -42,15 +60,21 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_password"
                 android:layout_width="match_parent"
+                style="@style/text_open_sans_medium"
                 android:inputType="textPassword"
+                android:textColorHint="@color/white"
                 android:layout_height="wrap_content"
                 android:hint="@string/password" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
+        <TextView
             android:id="@+id/btn_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="@dimen/space_4x"
+            android:gravity="center"
+            android:background="@drawable/ic_green_rounded_rectangle"
+            style="@style/text_open_sans_medium"
             android:layout_marginTop="@dimen/space_4x"
             android:text="@string/login"
             app:layout_constraintStart_toStartOf="parent"
@@ -66,6 +90,30 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/space_4x"
+            tools:ignore="UseCompoundDrawables">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/text_open_sans_medium"
+                android:text="@string/powered_by"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:ignore = "contentDescription"
+                android:src="@drawable/ic_mvine_logo"
+                android:layout_marginStart="@dimen/space_2x"/>
+
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

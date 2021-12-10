@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Large = 20sp -->
+    <!-- Medium = 16sp -->
+    <!-- Small = 12sp -->
+    <style name="text_open_sans_medium">
+        <item name="fontFamily">@font/open_sans_regular</item>
+        <item name="android:textSize">@dimen/size_4x</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="text_open_sans_14">
+        <item name="fontFamily">@font/open_sans_regular</item>
+        <item name="android:textSize">@dimen/size_14sp</item>
+        <item name="android:textColor">@color/mcomm_grey</item>
+    </style>
+
+    <style name="LoginTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxStrokeColor">#fff</item>
+        <item name="boxStrokeWidth">1dp</item>
+    </style>
+</resources>

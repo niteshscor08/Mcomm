@@ -1,4 +1,4 @@
-package com.mvine.mcomm.presentation.home.view
+package com.mvine.mcomm.presentation.home
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -35,6 +35,10 @@ class HomeActivity : AppCompatActivity() {
                 R.id.action_contacts -> navController.navigate(R.id.contactsFragment)
             }
             return@setOnNavigationItemSelectedListener true
+        }
+
+        activityHomeBinding.ivAppBarMenu.setOnClickListener {
+            navController.navigate(R.id.loginMenuFragment)
         }
     }
     private fun setUpNavController() {

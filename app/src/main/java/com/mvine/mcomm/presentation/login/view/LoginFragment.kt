@@ -14,8 +14,10 @@ import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.FragmentLoginBinding
 import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.domain.util.Resource.Success
-import com.mvine.mcomm.presentation.home.view.HomeActivity
+import com.mvine.mcomm.presentation.home.HomeActivity
 import com.mvine.mcomm.presentation.login.viewmodel.LoginViewModel
+import com.mvine.mcomm.util.hideKeyboard
+import com.mvine.mcomm.util.showKeyboard
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -72,8 +74,23 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     }
 
     private fun initListeners() {
+
+        fragmentLoginBinding.etEmail.apply {
+            setOnClickListener {
+                showKeyboard()
+            }
+        }
+
+        fragmentLoginBinding.etPassword.apply {
+            setOnClickListener {
+                showKeyboard()
+            }
+        }
+
         fragmentLoginBinding.apply {
             btnLogin.setOnClickListener {
+                fragmentLoginBinding.etPassword.hideKeyboard()
+                fragmentLoginBinding.etEmail.hideKeyboard()
                 val username = etEmail.text.toString()
                 val password = etPassword.text.toString()
                 loginViewModel.login(username, password)

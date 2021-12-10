@@ -6,14 +6,26 @@
 
     <fragment
         android:id="@+id/callsFragment"
-        android:name="com.mvine.mcomm.presentation.home.view.CallsFragment"
+        android:name="com.mvine.mcomm.presentation.home.calls.CallsFragment"
         android:label="CallsFragment" />
     <fragment
         android:id="@+id/chatsFragment"
-        android:name="com.mvine.mcomm.presentation.home.view.ChatsFragment"
+        android:name="com.mvine.mcomm.presentation.home.chats.ChatsFragment"
         android:label="ChatsFragment" />
     <fragment
         android:id="@+id/contactsFragment"
-        android:name="com.mvine.mcomm.presentation.home.view.ContactsFragment"
+        android:name="com.mvine.mcomm.presentation.home.contacts.ContactsFragment"
         android:label="ContactsFragment" />
+    <fragment
+        android:id="@+id/loginMenuFragment"
+        android:name="com.mvine.mcomm.presentation.login.view.LoginMenuFragment"
+        android:label="LoginMenuFragment" >
+        <action
+            android:id="@+id/action_loginMenuFragment_to_changePasswordFragment"
+            app:destination="@id/changePasswordFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.mvine.mcomm.presentation.login.view.ChangePasswordFragment"
+        android:label="ChangePasswordFragment" />
 </navigation>
