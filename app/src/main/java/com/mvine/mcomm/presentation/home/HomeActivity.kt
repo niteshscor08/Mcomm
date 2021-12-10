@@ -25,9 +25,9 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         activityHomeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home)
         setUpNavController()
-        initListeneres()
+        initListeners()
     }
-    private fun initListeneres() {
+    private fun initListeners() {
         activityHomeBinding.homeNavBar.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.action_chats -> navController.navigate(R.id.chatsFragment)

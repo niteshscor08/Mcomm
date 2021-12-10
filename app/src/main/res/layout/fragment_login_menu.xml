@@ -1,40 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:background="@color/mcomm_blue"
-    android:layout_height="match_parent"
-    android:padding="@dimen/space_4x"
-    tools:context=".presentation.LoginActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
 
-    <TextView
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:background="@color/mcomm_blue"
+        android:layout_height="match_parent"
         android:padding="@dimen/space_4x"
-        android:id="@+id/btn_changePassword"
-        android:gravity="center"
-        style="@style/text_open_sans_medium"
-        android:background="@drawable/ic_tint_blue_rounded_rectangle"
-        android:layout_marginTop="@dimen/space_4x"
-        android:text="@string/change_password"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        tools:context=".presentation.LoginActivity">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/space_4x"
-        android:id="@+id/btn_logout"
-        android:gravity="center"
-        style="@style/text_open_sans_medium"
-        android:background="@drawable/ic_tint_blue_rounded_rectangle"
-        android:layout_marginTop="@dimen/space_4x"
-        android:text="@string/logout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_changePassword"
-        app:layout_constraintEnd_toEndOf="parent"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/space_4x"
+            android:id="@+id/btn_changePassword"
+            android:gravity="center"
+            style="@style/text_open_sans_medium"
+            android:background="@drawable/ic_tint_blue_rounded_rectangle"
+            android:layout_marginTop="@dimen/space_4x"
+            android:text="@string/change_password"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/space_4x"
+            android:id="@+id/btn_logout"
+            android:gravity="center"
+            style="@style/text_open_sans_medium"
+            android:background="@drawable/ic_tint_blue_rounded_rectangle"
+            android:layout_marginTop="@dimen/space_4x"
+            android:text="@string/logout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_changePassword"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

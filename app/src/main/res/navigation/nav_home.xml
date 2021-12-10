@@ -19,13 +19,5 @@
     <fragment
         android:id="@+id/loginMenuFragment"
         android:name="com.mvine.mcomm.presentation.login.view.LoginMenuFragment"
-        android:label="LoginMenuFragment" >
-        <action
-            android:id="@+id/action_loginMenuFragment_to_changePasswordFragment"
-            app:destination="@id/changePasswordFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/changePasswordFragment"
-        android:name="com.mvine.mcomm.presentation.login.view.ChangePasswordFragment"
-        android:label="ChangePasswordFragment" />
+        android:label="LoginMenuFragment" />
 </navigation>
