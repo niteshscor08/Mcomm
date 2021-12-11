@@ -1,18 +1,15 @@
 package com.mvine.mcomm.data.api
 
-import com.mvine.mcomm.data.model.LoginRequest
-import okhttp3.ResponseBody
+import com.mvine.mcomm.data.model.response.ContactsResponse
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.Headers
-import retrofit2.http.POST
+import retrofit2.http.GET
+import retrofit2.http.Header
 
 /**
  * API service for Contact Requests
  */
 interface ContactsApiService {
 
-    @Headers("Content-Type: application/x-www-form-urlencoded")
-    @POST("MVinelogin")
-    suspend fun login(@Body loginRequest: LoginRequest): Response<ResponseBody>
+    @GET("call/callables")
+    suspend fun getRecentContacts(@Header("Cookie") cookie: String): Response<ContactsResponse>
 }
