@@ -8,17 +8,19 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.FragmentCallsBinding
-import com.mvine.mcomm.domain.util.Resource
+import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.domain.util.Resource.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CallsFragment : Fragment() {
+class CallsFragment : Fragment(), CallsAdapter.Interaction {
 
     private val callsViewModel: CallsViewModel by viewModels()
+
+    private val callsAdapter: CallsAdapter = CallsAdapter(this)
 
     private lateinit var fragmentCallsBinding: FragmentCallsBinding
 
@@ -35,6 +37,14 @@ class CallsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         subscribeObservers()
+        setUpViews()
+    }
+
+    private fun setUpViews() {
+        fragmentCallsBinding.rvCalls.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = callsAdapter
+        }
     }
 
     private fun subscribeObservers() {
@@ -43,7 +53,7 @@ class CallsFragment : Fragment() {
                 when (response) {
                     is Success -> {
                         fragmentCallsBinding.progressCalls.visibility = View.GONE
-                        fragmentCallsBinding.tvCalls.text = response.data?.size.toString()
+                        response.data?.let { callsAdapter.submitList(it) }
                     }
                     is Error -> {
                         fragmentCallsBinding.progressCalls.visibility = View.GONE
@@ -55,5 +65,9 @@ class CallsFragment : Fragment() {
                 }
             }
         })
+    }
+
+    override fun onItemSelected(position: Int, item: CallData) {
+
     }
 }

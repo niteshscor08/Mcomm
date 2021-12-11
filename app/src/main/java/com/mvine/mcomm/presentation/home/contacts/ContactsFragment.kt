@@ -8,17 +8,21 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.FragmentContactsBinding
+import com.mvine.mcomm.domain.model.ContactsData
 import com.mvine.mcomm.domain.util.Resource
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ContactsFragment : Fragment() {
+class ContactsFragment : Fragment(), ContactsAdapter.Interaction {
 
     private val contactsViewModel: ContactsViewModel by viewModels()
 
     private lateinit var fragmentContactsBinding: FragmentContactsBinding
+
+    private val contactsAdapter: ContactsAdapter = ContactsAdapter(this)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,6 +37,14 @@ class ContactsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         subscribeObservers()
+        setUpViews()
+    }
+
+    private fun setUpViews() {
+        fragmentContactsBinding.rvContacts.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = contactsAdapter
+        }
     }
 
     private fun subscribeObservers() {
@@ -41,7 +53,7 @@ class ContactsFragment : Fragment() {
                 when (response) {
                     is Resource.Success -> {
                         fragmentContactsBinding.progressContacts.visibility = View.GONE
-                        fragmentContactsBinding.tvContacts.text = response.data?.size.toString()
+                        response.data?.let { contactsAdapter.submitList(it) }
                     }
                     is Resource.Error -> {
                         fragmentContactsBinding.progressContacts.visibility = View.GONE
@@ -53,5 +65,9 @@ class ContactsFragment : Fragment() {
                 }
             }
         })
+    }
+
+    override fun onItemSelected(position: Int, item: ContactsData) {
+
     }
 }

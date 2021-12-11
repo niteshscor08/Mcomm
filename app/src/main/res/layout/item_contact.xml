@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="callData"
-            type="com.mvine.mcomm.domain.model.CallData" />
+            name="contactData"
+            type="com.mvine.mcomm.domain.model.ContactsData" />
 
     </data>
 
@@ -17,7 +17,7 @@
         android:padding="@dimen/space_2x">
 
         <ImageView
-            android:id="@+id/iv_profilePic_call"
+            android:id="@+id/iv_profilePic_contact"
             android:layout_width="@dimen/size_10x"
             android:layout_height="@dimen/size_10x"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -30,46 +30,24 @@
             android:id="@+id/tv_name_call"
             style="@style/text_open_sans_medium"
             android:layout_width="0dp"
-            android:text="@{callData.othercaller_company_id}"
+            android:text="@{contactData.username}"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space_4x"
             android:layout_marginTop="@dimen/size_x"
             android:layout_marginEnd="@dimen/size_3x"
             android:layout_marginBottom="@dimen/size_x"
-            app:layout_constraintEnd_toStartOf="@id/iv_videoCall_call"
-            app:layout_constraintStart_toEndOf="@id/iv_profilePic_call"
+            app:layout_constraintEnd_toStartOf="@id/iv_more_contacts"
+            app:layout_constraintStart_toEndOf="@id/iv_profilePic_contact"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             tools:text="Yordan Uzunova" />
 
-        <Spinner
-            android:id="@+id/spinner_history_call"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_4x"
-            android:layout_marginTop="@dimen/size_x"
-            android:layout_marginEnd="@dimen/size_3x"
-            android:layout_marginBottom="@dimen/size_x"
-            android:spinnerMode="dropdown"
-            app:layout_constraintEnd_toStartOf="@id/iv_videoCall_call"
-            app:layout_constraintStart_toEndOf="@id/iv_profilePic_call"
-            app:layout_constraintTop_toBottomOf="@+id/tv_name_call"
-            tools:listitem="@layout/item_spinner_call" />
-
         <ImageView
-            android:id="@+id/iv_voiceCall_call"
+            android:id="@+id/iv_more_contacts"
             android:layout_width="@dimen/space_14x"
             android:layout_height="@dimen/space_14x"
-            android:src="@drawable/ic_voice_call"
+            android:src="@drawable/ic_actions"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="contentDescription" />
-
-        <ImageView
-            android:id="@+id/iv_videoCall_call"
-            android:layout_width="@dimen/space_14x"
-            android:layout_height="@dimen/space_14x"
-            android:src="@drawable/ic_video_call"
-            app:layout_constraintEnd_toStartOf="@id/iv_voiceCall_call"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="contentDescription" />
 
