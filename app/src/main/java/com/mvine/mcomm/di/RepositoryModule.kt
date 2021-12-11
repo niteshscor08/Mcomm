@@ -4,6 +4,7 @@ import com.mvine.mcomm.data.api.CallsApiService
 import com.mvine.mcomm.data.api.ChatsApiService
 import com.mvine.mcomm.data.api.ContactsApiService
 import com.mvine.mcomm.data.api.LoginApiService
+import com.mvine.mcomm.data.mapper.CallsMapper
 import com.mvine.mcomm.data.repository.CallsRepoImpl
 import com.mvine.mcomm.data.repository.ChatsRepoImpl
 import com.mvine.mcomm.data.repository.ContactsRepoImpl
@@ -57,8 +58,8 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideCallsRepository(callsRemoteRepo: CallsRemoteRepo): CallsRepository =
-        CallsRepoImpl(callsRemoteRepo)
+    fun provideCallsRepository(callsRemoteRepo: CallsRemoteRepo, callsMapper: CallsMapper): CallsRepository =
+        CallsRepoImpl(callsRemoteRepo, callsMapper)
 
     @Singleton
     @Provides

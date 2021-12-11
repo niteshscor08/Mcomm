@@ -28,7 +28,9 @@ object RetrofitModule {
     @Singleton
     @Provides
     fun provideRetrofit(gson: Gson): Retrofit.Builder {
-        val okHttpClient = OkHttpClient().newBuilder()
+        val okHttpClient = OkHttpClient()
+            .newBuilder()
+            .followRedirects(false)
         val logging =
             HttpLoggingInterceptor().setLevel(
                 if (BuildConfig.DEBUG)

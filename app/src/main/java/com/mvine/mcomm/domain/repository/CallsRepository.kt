@@ -1,5 +1,6 @@
 package com.mvine.mcomm.domain.repository
 
+import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.domain.util.Resource
 
 /**
@@ -7,5 +8,5 @@ import com.mvine.mcomm.domain.util.Resource
  */
 interface CallsRepository {
 
-    suspend fun getCalls()
+    suspend fun getRecentCalls(cookie: String): Resource<ArrayList<CallData>>
 }

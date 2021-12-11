@@ -3,6 +3,7 @@ package com.mvine.mcomm.data.repository
 import com.mvine.mcomm.data.repository.dataSource.LoginRemoteRepo
 import com.mvine.mcomm.domain.repository.LoginRepository
 import com.mvine.mcomm.domain.util.Resource
+import okhttp3.Cookie
 import okhttp3.ResponseBody
 import retrofit2.Response
 import javax.inject.Inject
@@ -21,9 +22,14 @@ class LoginRepoImpl @Inject constructor(
         } catch (exception: Exception) {
             return Resource.Error(message = "Error in Logging in")
         }
-        return if (response.isSuccessful) {
-            Resource.Success(data = response.headers()["Set-Cookie"])
+        return if (response.isSuccessful || response.raw().isRedirect) {
+            val cookies = response.raw().headers("Set-Cookie")
+            Resource.Success(data = validCookie(cookies))
         } else Resource.Error(message = "Error in Logging in")
+    }
+
+    private fun validCookie(cookies: List<String>): String? {
+        return cookies.firstOrNull { !it.contains("HTTP_MVine_Session") && !it.contains("user:anon") }
     }
 
 }

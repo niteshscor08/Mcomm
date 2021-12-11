@@ -6,4 +6,6 @@ import javax.inject.Inject
 class GetCallsUseCase @Inject constructor(
     private val callsRepository: CallsRepository
 ) {
+    suspend fun getRecentCalls(cookie: String) =
+        callsRepository.getRecentCalls(cookie)
 }

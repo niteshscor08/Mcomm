@@ -2,30 +2,38 @@ package com.mvine.mcomm.presentation.login.view
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.mvine.mcomm.BuildConfig
 import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.FragmentLoginBinding
 import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.domain.util.Resource.Success
 import com.mvine.mcomm.presentation.home.HomeActivity
 import com.mvine.mcomm.presentation.login.viewmodel.LoginViewModel
+import com.mvine.mcomm.util.LOGIN_TOKEN
+import com.mvine.mcomm.util.MCOMM_SHARED_PREFERENCES
 import com.mvine.mcomm.util.hideKeyboard
 import com.mvine.mcomm.util.showKeyboard
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
     private val loginViewModel: LoginViewModel by viewModels()
 
-    private val sharedPreferences = activity?.getPreferences(Context.MODE_PRIVATE)
+    private lateinit var sharedPreferences: SharedPreferences
 
     private lateinit var fragmentLoginBinding: FragmentLoginBinding
 
@@ -44,7 +52,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         super.onViewCreated(view, savedInstanceState)
         subscribeObservers()
         initListeners()
-
+        sharedPreferences = requireContext().getSharedPreferences(
+            MCOMM_SHARED_PREFERENCES,
+            Context.MODE_PRIVATE
+        )
+        setUpData()
     }
 
     private fun subscribeObservers() {
@@ -53,7 +65,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 when (response) {
                     is Success -> {
                         fragmentLoginBinding.loginProgress.visibility = View.GONE
-                        sharedPreferences?.edit()?.let { editor ->
+                        sharedPreferences.edit()?.let { editor ->
                             editor.putString(LOGIN_TOKEN, response.data)
                             editor.apply()
                         }
@@ -71,6 +83,13 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 }
             }
         })
+    }
+
+    private fun setUpData() {
+        if (BuildConfig.DEBUG) {
+            fragmentLoginBinding.etEmail.setText("asen@mvine.com", TextView.BufferType.EDITABLE)
+            fragmentLoginBinding.etPassword.setText("1qaz2wsx", TextView.BufferType.EDITABLE)
+        }
     }
 
     private fun initListeners() {
@@ -96,10 +115,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 loginViewModel.login(username, password)
             }
         }
-    }
-
-    companion object {
-        const val LOGIN_TOKEN = "Login Token"
     }
 
 }
