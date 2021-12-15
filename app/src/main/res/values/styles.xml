@@ -15,6 +15,12 @@
         <item name="android:textColor">@color/mcomm_grey</item>
     </style>
 
+    <style name="text_open_sans_small">
+        <item name="fontFamily">@font/open_sans_regular</item>
+        <item name="android:textSize">@dimen/size_3x</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
     <style name="LoginTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
         <item name="boxStrokeColor">#fff</item>
         <item name="boxStrokeWidth">1dp</item>

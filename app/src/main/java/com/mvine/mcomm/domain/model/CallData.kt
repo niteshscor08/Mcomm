@@ -10,3 +10,8 @@ data class CallData(
     val timestamp: String?,
     val type: String?
 )
+
+data class SpinnerItem(
+    val callImageSrc: Int,
+    val itemText: String
+)

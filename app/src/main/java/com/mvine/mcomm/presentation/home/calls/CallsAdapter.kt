@@ -3,7 +3,6 @@ package com.mvine.mcomm.presentation.home.calls
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -15,11 +14,14 @@ import com.mvine.mcomm.BuildConfig
 import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.ItemCallBinding
 import com.mvine.mcomm.domain.model.CallData
+import com.mvine.mcomm.util.getSpinnerItems
 
 class CallsAdapter(private val interaction: Interaction? = null) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private lateinit var itemCallBinding: ItemCallBinding
+
+    private var callHistorySpinnerAdapter: CallHistorySpinnerAdapter? = null
 
     private val diffCallback = object : DiffUtil.ItemCallback<CallData>() {
 
@@ -50,7 +52,7 @@ class CallsAdapter(private val interaction: Interaction? = null) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is NewsArticleViewHolder -> {
-                holder.bind(itemCallBinding, differ.currentList[position])
+                holder.bind(itemCallBinding, differ.currentList[position], callHistorySpinnerAdapter)
             }
         }
     }
@@ -63,31 +65,30 @@ class CallsAdapter(private val interaction: Interaction? = null) :
         differ.submitList(list)
     }
 
+    fun setSpinnerAdapterInstance(callHistorySpinnerAdapter: CallHistorySpinnerAdapter) {
+        this.callHistorySpinnerAdapter = callHistorySpinnerAdapter
+    }
+
     class NewsArticleViewHolder
     constructor(
         itemView: View,
         private val interaction: Interaction?
     ) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(binding: ItemCallBinding, item: CallData) = with(itemView) {
-            setOnClickListener {
+        fun bind(
+            binding: ItemCallBinding,
+            item: CallData,
+            callHistorySpinnerAdapter: CallHistorySpinnerAdapter?
+        ) = with(itemView) {
+            binding.ivVoiceCallCall.setOnClickListener {
                 interaction?.onItemSelected(adapterPosition, item)
             }
             binding.callData = item
-            /**
-             * Spinner code set up
-             * TODO uncomment once resolved
-             */
-//            ArrayAdapter.createFromResource(
-//                context,
-//                R.array.planets_array,
-//                android.R.layout.simple_spinner_item
-//            ).also { adapter ->
-//                // Specify the layout to use when the list of choices appears
-//                adapter.setDropDownViewResource(R.layout.item_spinner_call)
-//                // Apply the adapter to the spinner
-//                binding.spinnerHistoryCall.adapter = adapter
-//            }
+            callHistorySpinnerAdapter?.let {
+                val spinnerItems = getSpinnerItems(item)
+                it.updateItems(spinnerItems)
+                binding.spinnerHistoryCall.adapter = it
+            }
             item.image_src?.let { url ->
                 loadImageUsingGlide(binding.ivProfilePicCall, "${BuildConfig.BASE_URL}$url")
             }

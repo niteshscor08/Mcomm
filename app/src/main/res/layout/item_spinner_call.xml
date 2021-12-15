@@ -3,28 +3,39 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/mcomm_blue"
-    android:padding="@dimen/space"
+    android:background="@color/mcomm_blue_light_tint"
+    android:padding="@dimen/space_2x"
     xmlns:tools="http://schemas.android.com/tools">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/size_14dp"
+        android:layout_height="@dimen/size_14dp"
         tools:src = "@drawable/ic_incoming"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/iv_spinner_call_status"
+        android:id="@+id/iv_spinner_call_status_start"
         tools:ignore = "contentDescription"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:maxLines="1"
         style="@style/text_open_sans_14"
         tools:text = "Yesterday at 10: 22"
         android:id="@+id/tv_spinner_call_history"
-        app:layout_constraintStart_toEndOf="@id/iv_spinner_call_status"
+        app:layout_constraintStart_toEndOf="@id/iv_spinner_call_status_start"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginStart="@dimen/space_2x"/>
+
+    <ImageView
+        android:layout_width="@dimen/size_14dp"
+        android:layout_height="@dimen/size_14dp"
+        tools:src = "@drawable/ic_incoming"
+        app:layout_constraintStart_toEndOf="@id/tv_spinner_call_history"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/iv_spinner_call_status_end"
+        tools:ignore = "contentDescription"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
