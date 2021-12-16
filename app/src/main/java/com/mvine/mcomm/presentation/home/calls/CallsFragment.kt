@@ -18,6 +18,7 @@ import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.domain.util.Resource.*
 import com.mvine.mcomm.presentation.common.ListInteraction
 import com.mvine.mcomm.presentation.common.MultipleRowTypeAdapter
+import com.mvine.mcomm.presentation.home.HomeActivity
 import com.mvine.mcomm.presentation.home.HomeViewModel
 import com.mvine.mcomm.util.prepareRowTypesFromCallData
 import dagger.hilt.android.AndroidEntryPoint
@@ -55,8 +56,7 @@ class CallsFragment : Fragment(), ListInteraction<CallData> {
             layoutManager = LinearLayoutManager(context)
             adapter = callsAdapter
         }
-
-
+        (activity as HomeActivity).showSearchBar()
     }
 
     private fun initListeners() {
