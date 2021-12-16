@@ -8,7 +8,9 @@ data class CallData(
     val othercaller_department: String?,
     val othercaller_stx: String?,
     val timestamp: String?,
-    val type: String?
+    val type: String?,
+    val callHistory: ArrayList<SpinnerItem>?,
+    var isExpanded: Boolean = false
 )
 
 data class SpinnerItem(

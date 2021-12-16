@@ -7,22 +7,30 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.FragmentContactsBinding
 import com.mvine.mcomm.domain.model.ContactsData
 import com.mvine.mcomm.domain.util.Resource
+import com.mvine.mcomm.presentation.common.ListInteraction
+import com.mvine.mcomm.presentation.common.MultipleRowTypeAdapter
+import com.mvine.mcomm.presentation.home.HomeViewModel
+import com.mvine.mcomm.util.prepareRowTypesFromContactsData
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ContactsFragment : Fragment(), ContactsAdapter.Interaction {
+class ContactsFragment : Fragment(), ListInteraction<ContactsData> {
 
     private val contactsViewModel: ContactsViewModel by viewModels()
 
     private lateinit var fragmentContactsBinding: FragmentContactsBinding
 
-    private val contactsAdapter: ContactsAdapter = ContactsAdapter(this)
+    private val homeViewModel: HomeViewModel by activityViewModels()
+
+    private val contactsAdapter: MultipleRowTypeAdapter = MultipleRowTypeAdapter(arrayListOf())
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,7 +61,9 @@ class ContactsFragment : Fragment(), ContactsAdapter.Interaction {
                 when (response) {
                     is Resource.Success -> {
                         fragmentContactsBinding.progressContacts.visibility = View.GONE
-                        response.data?.let { contactsAdapter.submitList(it) }
+                        response.data?.let {
+                            contactsAdapter.updateData(prepareRowTypesFromContactsData(it, this))
+                        }
                     }
                     is Resource.Error -> {
                         fragmentContactsBinding.progressContacts.visibility = View.GONE
@@ -65,9 +75,21 @@ class ContactsFragment : Fragment(), ContactsAdapter.Interaction {
                 }
             }
         })
+
+        homeViewModel.searchLiveData.observe(viewLifecycleOwner, {
+            it?.let { contactsViewModel.filterData(it) }
+        })
+
+        contactsViewModel.searchCalls.observe(viewLifecycleOwner, {
+            contactsAdapter.updateData(prepareRowTypesFromContactsData(it, this))
+        })
     }
 
-    override fun onItemSelected(position: Int, item: ContactsData) {
-
+    override fun onVoiceCallSelected(item: ContactsData) {
+        Toast.makeText(
+            activity,
+            "Voice call selected for ${item.username}",
+            Toast.LENGTH_LONG
+        ).show()
     }
 }

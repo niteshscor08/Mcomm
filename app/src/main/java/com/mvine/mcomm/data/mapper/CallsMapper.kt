@@ -3,6 +3,7 @@ package com.mvine.mcomm.data.mapper
 import com.mvine.mcomm.data.model.response.CallsResponse
 import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.domain.util.Resource
+import com.mvine.mcomm.util.getSpinnerItems
 
 class CallsMapper {
 
@@ -18,7 +19,8 @@ class CallsMapper {
                     othercaller_department = recent.othercaller_department,
                     othercaller_stx = recent.othercaller_stx,
                     timestamp = recent.timestamp,
-                    type = recent.type
+                    type = recent.type,
+                    callHistory = getSpinnerItems()
                 )
             )
         } ?: kotlin.run {

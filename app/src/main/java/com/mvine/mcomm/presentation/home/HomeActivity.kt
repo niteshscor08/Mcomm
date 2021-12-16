@@ -1,13 +1,16 @@
 package com.mvine.mcomm.presentation.home
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.ActivityHomeBinding
+import com.mvine.mcomm.util.showKeyboard
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -18,6 +21,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var activityHomeBinding: ActivityHomeBinding
+
+    private val homeViewModel: HomeViewModel by viewModels()
 
     private lateinit var navController: NavController
 
@@ -39,6 +44,15 @@ class HomeActivity : AppCompatActivity() {
 
         activityHomeBinding.ivAppBarMenu.setOnClickListener {
             navController.navigate(R.id.loginMenuFragment)
+        }
+
+        activityHomeBinding.etSearch.apply {
+            showKeyboard()
+            doOnTextChanged { text, _, _, _ ->
+                text?.let {
+                    homeViewModel.searchLiveData.postValue(it.toString())
+                }
+            }
         }
     }
     private fun setUpNavController() {

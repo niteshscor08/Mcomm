@@ -27,6 +27,10 @@ class CallsViewModel @Inject constructor(
         MutableLiveData()
     val recentCalls: LiveData<Resource<ArrayList<CallData>>> = _recentCallsLiveData
 
+    private val _searchCallsLiveData: MutableLiveData<ArrayList<CallData>> =
+        MutableLiveData()
+    val searchCalls: LiveData<ArrayList<CallData>> = _searchCallsLiveData
+
     private val sharedPreferences =
         context.getSharedPreferences(MCOMM_SHARED_PREFERENCES, Context.MODE_PRIVATE)
 
@@ -42,6 +46,14 @@ class CallsViewModel @Inject constructor(
                     postValue(getCallsUseCase.getRecentCalls(cookie))
                 }
             }
+        }
+    }
+
+    fun filterData(query: String) {
+        _recentCallsLiveData.value?.data?.filter {
+            it.othercaller_company_id?.contains(query, ignoreCase = true) == true
+        }?.let {
+            _searchCallsLiveData.postValue(it as ArrayList<CallData>)
         }
     }
 }

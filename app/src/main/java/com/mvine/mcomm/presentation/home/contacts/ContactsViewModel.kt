@@ -27,6 +27,10 @@ class ContactsViewModel @Inject constructor(
         MutableLiveData()
     val contacts: LiveData<Resource<ArrayList<ContactsData>>> = _contactsLiveData
 
+    private val _searchCallsLiveData: MutableLiveData<ArrayList<ContactsData>> =
+        MutableLiveData()
+    val searchCalls: LiveData<ArrayList<ContactsData>> = _searchCallsLiveData
+
     private val sharedPreferences =
         context.getSharedPreferences(MCOMM_SHARED_PREFERENCES, Context.MODE_PRIVATE)
 
@@ -42,6 +46,14 @@ class ContactsViewModel @Inject constructor(
                     postValue(getContactsUseCase.getContacts(cookie))
                 }
             }
+        }
+    }
+
+    fun filterData(query: String) {
+        _contactsLiveData.value?.data?.filter {
+            it.username?.contains(query, ignoreCase = true) == true
+        }?.let {
+            _searchCallsLiveData.postValue(it as ArrayList<ContactsData>)
         }
     }
 }

@@ -3,10 +3,13 @@ package com.mvine.mcomm.util
 import com.mvine.mcomm.R
 import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.domain.model.SpinnerItem
+import com.mvine.mcomm.presentation.common.ListInteraction
+import com.mvine.mcomm.presentation.common.RowType
+import com.mvine.mcomm.presentation.common.viewtypes.CallDataRowType
+import com.mvine.mcomm.presentation.common.viewtypes.CallSpinnerRowType
 
-fun getSpinnerItems(callData: CallData): ArrayList<SpinnerItem> {
+fun getSpinnerItems(): ArrayList<SpinnerItem> {
     return arrayListOf(
-        SpinnerItem(callImageSrc = getCallIcon(callData.type), itemText = callData.timestamp ?: ""),
         SpinnerItem(
             callImageSrc = R.drawable.ic_incoming,
             itemText = "20/05/2021 17:55 | 00:00:02 | Incoming"
@@ -26,7 +29,7 @@ fun getSpinnerItems(callData: CallData): ArrayList<SpinnerItem> {
     )
 }
 
-private fun getCallIcon(callType: String?): Int {
+fun getCallIcon(callType: String?): Int {
     return when (callType) {
         CallType.INCOMING.type -> {
             R.drawable.ic_incoming
@@ -36,6 +39,26 @@ private fun getCallIcon(callType: String?): Int {
         }
         else -> R.drawable.ic_incoming
     }
+}
+
+fun prepareRowTypesFromCallData(
+    callData: ArrayList<CallData>,
+    interaction: ListInteraction<CallData>
+): ArrayList<RowType> {
+    val rowTypes = arrayListOf<RowType>()
+    callData.forEach { callDataItem ->
+        callDataItem.isExpanded = false // Set Default Expanded as false
+        rowTypes.add(CallDataRowType(callDataItem, interaction))
+    }
+    return rowTypes
+}
+
+fun prepareHistoryRowTypesFromCallData(historyData: ArrayList<SpinnerItem>): ArrayList<RowType> {
+    val rowTypes = arrayListOf<RowType>()
+    historyData.forEach { callDataItem ->
+        rowTypes.add(CallSpinnerRowType(callDataItem))
+    }
+    return rowTypes
 }
 
 enum class CallType(val type: String) {

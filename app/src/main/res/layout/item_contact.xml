@@ -4,9 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable
-            name="contactData"
-            type="com.mvine.mcomm.domain.model.ContactsData" />
 
     </data>
 
@@ -26,11 +23,47 @@
             tools:ignore="contentDescription"
             tools:src="@drawable/ic_launcher_background" />
 
+        <LinearLayout
+            android:layout_width="0dp"
+            android:id="@+id/layout_contact"
+            android:visibility="gone"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toStartOf="@id/iv_more_contacts"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_profilePic_contact"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_videoCall_contact"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                tools:ignore="contentDescription"
+                android:src="@drawable/ic_video_call" />
+
+            <ImageView
+                android:id="@+id/iv_voiceCall_contact"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                tools:ignore="contentDescription"
+                android:src="@drawable/ic_voice_call" />
+
+            <ImageView
+                android:id="@+id/iv_chats_contact"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                tools:ignore="contentDescription"
+                android:src="@drawable/ic_chat_empty" />
+
+        </LinearLayout>
+
+
         <TextView
-            android:id="@+id/tv_name_call"
+            android:id="@+id/tv_name_contact"
             style="@style/text_open_sans_medium"
             android:layout_width="0dp"
-            android:text="@{contactData.username}"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space_4x"
             android:layout_marginTop="@dimen/size_x"

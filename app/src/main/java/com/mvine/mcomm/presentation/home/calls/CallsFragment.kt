@@ -7,23 +7,27 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.FragmentCallsBinding
 import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.domain.util.Resource.*
-import com.mvine.mcomm.util.getSpinnerItems
+import com.mvine.mcomm.presentation.common.ListInteraction
+import com.mvine.mcomm.presentation.common.MultipleRowTypeAdapter
+import com.mvine.mcomm.presentation.home.HomeViewModel
+import com.mvine.mcomm.util.prepareRowTypesFromCallData
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CallsFragment : Fragment(), CallsAdapter.Interaction {
+class CallsFragment : Fragment(), ListInteraction<CallData> {
 
     private val callsViewModel: CallsViewModel by viewModels()
 
-    private val callsAdapter: CallsAdapter = CallsAdapter(this)
+    private val homeViewModel: HomeViewModel by activityViewModels()
 
-    private lateinit var callHistorySpinnerAdapter: CallHistorySpinnerAdapter
+    private val callsAdapter: MultipleRowTypeAdapter = MultipleRowTypeAdapter(arrayListOf())
 
     private lateinit var fragmentCallsBinding: FragmentCallsBinding
 
@@ -59,15 +63,7 @@ class CallsFragment : Fragment(), CallsAdapter.Interaction {
                     is Success -> {
                         fragmentCallsBinding.progressCalls.visibility = View.GONE
                         response.data?.let { callData ->
-                            activity?.let {
-                                callHistorySpinnerAdapter = CallHistorySpinnerAdapter(
-                                    it,
-                                    R.layout.item_spinner_call,
-                                    arrayListOf()
-                                )
-                                callsAdapter.setSpinnerAdapterInstance(callHistorySpinnerAdapter)
-                            }
-                            callsAdapter.submitList(callData)
+                            callsAdapter.updateData(prepareRowTypesFromCallData(callData, this))
                         }
                     }
                     is Error -> {
@@ -80,12 +76,28 @@ class CallsFragment : Fragment(), CallsAdapter.Interaction {
                 }
             }
         })
+        homeViewModel.searchLiveData.observe(viewLifecycleOwner, {
+            it?.let { callsViewModel.filterData(it) }
+        })
+        callsViewModel.searchCalls.observe(viewLifecycleOwner, {
+            it?.let { callData ->
+                callsAdapter.updateData(prepareRowTypesFromCallData(callData, this))
+            }
+        })
     }
 
-    override fun onItemSelected(position: Int, item: CallData) {
+    override fun onItemSelectedForExpansion(position: Int, item: CallData, isExpanded: Boolean) {
+        if (isExpanded) {
+            callsAdapter.expandCallHistory(position, item)
+        } else {
+            callsAdapter.dissolveCallHistory(position, item)
+        }
+    }
+
+    override fun onVoiceCallSelected(item: CallData) {
         Toast.makeText(
             activity,
-            "${item.othercaller_company} at position $position clicked",
+            "Voice call selected for ${item.othercaller_company_id}",
             Toast.LENGTH_LONG
         ).show()
     }

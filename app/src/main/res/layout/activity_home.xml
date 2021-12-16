@@ -66,6 +66,30 @@
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tl_search"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/mcomm_blue_light_tint"
+            android:padding="@dimen/space_2x"
+            android:paddingStart="@dimen/space_4x"
+            android:paddingEnd="@dimen/space_4x"
+            app:boxStrokeColor="@color/mtrl_textinput_default_box_stroke_color"
+            app:hintTextColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appBar_home">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/search"
+                android:inputType="text"
+                style="@style/text_open_sans_14"
+                android:textColor="@color/white" />
+        </com.google.android.material.textfield.TextInputLayout>
+
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_fragment"
             android:name="androidx.navigation.fragment.NavHostFragment"
@@ -75,7 +99,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layout_constraintBottom_toTopOf="@id/home_nav_bar"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appBar_home"
+            app:layout_constraintTop_toBottomOf="@+id/tl_search"
             app:navGraph="@navigation/nav_home" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
