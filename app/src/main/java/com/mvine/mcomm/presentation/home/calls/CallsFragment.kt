@@ -1,10 +1,12 @@
 package com.mvine.mcomm.presentation.home.calls
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -45,6 +47,7 @@ class CallsFragment : Fragment(), ListInteraction<CallData> {
         super.onViewCreated(view, savedInstanceState)
         subscribeObservers()
         setUpViews()
+        initListeners()
     }
 
     private fun setUpViews() {
@@ -54,6 +57,30 @@ class CallsFragment : Fragment(), ListInteraction<CallData> {
         }
 
 
+    }
+
+    private fun initListeners() {
+        fragmentCallsBinding.callsAll.apply {
+            setOnClickListener {
+                background = ContextCompat.getDrawable(context, R.drawable.ic_white_filled_rounded_rectangle)
+                setTextColor(ContextCompat.getColor(context, R.color.mcomm_blue))
+                setTypeface(typeface, Typeface.BOLD)
+                fragmentCallsBinding.callsRecents.background = ContextCompat.getDrawable(context, R.drawable.ic_mcomm_blue_light_rounded_rectangle)
+                fragmentCallsBinding.callsRecents.setTextColor(ContextCompat.getColor(context, R.color.white))
+                fragmentCallsBinding.callsRecents.setTypeface(typeface, Typeface.NORMAL)
+            }
+        }
+
+        fragmentCallsBinding.callsRecents.apply {
+            setOnClickListener {
+                background = ContextCompat.getDrawable(context, R.drawable.ic_white_filled_rounded_rectangle)
+                setTextColor(ContextCompat.getColor(context, R.color.mcomm_blue))
+                setTypeface(typeface, Typeface.BOLD)
+                fragmentCallsBinding.callsAll.background = ContextCompat.getDrawable(context, R.drawable.ic_mcomm_blue_light_rounded_rectangle)
+                fragmentCallsBinding.callsAll.setTextColor(ContextCompat.getColor(context, R.color.white))
+                fragmentCallsBinding.callsAll.setTypeface(typeface, Typeface.NORMAL)
+            }
+        }
     }
 
     private fun subscribeObservers() {

@@ -12,12 +12,51 @@
         android:padding="@dimen/space_2x"
         android:background="@color/mcomm_blue_light_tint">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/layout_recent_all"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/text_open_sans_medium"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/space_4x"
+                android:layout_marginTop="@dimen/space_4x"
+                android:textColor="@color/mcomm_blue"
+                android:textStyle="bold"
+                android:background="@drawable/ic_white_filled_rounded_rectangle"
+                android:gravity="center"
+                android:padding="@dimen/space_4x"
+                android:text="@string/recents"
+                android:id="@+id/calls_recents"/>
+
+            <TextView
+                style="@style/text_open_sans_medium"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/space_4x"
+                android:layout_marginTop="@dimen/space_4x"
+                android:background="@drawable/ic_mcomm_blue_light_rounded_rectangle"
+                android:gravity="center"
+                android:padding="@dimen/space_4x"
+                android:text="@string/all"
+                android:id="@+id/calls_all"/>
+
+        </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_2x"
             android:id="@+id/rv_calls"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_recent_all"
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <ProgressBar

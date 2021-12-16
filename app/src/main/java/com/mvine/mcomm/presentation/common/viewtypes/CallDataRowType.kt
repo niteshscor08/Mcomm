@@ -34,7 +34,7 @@ data class CallDataRowType(
             }
             itemView.setBackgroundResource(if (callData.isExpanded) R.color.mcomm_blue else R.color.mcomm_blue_light_tint)
             callDropDown?.setImageResource(if (callData.isExpanded) R.drawable.ic_arrow_up else R.drawable.ic_arrow_down)
-            callDropDown?.setOnClickListener {
+            itemView.setOnClickListener {
                 interaction.onItemSelectedForExpansion(position, callData, isExpanded = !callData.isExpanded)
             }
         }

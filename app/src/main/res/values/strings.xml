@@ -18,4 +18,8 @@
     <string name="calls">Calls</string>
     <string name="contacts">Contacts</string>
 
+    <!-- Calls -->
+    <string name="recents">Recent</string>
+    <string name="all">All</string>
+
 </resources>
