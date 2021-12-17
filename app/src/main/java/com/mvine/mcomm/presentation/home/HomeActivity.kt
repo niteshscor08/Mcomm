@@ -1,6 +1,7 @@
 package com.mvine.mcomm.presentation.home
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
@@ -43,6 +44,7 @@ class HomeActivity : AppCompatActivity() {
         }
 
         activityHomeBinding.ivAppBarMenu.setOnClickListener {
+            activityHomeBinding.tlSearch.visibility = View.GONE
             navController.navigate(R.id.loginMenuFragment)
         }
 
@@ -60,5 +62,9 @@ class HomeActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
         activityHomeBinding.homeNavBar.setupWithNavController(navController)
+    }
+
+    fun showSearchBar() {
+        activityHomeBinding.tlSearch.visibility = View.VISIBLE
     }
 }

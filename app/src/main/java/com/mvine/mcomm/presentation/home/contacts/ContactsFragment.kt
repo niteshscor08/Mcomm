@@ -17,6 +17,7 @@ import com.mvine.mcomm.domain.model.ContactsData
 import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.presentation.common.ListInteraction
 import com.mvine.mcomm.presentation.common.MultipleRowTypeAdapter
+import com.mvine.mcomm.presentation.home.HomeActivity
 import com.mvine.mcomm.presentation.home.HomeViewModel
 import com.mvine.mcomm.util.prepareRowTypesFromContactsData
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,6 +54,7 @@ class ContactsFragment : Fragment(), ListInteraction<ContactsData> {
             layoutManager = LinearLayoutManager(context)
             adapter = contactsAdapter
         }
+        (activity as HomeActivity).showSearchBar()
     }
 
     private fun subscribeObservers() {
