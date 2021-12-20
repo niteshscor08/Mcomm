@@ -7,6 +7,7 @@ import com.mvine.mcomm.data.api.CallsApiService
 import com.mvine.mcomm.data.api.ChatsApiService
 import com.mvine.mcomm.data.api.ContactsApiService
 import com.mvine.mcomm.data.api.LoginApiService
+import com.mvine.mcomm.data.api.ChangePasswordApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -66,6 +67,12 @@ object RetrofitModule {
     @Provides
     fun provideCallsApi(retrofit: Retrofit.Builder): CallsApiService {
         return retrofit.build().create(CallsApiService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideChangePasswordApiService(retrofit: Retrofit.Builder): ChangePasswordApiService {
+        return retrofit.build().create(ChangePasswordApiService::class.java)
     }
 
 }
