@@ -14,11 +14,12 @@ class ChangePasswordRemoteRepoImpl @Inject constructor(
 
     override suspend fun changePassword(
         cookie: String,
-        newPassword: String
+        newPassword: String,
+        reEnteredPassword: String
     ): Response<ChangePasswordResponse> {
         val requestBody: RequestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
-            .addFormDataPart(newPassword, newPassword)
+            .addFormDataPart(newPassword, reEnteredPassword)
             .build()
         return changePasswordApiService.changePassword(cookie, requestBody)
     }

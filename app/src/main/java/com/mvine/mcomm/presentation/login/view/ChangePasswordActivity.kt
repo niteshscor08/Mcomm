@@ -10,6 +10,8 @@ import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.ActivityChangePasswordBinding
 import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.presentation.login.viewmodel.ChangePasswordViewModel
+import com.mvine.mcomm.util.hideKeyboard
+import com.mvine.mcomm.util.toast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -35,15 +37,16 @@ class ChangePasswordActivity: AppCompatActivity() {
 
     private fun subscribeObservers(){
         changePasswordViewModel.passwordUpdated.observe(this, {result ->
+            activityChangePasswordBinding.etNewPassword.hideKeyboard()
             result?.let { response ->
                 when(response){
                     is Resource.Success -> {
                         activityChangePasswordBinding.progressBar.visibility = View.GONE
-                        Toast.makeText(this, response.data, Toast.LENGTH_LONG).show()
+                        response.data?.let { this.toast(it) }
                     }
                     is Resource.Error -> {
                         activityChangePasswordBinding.progressBar.visibility = View.GONE
-                        Toast.makeText(this, response.message, Toast.LENGTH_LONG).show()
+                        response.message?.let { this.toast(it) }
                     }
                     is Resource.Loading-> {
                         activityChangePasswordBinding.progressBar.visibility = View.VISIBLE

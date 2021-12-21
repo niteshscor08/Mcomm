@@ -5,5 +5,5 @@ import com.mvine.mcomm.domain.util.Resource
 import retrofit2.Response
 
 interface ChangePasswordRemoteRepo {
-    suspend fun changePassword(cookie: String, newPassword: String): Response<ChangePasswordResponse>
+    suspend fun changePassword(cookie: String, newPassword: String, reEnteredPassword:String): Response<ChangePasswordResponse>
 }

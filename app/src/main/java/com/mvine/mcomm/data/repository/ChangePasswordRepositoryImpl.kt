@@ -8,9 +8,9 @@ import javax.inject.Inject
 class ChangePasswordRepositoryImpl @Inject constructor(
     private val changePasswordRemoteRepo: ChangePasswordRemoteRepo
 ) : ChangePasswordRepository{
-    override suspend fun changePassword(cookie: String, newPassword: String): Resource<String> {
+    override suspend fun changePassword(cookie: String, newPassword: String, reEnteredPassword: String): Resource<String> {
         val response =  try {
-            changePasswordRemoteRepo.changePassword(cookie, newPassword)
+            changePasswordRemoteRepo.changePassword(cookie, newPassword, reEnteredPassword)
         } catch (exception: Exception) {
             return Resource.Error(message = "Error in Password Update")
         }

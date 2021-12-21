@@ -6,6 +6,6 @@ import javax.inject.Inject
 class ChangePasswordUseCase @Inject constructor(
     private val changePasswordRepository: ChangePasswordRepository
 ) {
-    suspend fun changePassword(cookie: String, newPassword: String) =
-        changePasswordRepository.changePassword(cookie,newPassword)
+    suspend fun changePassword(cookie: String, newPassword: String, reEnteredPassword:String) =
+        changePasswordRepository.changePassword(cookie,newPassword,reEnteredPassword)
 }

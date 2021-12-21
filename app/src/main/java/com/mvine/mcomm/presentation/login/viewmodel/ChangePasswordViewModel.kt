@@ -25,9 +25,9 @@ class ChangePasswordViewModel @Inject constructor(
     @ApplicationContext context: Context
 ): ViewModel(){
 
-    var oldPassword = EMPTY_STRING
     var newPassword = EMPTY_STRING
     var reEnteredPassword = EMPTY_STRING
+
 
     private val _passwordUpdatedLiveData: MutableLiveData<Resource<String>> =
         MutableLiveData()
@@ -42,7 +42,7 @@ class ChangePasswordViewModel @Inject constructor(
             viewModelScope.launch(dispatcher) {
                 _passwordUpdatedLiveData.apply {
                     postValue(Resource.Loading())
-                    postValue(changePasswordUseCase.changePassword(cookie, newPassword))
+                    postValue(changePasswordUseCase.changePassword(cookie, newPassword,reEnteredPassword))
                 }
             }
         }
