@@ -6,11 +6,17 @@
     <dimen name="space_3x">12dp</dimen>
     <dimen name="size_14dp">14dp</dimen>
     <dimen name="space_4x">16dp</dimen>
+    <dimen name="size_18dp">18dp</dimen>
+    <dimen name="size_20dp">20dp</dimen>
+    <dimen name="size_24dp">24dp</dimen>
+    <dimen name="size_28dp">28dp</dimen>
+    <dimen name="size_30dp">30dp</dimen>
     <dimen name="space_8x">32dp</dimen>
     <dimen name="space_10x">40dp</dimen>
     <dimen name="space_14x">56dp</dimen>
     <dimen name="space_16x">64dp</dimen>
     <dimen name="space_24x">96dp</dimen>
+    <dimen name="size_104dp">104dp</dimen>
     <dimen name="space_32x">128dp</dimen>
     <dimen name="space_64x">256dp</dimen>
 

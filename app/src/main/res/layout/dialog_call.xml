@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:strokeWidth="@dimen/space_x"
+        app:strokeColor= "@color/mcomm_green"
+        app:cardBackgroundColor="@color/mcomm_blue"
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:paddingBottom="@dimen/size_18dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/dialog_title"
+                style="@style/text_open_sans_italic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/size_24dp"
+                android:text="@string/incoming_call"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/dialog_title_img"
+                android:layout_width="@dimen/size_104dp"
+                android:layout_height="@dimen/size_104dp"
+                android:layout_marginTop="@dimen/size_30dp"
+                app:layout_constraintEnd_toEndOf="@+id/dialog_title"
+                app:layout_constraintStart_toStartOf="@+id/dialog_title"
+                app:layout_constraintTop_toBottomOf="@+id/dialog_title" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/dialog_caller_name"
+                style="@style/text_open_sans_bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/size_30dp"
+                android:text="@string/caller_name"
+                app:layout_constraintEnd_toEndOf="@+id/dialog_title"
+                app:layout_constraintStart_toStartOf="@+id/dialog_title"
+                app:layout_constraintTop_toBottomOf="@+id/dialog_title_img" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/dialog_call"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_4x"
+                android:src="@drawable/ic_call"
+                app:layout_constraintTop_toBottomOf="@+id/dialog_caller_name"
+                app:layout_constraintEnd_toStartOf="@+id/dialog_call_end"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/dialog_call_end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/size_28dp"
+                android:src="@drawable/ic_call_red"
+                app:layout_constraintTop_toBottomOf="@+id/dialog_caller_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/dialog_call" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+
+</layout>
