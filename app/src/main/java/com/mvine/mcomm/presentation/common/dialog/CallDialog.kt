@@ -13,9 +13,11 @@ import com.mvine.mcomm.databinding.DialogCallBinding
 class CallDialog(private val callDialogListener: CallDialogListener?,
                  private val callDialogData: CallDialogData) : DialogFragment() {
 
+    private lateinit var dialogBaseBinding: DialogCallBinding
+
     override fun onStart() {
         super.onStart()
-        val width = (resources.displayMetrics.widthPixels * 0.80).toInt()
+        val width = (resources.displayMetrics.widthPixels * DIALOG_WIDTH).toInt()
         dialog?.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
@@ -24,27 +26,42 @@ class CallDialog(private val callDialogListener: CallDialogListener?,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val dialogBaseBinding = DataBindingUtil.inflate<DialogCallBinding>(
+         dialogBaseBinding = DataBindingUtil.inflate<DialogCallBinding>(
             LayoutInflater.from(context),
             R.layout.dialog_call,
             container,
             true
         )
-       callDialogData.callerName?.let {
-           dialogBaseBinding.dialogCallerName.text = it
-       }
-       callDialogData.isIncomingDialog?.let {
-           dialogBaseBinding.dialogCall.isVisible = it
-           dialogBaseBinding.dialogTitle.text = if(it){ context?.getString(R.string.incoming_call)} else{ context?.getString(R.string.outgoing_call) }
-       }
-
-       dialogBaseBinding.dialogCall.setOnClickListener {
-           callDialogListener?.onCallButtonClick()
-       }
-       dialogBaseBinding.dialogCallEnd.setOnClickListener {
-           callDialogListener?.onCancelCallButtonClick()
-       }
+        setUp()
         isCancelable = false
         return dialogBaseBinding.root
+    }
+
+    private fun setUp() {
+        setDialogTypeAndUi()
+        onButtonClickEvent()
+    }
+
+    private fun setDialogTypeAndUi(){
+        callDialogData.callerName?.let {
+            dialogBaseBinding.dialogCallerName.text = it
+        }
+        callDialogData.isIncomingDialog?.let {
+            dialogBaseBinding.dialogCall.isVisible = it
+            dialogBaseBinding.dialogTitle.text = if(it){ context?.getString(R.string.incoming_call)} else{ context?.getString(R.string.outgoing_call) }
+        }
+    }
+
+    private fun onButtonClickEvent(){
+        dialogBaseBinding.dialogCall.setOnClickListener {
+            callDialogListener?.onCallButtonClick()
+        }
+        dialogBaseBinding.dialogCallEnd.setOnClickListener {
+            callDialogListener?.onCancelCallButtonClick()
+        }
+    }
+
+    companion object{
+        const val DIALOG_WIDTH = 0.80
     }
 }
