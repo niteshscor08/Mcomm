@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mvine.mcomm.domain.model.AllCalls
 import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.domain.usecase.GetCallsUseCase
 import com.mvine.mcomm.domain.util.Resource
@@ -27,6 +28,10 @@ class CallsViewModel @Inject constructor(
         MutableLiveData()
     val recentCalls: LiveData<Resource<ArrayList<CallData>>> = _recentCallsLiveData
 
+    private val _allCallsLiveData: MutableLiveData<Resource<AllCalls>> =
+        MutableLiveData()
+    val allCalls: LiveData<Resource<AllCalls>> = _allCallsLiveData
+
     private val _searchCallsLiveData: MutableLiveData<ArrayList<CallData>> =
         MutableLiveData()
     val searchCalls: LiveData<ArrayList<CallData>> = _searchCallsLiveData
@@ -36,6 +41,7 @@ class CallsViewModel @Inject constructor(
 
     init {
         getRecentCalls()
+        getAllCalls()
     }
 
     private fun getRecentCalls() {
@@ -44,6 +50,17 @@ class CallsViewModel @Inject constructor(
                 _recentCallsLiveData.apply {
                     postValue(Resource.Loading())
                     postValue(getCallsUseCase.getRecentCalls(cookie))
+                }
+            }
+        }
+    }
+
+    private fun getAllCalls(){
+        sharedPreferences.getString(LOGIN_TOKEN, null)?.let { cookie ->
+            viewModelScope.launch(dispatcher) {
+                _allCallsLiveData.apply {
+                    postValue(Resource.Loading())
+                    postValue(getCallsUseCase.getAllCalls(cookie))
                 }
             }
         }

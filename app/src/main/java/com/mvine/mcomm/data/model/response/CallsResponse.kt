@@ -17,3 +17,28 @@ data class Recent(
     val timestamp: String?,
     val type: String?
 )
+
+data class CallablesResponse(
+    val callables: List<CallableClass>?,
+    val companies: List<CompanyData>?,
+    val status: String?,
+    val total: Int?
+)
+
+data class CallableClass(
+    val Company: String?,
+    val Department: String?,
+    val STX: String?,
+    val admin: String?,
+    val companyid: String?,
+    val email:String?,
+    val id: String?,
+    val image_src: String?,
+    val usename: String?,
+    val username: String?
+)
+data class CompanyData(
+    val ID: String?,
+    val Value: String?,
+    val image_src: String
+)

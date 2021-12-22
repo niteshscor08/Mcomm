@@ -84,6 +84,24 @@ class CallsFragment : Fragment(), ListInteraction<CallData> {
     }
 
     private fun subscribeObservers() {
+        callsViewModel.allCalls.observe(viewLifecycleOwner, { result ->
+            result?.let { response ->
+                when (response) {
+                    is Success -> {
+                        fragmentCallsBinding.progressCalls.visibility = View.GONE
+                        Toast.makeText(activity, "response.message", Toast.LENGTH_LONG).show()
+                    }
+                    is Error -> {
+                        fragmentCallsBinding.progressCalls.visibility = View.GONE
+                        Toast.makeText(activity, response.message, Toast.LENGTH_LONG).show()
+                    }
+                    is Loading -> {
+                        fragmentCallsBinding.progressCalls.visibility = View.VISIBLE
+                    }
+                }
+            }
+        })
+
         callsViewModel.recentCalls.observe(viewLifecycleOwner, { result ->
             result?.let { response ->
                 when (response) {
