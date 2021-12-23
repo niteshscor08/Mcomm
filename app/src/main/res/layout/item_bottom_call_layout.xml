@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottom_bar_call_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/mcomm_blue"
+        android:paddingLeft="27dp"
+        android:paddingRight="27dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/bb_end_call"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="11dp"
+            android:layout_marginBottom="35dp"
+            android:src="@drawable/ic_call_red"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/bb_mic_bck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_toggle_background"
+            app:layout_constraintBottom_toBottomOf="@+id/bb_end_call"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/bb_mic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_mic_toggle"
+            app:layout_constraintBottom_toBottomOf="@+id/bb_mic_bck"
+            app:layout_constraintEnd_toEndOf="@+id/bb_mic_bck"
+            app:layout_constraintStart_toStartOf="@+id/bb_mic_bck"
+            app:layout_constraintTop_toTopOf="@+id/bb_mic_bck" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/bb_speaker_bck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_toggle_background"
+            app:layout_constraintBottom_toBottomOf="@+id/bb_end_call"
+            app:layout_constraintEnd_toStartOf="@+id/bb_video_bck"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/bb_mic_bck" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/bb_speaker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_speaker_toggle"
+            app:layout_constraintBottom_toBottomOf="@+id/bb_speaker_bck"
+            app:layout_constraintEnd_toEndOf="@+id/bb_speaker_bck"
+            app:layout_constraintStart_toStartOf="@+id/bb_speaker_bck"
+            app:layout_constraintTop_toTopOf="@+id/bb_speaker_bck" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/bb_video_bck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_toggle_background"
+            app:layout_constraintBottom_toBottomOf="@+id/bb_speaker_bck"
+            app:layout_constraintEnd_toStartOf="@+id/bb_end_call"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/bb_speaker_bck" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/bb_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_video_toggle"
+            app:layout_constraintBottom_toBottomOf="@+id/bb_video_bck"
+            app:layout_constraintEnd_toEndOf="@+id/bb_video_bck"
+            app:layout_constraintStart_toStartOf="@+id/bb_video_bck"
+            app:layout_constraintTop_toTopOf="@+id/bb_video_bck" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
