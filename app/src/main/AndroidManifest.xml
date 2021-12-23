@@ -23,7 +23,9 @@
         <activity
             android:name=".presentation.home.HomeActivity"
             android:theme="@style/Theme.MaterialComponents.NoActionBar" />
-        <activity android:name=".presentation.login.view.ChangePasswordActivity" />
+
+        <activity android:name=".presentation.login.view.ChangePasswordActivity"
+            android:theme="@style/Theme.MaterialComponents.NoActionBar"/>
     </application>
 
 </manifest>
