@@ -22,4 +22,9 @@
     <string name="recents">Recent</string>
     <string name="all">All</string>
 
+    <!-- Dialog -->
+    <string name="incoming_call">Incoming Call…</string>
+    <string name="caller_name">Yordan Uzunov</string>
+    <string name="outgoing_call">Outgoing Call…</string>
+
 </resources>
