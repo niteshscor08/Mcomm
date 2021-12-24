@@ -2,6 +2,7 @@ package com.mvine.mcomm.presentation.home.calls
 
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.FragmentCallsBinding
 import com.mvine.mcomm.domain.model.CallData
@@ -20,11 +22,19 @@ import com.mvine.mcomm.presentation.common.ListInteraction
 import com.mvine.mcomm.presentation.common.MultipleRowTypeAdapter
 import com.mvine.mcomm.presentation.home.HomeActivity
 import com.mvine.mcomm.presentation.home.HomeViewModel
+import com.mvine.mcomm.service.WebSocketService
 import com.mvine.mcomm.util.prepareRowTypesFromCallData
+import com.tinder.scarlet.Message
+import com.tinder.scarlet.WebSocket
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.android.schedulers.AndroidSchedulers
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CallsFragment : Fragment(), ListInteraction<CallData> {
+
+    @Inject
+    lateinit var webSocketService: WebSocketService
 
     private val callsViewModel: CallsViewModel by viewModels()
 
@@ -49,6 +59,7 @@ class CallsFragment : Fragment(), ListInteraction<CallData> {
         subscribeObservers()
         setUpViews()
         initListeners()
+        observeConnection()
     }
 
     private fun setUpViews() {
@@ -127,5 +138,30 @@ class CallsFragment : Fragment(), ListInteraction<CallData> {
             "Voice call selected for ${item.othercaller_company_id}",
             Toast.LENGTH_LONG
         ).show()
+        webSocketService.sendMessage("Voice call selected for ${item.othercaller_company_id}")
+    }
+
+    private fun observeConnection() {
+        webSocketService.observeConnection()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ response ->
+                onReceiveResponseConnection(response)
+            }, { error ->
+                Snackbar.make(fragmentCallsBinding.root, error.message.orEmpty(), Snackbar.LENGTH_SHORT).show()
+            })
+    }
+
+    private fun onReceiveResponseConnection(response: WebSocket.Event) {
+        when (response) {
+            is WebSocket.Event.OnConnectionOpened<*> -> Log.i("connection", "opened")
+            is WebSocket.Event.OnConnectionClosed -> Log.i("connection", "closed")
+            is WebSocket.Event.OnConnectionClosing -> Log.i("connection", "closing connection")
+            is WebSocket.Event.OnConnectionFailed -> Log.i("connection", "failed")
+            is WebSocket.Event.OnMessageReceived -> handleOnMessageReceived(response.message)
+        }
+    }
+
+    private fun handleOnMessageReceived(message: Message) {
+        Log.i("connection", message.toString())
     }
 }
