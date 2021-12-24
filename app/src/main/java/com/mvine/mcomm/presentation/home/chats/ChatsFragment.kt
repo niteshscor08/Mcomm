@@ -82,7 +82,7 @@ class ChatsFragment : Fragment() {
     }
 
     private fun sendMessage(message: String) {
-        webSocketService.sendMessage(message)
+        webSocketService.sendMessage(JanusMessage())
     }
 
 }
