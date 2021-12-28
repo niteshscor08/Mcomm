@@ -1,5 +1,7 @@
 package com.mvine.mcomm.presentation.home.calls
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
@@ -14,6 +16,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.FragmentCallsBinding
 import com.mvine.mcomm.domain.model.CallData
@@ -22,12 +25,16 @@ import com.mvine.mcomm.presentation.common.ListInteraction
 import com.mvine.mcomm.presentation.common.MultipleRowTypeAdapter
 import com.mvine.mcomm.presentation.home.HomeActivity
 import com.mvine.mcomm.presentation.home.HomeViewModel
-import com.mvine.mcomm.service.WebSocketService
+import com.mvine.mcomm.janus.WebSocketService
+import com.mvine.mcomm.util.MCOMM_SHARED_PREFERENCES
+import com.mvine.mcomm.util.PreferenceHandler
+import com.mvine.mcomm.util.USER_INFO
 import com.mvine.mcomm.util.prepareRowTypesFromCallData
 import com.tinder.scarlet.Message
 import com.tinder.scarlet.WebSocket
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.android.schedulers.AndroidSchedulers
+import org.antlr.v4.gui.Trees.save
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -36,6 +43,9 @@ class CallsFragment : Fragment(), ListInteraction<CallData> {
     @Inject
     lateinit var webSocketService: WebSocketService
 
+    @Inject
+    lateinit var preferenceHandler: PreferenceHandler
+
     private val callsViewModel: CallsViewModel by viewModels()
 
     private val homeViewModel: HomeViewModel by activityViewModels()
@@ -43,6 +53,8 @@ class CallsFragment : Fragment(), ListInteraction<CallData> {
     private val callsAdapter: MultipleRowTypeAdapter = MultipleRowTypeAdapter(arrayListOf())
 
     private lateinit var fragmentCallsBinding: FragmentCallsBinding
+
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,6 +72,10 @@ class CallsFragment : Fragment(), ListInteraction<CallData> {
         setUpViews()
         initListeners()
         observeConnection()
+        sharedPreferences = requireContext().getSharedPreferences(
+            MCOMM_SHARED_PREFERENCES,
+            Context.MODE_PRIVATE
+        )
     }
 
     private fun setUpViews() {
@@ -95,6 +111,15 @@ class CallsFragment : Fragment(), ListInteraction<CallData> {
     }
 
     private fun subscribeObservers() {
+        callsViewModel.userInfo.observe(viewLifecycleOwner, {result ->
+            result?.let { res ->
+                when(res){
+                    is Success -> {
+                        preferenceHandler.save(USER_INFO, Gson().toJson(res.data))
+                    }
+                }
+            }
+        })
         callsViewModel.recentCalls.observe(viewLifecycleOwner, { result ->
             result?.let { response ->
                 when (response) {

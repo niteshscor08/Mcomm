@@ -1,5 +1,6 @@
-package com.mvine.mcomm.service
+package com.mvine.mcomm.janus
 
+import com.mvine.mcomm.janus.request.JanusCreate
 import com.mvine.mcomm.presentation.home.chats.JanusMessage
 import com.tinder.scarlet.WebSocket
 import com.tinder.scarlet.ws.Receive
@@ -15,5 +16,5 @@ interface WebSocketService {
     fun sendMessage(param: String)
 
     @Send
-    fun sendMessage(param: JanusMessage)
+    fun sendMessage(param: JanusCreate)
 }

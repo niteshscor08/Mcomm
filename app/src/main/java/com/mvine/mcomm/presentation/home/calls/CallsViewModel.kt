@@ -5,11 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mvine.mcomm.data.model.response.PersonInfo
 import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.domain.usecase.GetCallsUseCase
 import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.util.LOGIN_TOKEN
 import com.mvine.mcomm.util.MCOMM_SHARED_PREFERENCES
+import com.mvine.mcomm.util.USER_INFO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
@@ -27,6 +29,11 @@ class CallsViewModel @Inject constructor(
         MutableLiveData()
     val recentCalls: LiveData<Resource<ArrayList<CallData>>> = _recentCallsLiveData
 
+
+    private val _userInfo: MutableLiveData<Resource<PersonInfo>> =
+        MutableLiveData()
+    val userInfo: LiveData<Resource<PersonInfo>> = _userInfo
+
     private val _searchCallsLiveData: MutableLiveData<ArrayList<CallData>> =
         MutableLiveData()
     val searchCalls: LiveData<ArrayList<CallData>> = _searchCallsLiveData
@@ -36,6 +43,17 @@ class CallsViewModel @Inject constructor(
 
     init {
         getRecentCalls()
+        getUserInfo()
+    }
+
+    private fun getUserInfo(){
+        sharedPreferences.getString(LOGIN_TOKEN,null)?.let { cookie ->
+            viewModelScope.launch(dispatcher) {
+                _userInfo.apply {
+                    postValue(getCallsUseCase.getUserInfo(cookie))
+                }
+            }
+        }
     }
 
     private fun getRecentCalls() {

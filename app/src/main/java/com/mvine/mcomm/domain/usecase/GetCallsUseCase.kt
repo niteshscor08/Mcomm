@@ -8,4 +8,7 @@ class GetCallsUseCase @Inject constructor(
 ) {
     suspend fun getRecentCalls(cookie: String) =
         callsRepository.getRecentCalls(cookie)
+
+    suspend fun getUserInfo(cookie: String) = callsRepository.getUserInfo(cookie)
+
 }
