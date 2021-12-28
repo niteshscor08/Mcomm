@@ -71,6 +71,7 @@ dependencies {
     implementation(Dependencies.navigation_fragment)
     implementation(Dependencies.navigation_ui)
     implementation(Dependencies.fragment_ktx)
+    implementation(project(":janusclient"))
     // endregion UI
 
     // region Network Layer

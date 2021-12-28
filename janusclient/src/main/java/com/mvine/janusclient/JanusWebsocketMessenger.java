@@ -1,4 +1,4 @@
-package computician.janusclientapi;
+package com.mvine.janusclient;
 
 import com.koushikdutta.async.ByteBufferList;
 import com.koushikdutta.async.DataEmitter;

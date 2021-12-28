@@ -1,4 +1,4 @@
-package computician.janusclientapi;
+package com.mvine.janusclient;
 
 import android.os.AsyncTask;
 import android.os.Handler;

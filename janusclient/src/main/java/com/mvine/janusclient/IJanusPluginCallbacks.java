@@ -1,4 +1,4 @@
-package computician.janusclientapi; /**
+package com.mvine.janusclient; /**
  * Created by ben.trent on 5/7/2015.
  */
 

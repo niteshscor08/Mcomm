@@ -1,4 +1,4 @@
-package computician.janusclientapi;
+package com.mvine.janusclient;
 
 import android.net.Uri;
 import com.koushikdutta.async.http.*;

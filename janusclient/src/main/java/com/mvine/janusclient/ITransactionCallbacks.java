@@ -1,4 +1,4 @@
-package computician.janusclientapi;
+package com.mvine.janusclient;
 
 import org.json.JSONObject;
 
