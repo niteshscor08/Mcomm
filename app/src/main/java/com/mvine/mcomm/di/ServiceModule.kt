@@ -3,7 +3,7 @@ package com.mvine.mcomm.di
 import android.app.Application
 import android.content.Context
 import com.mvine.mcomm.BuildConfig
-import com.mvine.mcomm.janus.JanusService
+import com.mvine.mcomm.janus.JanusManager
 import com.mvine.mcomm.presentation.common.GsonMessageAdapter
 import com.mvine.mcomm.janus.WebSocketService
 import com.mvine.mcomm.util.LOGIN_TOKEN
@@ -72,9 +72,4 @@ object ServiceModule {
     @Singleton
     @Provides
     fun provideWebSocketService(scarlet: Scarlet) : WebSocketService= scarlet.create(WebSocketService::class.java)
-
-    @Singleton
-    @Provides
-    fun provideJanusService(webSocketService: WebSocketService) : JanusService = JanusService(webSocketService)
-
 }

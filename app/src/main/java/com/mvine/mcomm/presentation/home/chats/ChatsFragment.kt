@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.FragmentChatsBinding
-import com.mvine.mcomm.janus.JanusService
+import com.mvine.mcomm.janus.JanusManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -21,7 +21,7 @@ class ChatsFragment : Fragment() {
     private lateinit var fragmentChatsBinding: FragmentChatsBinding
 
     @Inject
-    lateinit var janusService: JanusService
+    lateinit var janusManager: JanusManager
 
 
     override fun onCreateView(
@@ -36,9 +36,8 @@ class ChatsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        janusService.connect()
         fragmentChatsBinding.send.setOnClickListener {
-            janusService.sendMessage("hello")
+            janusManager.connect()
         }
     }
 }

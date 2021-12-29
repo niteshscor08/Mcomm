@@ -1,67 +1,36 @@
 package com.mvine.mcomm.janus
 
+import android.content.Context
 import android.util.Log
-import com.google.gson.Gson
 import com.mvine.janusclient.*
 import com.mvine.mcomm.data.model.response.PersonInfo
-import com.mvine.mcomm.janus.request.JanusCreate
 import com.mvine.mcomm.janus.request.JanusRegister
-import com.mvine.mcomm.janus.utils.CommonValues.CREATE_KEY_LENGTH
-import com.mvine.mcomm.janus.utils.RandomString
+import com.mvine.mcomm.util.LOGIN_TOKEN
+import com.mvine.mcomm.util.MCOMM_SHARED_PREFERENCES
 import com.mvine.mcomm.util.PreferenceHandler
 import com.mvine.mcomm.util.USER_INFO
-import com.tinder.scarlet.Message
-import com.tinder.scarlet.WebSocket
-import io.reactivex.android.schedulers.AndroidSchedulers
+import dagger.hilt.android.qualifiers.ApplicationContext
 import org.json.JSONObject
 import org.webrtc.MediaStream
 import org.webrtc.PeerConnection
 import javax.inject.Inject
 
-class JanusService(private val webSocketService: WebSocketService) {
+class JanusManager @Inject constructor(@ApplicationContext private val context: Context) {
 
     @Inject
     lateinit var preferenceHandler: PreferenceHandler
 
-    private val janusServer = JanusServer(JanusGlobalCallbacks())
-
+     private val janusServer = JanusServer(JanusGlobalCallbacks())
 
     fun connect() {
-        webSocketService.observeConnection()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ response ->
-                Log.d("observeConnection", response.toString())
-                onReceiveResponseConnection(response)
-            }, { error ->
-                Log.e("observeConnection", error.message.orEmpty())
-            })
+        createJanusSession()
     }
 
-    private fun onReceiveResponseConnection(response: WebSocket.Event) {
-        when (response) {
-            is WebSocket.Event.OnConnectionOpened<*> -> Log.i("connection", "opened")
-            is WebSocket.Event.OnConnectionClosed -> Log.i("connection", "closed")
-            is WebSocket.Event.OnConnectionClosing -> Log.i("connection", "closing connection")
-            is WebSocket.Event.OnConnectionFailed -> Log.i("connection", "failed")
-            is WebSocket.Event.OnMessageReceived -> handleOnMessageReceived(response.message)
+    private fun createJanusSession() {
+        val sharedPreferences = context.getSharedPreferences(MCOMM_SHARED_PREFERENCES, Context.MODE_PRIVATE)
+        sharedPreferences.getString(LOGIN_TOKEN, null)?.let { cookie ->
+            janusServer.Connect(cookie)
         }
-    }
-
-    private fun handleOnMessageReceived(message: Message) {
-        Log.i("connection", message.toString())
-        when(message.toString()){
-             JanusMessageType.success.toString() -> {
-                when()
-            }
-        }
-    }
-
-    fun sendMessage(message: String) {
-        webSocketService.sendMessage(message)
-    }
-
-    fun createJanusSession() {
-        sendMessage(Gson().toJson(JanusCreate()))
     }
 
     inner class JanusGlobalCallbacks : IJanusGatewayCallbacks {
@@ -78,19 +47,19 @@ class JanusService(private val webSocketService: WebSocketService) {
         }
 
         override fun getServerUri(): String {
-            TODO("Not yet implemented")
+            return ""
         }
 
         override fun getIceServers(): MutableList<PeerConnection.IceServer> {
-            TODO("Not yet implemented")
+            return ArrayList()
         }
 
         override fun getIpv6Support(): Boolean {
-            TODO("Not yet implemented")
+            return false
         }
 
         override fun getMaxPollEvents(): Int {
-            TODO("Not yet implemented")
+            return 0
         }
 
     }
@@ -105,7 +74,16 @@ class JanusService(private val webSocketService: WebSocketService) {
         }
 
         override fun onMessage(msg: JSONObject?, jsep: JSONObject?) {
-            TODO("Not yet implemented")
+            when (msg?.getString("sip")) {
+                JanusMessageType.event.toString() -> {
+                    if (msg.has("result")) {
+                        val result = msg.getJSONObject("result")
+                        when (result.getString("event")) {
+                            "registered" -> Log.d("observeConnection", "Registered")
+                        }
+                    }
+                }
+            }
         }
 
         override fun onLocalStream(stream: MediaStream?) {
@@ -141,9 +119,15 @@ class JanusService(private val webSocketService: WebSocketService) {
         }
     }
 
-    fun startSIPRegistration() {
-        val personInfo : PersonInfo = preferenceHandler.get(USER_INFO)
-        
+    private fun startSIPRegistration(): JanusRegister {
+        val personInfo: PersonInfo = preferenceHandler.get(USER_INFO)
+        personInfo.view.apply {
+            return JanusRegister(
+                authuser = nSTX!!,
+                display_name = contact?.name!!,
+                secret = nastrpass!!,
+                username = usename!!
+            )
+        }
     }
-
 }
