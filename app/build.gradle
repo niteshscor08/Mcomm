@@ -29,11 +29,13 @@ android {
             dimension "development"
             buildConfigField("String", "ENDPOINT", "\"wss://portaluat.mvine.com/janusws\"")
             buildConfigField("String", BASE_URL, '"https://portalUat.mvine.com/"')
+            buildConfigField("String", "SIP", "\"portaluat.mvine.com:5068\"")
         }
         uat {
             dimension "development"
             buildConfigField("String", "ENDPOINT", "\"wss://portaluat.mvine.com/janusws\"")
             buildConfigField("String", BASE_URL, '"https://portalUat.mvine.com/"')
+            buildConfigField("String", "SIP", "\"portaluat.mvine.com:5068\"")
         }
     }
 

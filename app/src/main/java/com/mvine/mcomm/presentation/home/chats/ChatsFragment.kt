@@ -37,6 +37,7 @@ class ChatsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fragmentChatsBinding.send.setOnClickListener {
+
             janusManager.connect()
         }
     }
