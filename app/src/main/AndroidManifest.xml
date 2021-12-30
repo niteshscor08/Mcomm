@@ -3,6 +3,9 @@
     package="com.mvine.mcomm">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
 
     <application
         android:name=".McommApplication"
@@ -12,6 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Mcomm">
+        <activity android:name=".presentation.audio.view.AudioActivity"></activity>
         <activity android:name=".presentation.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,7 +23,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".presentation.home.HomeActivity"
             android:theme="@style/Theme.MaterialComponents.NoActionBar" />

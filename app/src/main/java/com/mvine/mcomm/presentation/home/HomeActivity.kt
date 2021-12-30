@@ -1,9 +1,12 @@
 package com.mvine.mcomm.presentation.home
 
+import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
@@ -32,6 +35,7 @@ class HomeActivity : AppCompatActivity() {
         activityHomeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home)
         setUpNavController()
         initListeners()
+        checkPermissionsAndStartService()
     }
     private fun initListeners() {
         activityHomeBinding.homeNavBar.setOnNavigationItemSelectedListener { menuItem ->
@@ -67,4 +71,29 @@ class HomeActivity : AppCompatActivity() {
     fun showSearchBar() {
         activityHomeBinding.tlSearch.visibility = View.VISIBLE
     }
+
+    private fun checkPermissionsAndStartService() {
+        val permissions =
+            arrayOf(
+                android.Manifest.permission.MODIFY_AUDIO_SETTINGS,
+                android.Manifest.permission.RECORD_AUDIO
+            )
+        if (!hasPermissions(this, *permissions)) {
+            ActivityCompat.requestPermissions(this, permissions, 101)
+        }
+    }
+
+    private fun hasPermissions(context: Context, vararg permissions: String): Boolean {
+        for (permission in permissions) {
+            if (ActivityCompat.checkSelfPermission(
+                    context,
+                    permission
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return false
+            }
+        }
+        return true
+    }
+
 }

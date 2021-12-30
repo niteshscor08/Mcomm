@@ -1,6 +1,7 @@
 package com.mvine.mcomm.di
 
 import android.content.Context
+import com.mvine.mcomm.util.PreferenceHandler
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,4 +16,9 @@ object AppModule {
     @Singleton
     @Provides
     fun getApplicationContext(@ApplicationContext context: Context) = context
+
+    @Singleton
+    @Provides
+    fun providePreferenceHandler(@ApplicationContext context: Context) : PreferenceHandler = PreferenceHandler(context)
+
 }
