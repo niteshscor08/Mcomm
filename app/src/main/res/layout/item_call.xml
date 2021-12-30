@@ -69,10 +69,10 @@
             android:layout_width="@dimen/space_3x"
             android:layout_height="@dimen/space_4x"
             android:layout_marginStart="@dimen/space_4x"
-            android:layout_marginTop="@dimen/space_2x"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_call_history"
             app:layout_constraintEnd_toStartOf="@+id/iv_videoCall_call"
             app:layout_constraintStart_toEndOf="@id/tv_call_history"
-            app:layout_constraintTop_toBottomOf="@id/tv_name_call"
+            app:layout_constraintTop_toTopOf="@+id/tv_call_history"
             tools:ignore="contentDescription" />
 
         <ImageView
