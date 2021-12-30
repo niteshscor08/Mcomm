@@ -26,8 +26,10 @@ import com.mvine.mcomm.janus.utils.CommonValues
 import com.mvine.mcomm.janus.utils.CommonValues.JANUS_ACCEPTED
 import com.mvine.mcomm.janus.utils.CommonValues.JANUS_DECLINING
 import com.mvine.mcomm.janus.utils.CommonValues.JANUS_HANGUP
+import com.mvine.mcomm.janus.utils.CommonValues.JANUS_INCOMING_CALL
 import com.mvine.mcomm.janus.utils.CommonValues.JANUS_REGISTERED
 import com.mvine.mcomm.janus.utils.CommonValues.JANUS_REGISTRATION_FAILED
+import com.mvine.mcomm.janus.utils.CommonValues.OUTGOING
 import com.mvine.mcomm.presentation.audio.view.AudioActivity
 import com.mvine.mcomm.presentation.common.ListInteraction
 import com.mvine.mcomm.presentation.common.MultipleRowTypeAdapter
@@ -59,7 +61,6 @@ class CallsFragment : Fragment(), ListInteraction<CallData>, CallDialogListener 
     private lateinit var fragmentCallsBinding: FragmentCallsBinding
 
     private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var callDialog: CallDialog
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -151,6 +152,18 @@ class CallsFragment : Fragment(), ListInteraction<CallData>, CallDialogListener 
                 callsAdapter.updateData(prepareRowTypesFromCallData(callData, this))
             }
         })
+        janusManager.janusConnectionStatus.observe(viewLifecycleOwner, {
+            when(it){
+                JANUS_DECLINING, JANUS_HANGUP -> {
+                    (activity as HomeActivity).callDialog.dismiss()
+                }
+                JANUS_ACCEPTED -> {
+                    (activity as HomeActivity).callDialog.dismiss()
+                    val intent = Intent(activity, AudioActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+        })
     }
 
     override fun onItemSelectedForExpansion(position: Int, item: CallData, isExpanded: Boolean) {
@@ -162,49 +175,20 @@ class CallsFragment : Fragment(), ListInteraction<CallData>, CallDialogListener 
     }
 
     override fun onVoiceCallSelected(item: CallData) {
-        item.othercaller_company_id?.let { companyId ->
-            showOutgoingCallPopUp(companyId)
-        }
-        janusManager.connect()
-        observingJanusStatus(item)
-    }
-
-    private fun observingJanusStatus(item: CallData) {
-        janusManager.janusConnectionStatus.observe(viewLifecycleOwner, {
-            when(it){
-                JANUS_REGISTERED -> {
-                    janusManager.call("42010")
-                }
-                JANUS_REGISTRATION_FAILED , JANUS_DECLINING, JANUS_HANGUP -> {
-                    callDialog.dismiss()
-                }
-                JANUS_ACCEPTED -> {
-                    callDialog.dismiss()
-                    val intent = Intent(activity, AudioActivity::class.java)
-                    startActivity(intent)
-                }
+        if((activity as HomeActivity).isRegistered) {
+            item.othercaller_company_id?.let { companyId ->
+                (activity as HomeActivity).showCallsPopUp(companyId, OUTGOING)
             }
-        })
-    }
-
-    private fun showOutgoingCallPopUp(
-        callerName: String
-    ){
-        callDialog = CallDialog(callDialogData = CallDialogData(callerName = callerName, isIncomingDialog = false))
-        activity?.let {
-            callDialog.show(
-                it.supportFragmentManager,
-                CallDialog::class.java.simpleName
-            )
+            janusManager.call("42010")
         }
     }
-
     override fun onCallButtonClick() {
-        callDialog.dismiss()
+        janusManager.pickup()
+        (activity as HomeActivity).callDialog.dismiss()
     }
 
     override fun onCancelCallButtonClick() {
-        callDialog.dismiss()
+        (activity as HomeActivity). callDialog.dismiss()
     }
 
 }

@@ -13,4 +13,6 @@ object CommonValues {
     const val JANUS_HANGINGUP = "hangingup"
     const val JANUS_HANGUP = "hangup"
     const val JANUS_INCOMING_CALL = "incomingcall"
+    const val INCOMING = "incoming_dialog"
+    const val OUTGOING = "outgoing_dialog"
 }

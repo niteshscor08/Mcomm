@@ -43,7 +43,7 @@ class CallsViewModel @Inject constructor(
 
     init {
         getRecentCalls()
-        getUserInfo()
+        //getUserInfo()
     }
 
     private fun getUserInfo(){

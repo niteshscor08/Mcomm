@@ -1,5 +1,6 @@
 package com.mvine.mcomm.data.repository
 
+import com.mvine.mcomm.data.model.response.PersonInfo
 import com.mvine.mcomm.data.repository.dataSource.LoginRemoteRepo
 import com.mvine.mcomm.domain.repository.LoginRepository
 import com.mvine.mcomm.domain.util.Resource
@@ -26,6 +27,10 @@ class LoginRepoImpl @Inject constructor(
             val cookies = response.raw().headers("Set-Cookie")
             Resource.Success(data = validCookie(cookies))
         } else Resource.Error(message = "Error in Logging in")
+    }
+
+    override suspend fun getUserInfo(cookie: String): Resource<PersonInfo> {
+        return loginRemoteRepo.getUserInfo(cookie)
     }
 
     private fun validCookie(cookies: List<String>): String? {

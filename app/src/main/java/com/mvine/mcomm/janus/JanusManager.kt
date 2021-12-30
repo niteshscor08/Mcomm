@@ -20,6 +20,7 @@ import com.mvine.mcomm.janus.utils.CommonValues.JANUS_ACCEPTED
 import com.mvine.mcomm.janus.utils.CommonValues.JANUS_CALLING
 import com.mvine.mcomm.janus.utils.CommonValues.JANUS_DECLINING
 import com.mvine.mcomm.janus.utils.CommonValues.JANUS_HANGUP
+import com.mvine.mcomm.janus.utils.CommonValues.JANUS_INCOMING_CALL
 import com.mvine.mcomm.janus.utils.CommonValues.JANUS_REGISTERED
 import com.mvine.mcomm.janus.utils.CommonValues.JANUS_REGISTRATION_FAILED
 import com.mvine.mcomm.janus.utils.CommonValues.JANUS_RINGING
@@ -42,6 +43,7 @@ class JanusManager @Inject constructor(@ApplicationContext private val context: 
     private var audioFocusRequest: AudioFocusRequest? = null
     private var previousMicrophoneMute: Boolean? = null
     private var mediaPlayer: MediaPlayer? = null
+    private var jsep: JSONObject?= null
     private val _janusConnectionStatus: MutableLiveData<String> =
         MutableLiveData(EMPTY_STRING)
     val janusConnectionStatus: LiveData<String> = _janusConnectionStatus
@@ -69,7 +71,6 @@ class JanusManager @Inject constructor(@ApplicationContext private val context: 
             fd.close()
             prepare()
             isLooping = true
-            start()
         }
     }
 
@@ -113,7 +114,7 @@ class JanusManager @Inject constructor(@ApplicationContext private val context: 
 
     inner class JanusPluginCallbacks : IJanusPluginCallbacks {
         override fun onCallbackError(error: String?) {
-            TODO("Not yet implemented")
+            Log.d("Janus Manager", "onCallbackError, $error")
         }
 
         override fun success(handle: JanusPluginHandle?) {
@@ -132,7 +133,6 @@ class JanusManager @Inject constructor(@ApplicationContext private val context: 
                             }
                             JANUS_REGISTERED -> {
                                 _janusConnectionStatus.postValue(JANUS_REGISTERED)
-                                call("")
                             }
                             JANUS_ACCEPTED -> {
                                 configureAudio(true)
@@ -154,6 +154,10 @@ class JanusManager @Inject constructor(@ApplicationContext private val context: 
                             JANUS_HANGUP -> {
                                 _janusConnectionStatus.postValue(JANUS_HANGUP)
                                 stopRinging()
+                            }
+                            JANUS_INCOMING_CALL -> {
+                                this@JanusManager.jsep = jsep
+                               // pickup(jsep)
                             }
 
                         }
@@ -322,6 +326,7 @@ class JanusManager @Inject constructor(@ApplicationContext private val context: 
     }
 
     fun call(callerInfo: String) {
+        mediaPlayer?.start()
         try {
             val remoteAddress =  "sip:42010@portaluat.mvine.com:5068" // "sip:$callerInfo@${BuildConfig.SIP}"
             var jesp: JSONObject? = null
@@ -388,5 +393,46 @@ class JanusManager @Inject constructor(@ApplicationContext private val context: 
             release()
         }
         mediaPlayer = null
+    }
+
+    fun pickup() {
+        handle!!.createAnswer(object : PluginHandleWebRTCCallbacks(mediaConstraints, jsep, true) {
+            override fun onSuccess(obj: JSONObject?) {
+                super.onSuccess(obj)
+                Log.d("Janus Manager","createAnswer.onSuccess $obj")
+
+                val body = JSONObject().apply { put("request", "accept") }
+                val msg = JSONObject().apply {
+                    put("message", body)
+                    put("jsep", obj)
+                }
+                handle!!.sendMessage(object : PluginHandleSendMessageCallbacks(msg) {
+                    override fun onSuccessSynchronous(obj: JSONObject?) {
+                        super.onSuccessSynchronous(obj)
+                        Log.d("Janus Manager","PluginHandleSendMessageCallbacks.onSuccessSynchronous $obj")
+                    }
+
+                    override fun onSuccesAsynchronous() {
+                        super.onSuccesAsynchronous()
+                        Log.d("Janus Manager","PluginHandleSendMessageCallbacks.onSuccessAsynchronous")
+                    }
+
+                    override fun getMessage(): JSONObject {
+                        Log.d("Janus Manager","PluginHandleSendMessageCallbacks.getMessage")
+                        return super.getMessage()
+                    }
+
+                    override fun onCallbackError(error: String?) {
+                        super.onCallbackError(error)
+                        Log.d("Janus Manager","PluginHandleSendMessageCallbacks: $error")
+                    }
+                })
+            }
+
+            override fun onCallbackError(error: String?) {
+                super.onCallbackError(error)
+                Log.d("Janus Manager","createAnswer.onCallbackError: $error")
+            }
+        })
     }
 }

@@ -20,4 +20,6 @@ class LoginUseCase @Inject constructor(
      * @param password The password of the user
      */
     suspend fun login(username: String, password: String) = loginRepository.login(username, password)
+
+    suspend fun getUserInfo(cookie: String) = loginRepository.getUserInfo(cookie)
 }
