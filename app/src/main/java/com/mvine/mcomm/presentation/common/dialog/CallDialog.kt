@@ -10,7 +10,7 @@ import androidx.fragment.app.DialogFragment
 import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.DialogCallBinding
 
-class CallDialog(private val callDialogListener: CallDialogListener?,
+class CallDialog(private val callDialogListener: CallDialogListener?= null,
                  private val callDialogData: CallDialogData) : DialogFragment() {
 
     private lateinit var dialogBaseBinding: DialogCallBinding

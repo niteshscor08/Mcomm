@@ -1,10 +1,10 @@
 package com.mvine.mcomm.presentation.home.calls
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Typeface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,39 +12,43 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.FragmentCallsBinding
 import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.domain.util.Resource.*
+import com.mvine.mcomm.janus.JanusManager
+import com.mvine.mcomm.janus.utils.CommonValues
+import com.mvine.mcomm.janus.utils.CommonValues.JANUS_ACCEPTED
+import com.mvine.mcomm.janus.utils.CommonValues.JANUS_DECLINING
+import com.mvine.mcomm.janus.utils.CommonValues.JANUS_HANGUP
+import com.mvine.mcomm.janus.utils.CommonValues.JANUS_REGISTERED
+import com.mvine.mcomm.janus.utils.CommonValues.JANUS_REGISTRATION_FAILED
+import com.mvine.mcomm.presentation.audio.view.AudioActivity
 import com.mvine.mcomm.presentation.common.ListInteraction
 import com.mvine.mcomm.presentation.common.MultipleRowTypeAdapter
+import com.mvine.mcomm.presentation.common.dialog.CallDialog
+import com.mvine.mcomm.presentation.common.dialog.CallDialogData
+import com.mvine.mcomm.presentation.common.dialog.CallDialogListener
 import com.mvine.mcomm.presentation.home.HomeActivity
 import com.mvine.mcomm.presentation.home.HomeViewModel
-import com.mvine.mcomm.janus.WebSocketService
-import com.mvine.mcomm.util.MCOMM_SHARED_PREFERENCES
-import com.mvine.mcomm.util.PreferenceHandler
-import com.mvine.mcomm.util.USER_INFO
-import com.mvine.mcomm.util.prepareRowTypesFromCallData
-import com.tinder.scarlet.Message
-import com.tinder.scarlet.WebSocket
+import com.mvine.mcomm.presentation.login.view.ChangePasswordActivity
+import com.mvine.mcomm.util.*
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.android.schedulers.AndroidSchedulers
-import org.antlr.v4.gui.Trees.save
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CallsFragment : Fragment(), ListInteraction<CallData> {
-
-    @Inject
-    lateinit var webSocketService: WebSocketService
+class CallsFragment : Fragment(), ListInteraction<CallData>, CallDialogListener {
 
     @Inject
     lateinit var preferenceHandler: PreferenceHandler
+
+    @Inject
+    lateinit var janusManager: JanusManager
 
     private val callsViewModel: CallsViewModel by viewModels()
 
@@ -55,6 +59,7 @@ class CallsFragment : Fragment(), ListInteraction<CallData> {
     private lateinit var fragmentCallsBinding: FragmentCallsBinding
 
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var callDialog: CallDialog
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,7 +76,6 @@ class CallsFragment : Fragment(), ListInteraction<CallData> {
         subscribeObservers()
         setUpViews()
         initListeners()
-        observeConnection()
         sharedPreferences = requireContext().getSharedPreferences(
             MCOMM_SHARED_PREFERENCES,
             Context.MODE_PRIVATE
@@ -158,35 +162,49 @@ class CallsFragment : Fragment(), ListInteraction<CallData> {
     }
 
     override fun onVoiceCallSelected(item: CallData) {
-        Toast.makeText(
-            activity,
-            "Voice call selected for ${item.othercaller_company_id}",
-            Toast.LENGTH_LONG
-        ).show()
-        webSocketService.sendMessage("Voice call selected for ${item.othercaller_company_id}")
+        item.othercaller_company_id?.let { companyId ->
+            showOutgoingCallPopUp(companyId)
+        }
+        janusManager.connect()
+        observingJanusStatus(item)
     }
 
-    private fun observeConnection() {
-        webSocketService.observeConnection()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ response ->
-                onReceiveResponseConnection(response)
-            }, { error ->
-                Snackbar.make(fragmentCallsBinding.root, error.message.orEmpty(), Snackbar.LENGTH_SHORT).show()
-            })
+    private fun observingJanusStatus(item: CallData) {
+        janusManager.janusConnectionStatus.observe(viewLifecycleOwner, {
+            when(it){
+                JANUS_REGISTERED -> {
+                    janusManager.call("42010")
+                }
+                JANUS_REGISTRATION_FAILED , JANUS_DECLINING, JANUS_HANGUP -> {
+                    callDialog.dismiss()
+                }
+                JANUS_ACCEPTED -> {
+                    callDialog.dismiss()
+                    val intent = Intent(activity, AudioActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+        })
     }
 
-    private fun onReceiveResponseConnection(response: WebSocket.Event) {
-        when (response) {
-            is WebSocket.Event.OnConnectionOpened<*> -> Log.i("connection", "opened")
-            is WebSocket.Event.OnConnectionClosed -> Log.i("connection", "closed")
-            is WebSocket.Event.OnConnectionClosing -> Log.i("connection", "closing connection")
-            is WebSocket.Event.OnConnectionFailed -> Log.i("connection", "failed")
-            is WebSocket.Event.OnMessageReceived -> handleOnMessageReceived(response.message)
+    private fun showOutgoingCallPopUp(
+        callerName: String
+    ){
+        callDialog = CallDialog(callDialogData = CallDialogData(callerName = callerName, isIncomingDialog = false))
+        activity?.let {
+            callDialog.show(
+                it.supportFragmentManager,
+                CallDialog::class.java.simpleName
+            )
         }
     }
 
-    private fun handleOnMessageReceived(message: Message) {
-        Log.i("connection", message.toString())
+    override fun onCallButtonClick() {
+        callDialog.dismiss()
     }
+
+    override fun onCancelCallButtonClick() {
+        callDialog.dismiss()
+    }
+
 }

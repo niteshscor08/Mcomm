@@ -2,22 +2,28 @@ package com.mvine.mcomm.janus
 
 import android.content.Context
 import android.content.Intent
-import android.media.AudioAttributes
-import android.media.AudioFocusRequest
-import android.media.AudioManager
+import android.media.*
 import android.opengl.EGLContext
 import android.os.Build
 import android.util.Log
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.mvine.janusclient.*
 import com.mvine.mcomm.BuildConfig
 import com.mvine.mcomm.data.model.response.PersonInfo
+import com.mvine.mcomm.domain.model.CallData
+import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.janus.request.JanusRegister
-import com.mvine.mcomm.util.LOGIN_TOKEN
-import com.mvine.mcomm.util.MCOMM_SHARED_PREFERENCES
-import com.mvine.mcomm.util.PreferenceHandler
-import com.mvine.mcomm.util.USER_INFO
+import com.mvine.mcomm.janus.utils.CommonValues.JANUS_ACCEPTED
+import com.mvine.mcomm.janus.utils.CommonValues.JANUS_CALLING
+import com.mvine.mcomm.janus.utils.CommonValues.JANUS_DECLINING
+import com.mvine.mcomm.janus.utils.CommonValues.JANUS_HANGUP
+import com.mvine.mcomm.janus.utils.CommonValues.JANUS_REGISTERED
+import com.mvine.mcomm.janus.utils.CommonValues.JANUS_REGISTRATION_FAILED
+import com.mvine.mcomm.janus.utils.CommonValues.JANUS_RINGING
+import com.mvine.mcomm.util.*
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.json.JSONObject
 import org.webrtc.MediaStream
@@ -29,13 +35,16 @@ class JanusManager @Inject constructor(@ApplicationContext private val context: 
     @Inject
     lateinit var preferenceHandler: PreferenceHandler
 
-     private val janusServer = JanusServer(JanusGlobalCallbacks())
-
+    private val janusServer = JanusServer(JanusGlobalCallbacks())
     private var handle: JanusPluginHandle? = null
     private var previousAudioMode: Int? = null
     private lateinit var audioManager: AudioManager
     private var audioFocusRequest: AudioFocusRequest? = null
     private var previousMicrophoneMute: Boolean? = null
+    private var mediaPlayer: MediaPlayer? = null
+    private val _janusConnectionStatus: MutableLiveData<String> =
+        MutableLiveData(EMPTY_STRING)
+    val janusConnectionStatus: LiveData<String> = _janusConnectionStatus
 
 
     private val mediaConstraints = JanusMediaConstraints().apply {
@@ -50,6 +59,18 @@ class JanusManager @Inject constructor(@ApplicationContext private val context: 
         previousAudioMode = audioManager.mode
         createJanusSession()
         initializeMediaContext(context, true, true, false)
+        initializeMediaPlayer()
+    }
+
+    private fun initializeMediaPlayer(){
+        val fd = context.assets.openFd("dialing.ogg")
+        mediaPlayer = MediaPlayer().apply {
+            setDataSource(fd.fileDescriptor, fd.startOffset, fd.length)
+            fd.close()
+            prepare()
+            isLooping = true
+            start()
+        }
     }
 
     private fun createJanusSession() {
@@ -106,11 +127,35 @@ class JanusManager @Inject constructor(@ApplicationContext private val context: 
                     if (msg.has("result")) {
                         val result = msg.getJSONObject("result")
                         when (result.getString("event")) {
-                            "registered" -> {
-                                call()
+                            JANUS_REGISTRATION_FAILED -> {
+                                _janusConnectionStatus.postValue(JANUS_REGISTERED)
                             }
-                            "accepted" ->
+                            JANUS_REGISTERED -> {
+                                _janusConnectionStatus.postValue(JANUS_REGISTERED)
+                                call("")
+                            }
+                            JANUS_ACCEPTED -> {
                                 configureAudio(true)
+                                _janusConnectionStatus.postValue(JANUS_ACCEPTED)
+                                stopRinging()
+                            }
+                            JANUS_CALLING -> {
+                                startRinging()
+                                _janusConnectionStatus.postValue(JANUS_CALLING)
+                            }
+                            JANUS_RINGING -> {
+                                startRinging()
+                                _janusConnectionStatus.postValue(JANUS_RINGING)
+                            }
+                            JANUS_DECLINING -> {
+                                _janusConnectionStatus.postValue(JANUS_DECLINING)
+                                stopRinging()
+                            }
+                            JANUS_HANGUP -> {
+                                _janusConnectionStatus.postValue(JANUS_HANGUP)
+                                stopRinging()
+                            }
+
                         }
                     }
                 }
@@ -136,15 +181,6 @@ class JanusManager @Inject constructor(@ApplicationContext private val context: 
     private fun configureAudio(enable: Boolean) {
         if (enable) {
 
-//            // Use software AEC
-//            WebRtcAudioUtils.setWebRtcBasedAcousticEchoCanceler(true)
-//
-//            // Use sofware NS
-//            WebRtcAudioUtils.setWebRtcBasedNoiseSuppressor(true)
-//
-//            // Use software AGC
-//            WebRtcAudioUtils.setWebRtcBasedAutomaticGainControl(true)
-
             if (previousAudioMode == null)
                 previousAudioMode = audioManager.mode
             // Request audio focus before making any device switch
@@ -161,7 +197,6 @@ class JanusManager @Inject constructor(@ApplicationContext private val context: 
              */
             if (previousMicrophoneMute == null)
                 previousMicrophoneMute = audioManager.isMicrophoneMute
-//            audioManager.isMicrophoneMute = false
         } else {
             audioManager.mode = previousAudioMode ?: AudioManager.MODE_NORMAL
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -270,7 +305,7 @@ class JanusManager @Inject constructor(@ApplicationContext private val context: 
 
     }
 
-    fun initializeMediaContext(
+    private fun initializeMediaContext(
         context: Context?,
         audio: Boolean,
         video: Boolean,
@@ -286,8 +321,9 @@ class JanusManager @Inject constructor(@ApplicationContext private val context: 
         )
     }
 
-    fun call(remoteAddress: String = "sip:42010@portaluat.mvine.com:5068" ) {
+    fun call(callerInfo: String) {
         try {
+            val remoteAddress =  "sip:42010@portaluat.mvine.com:5068" // "sip:$callerInfo@${BuildConfig.SIP}"
             var jesp: JSONObject? = null
             Log.d("JanusMangaer", remoteAddress)
             this@JanusManager.handle!!.createOffer(object :
@@ -323,14 +359,9 @@ class JanusManager @Inject constructor(@ApplicationContext private val context: 
                             super.onCallbackError(error)
                             Log.d("JanusMangaer","PluginHandleSendMessageCallbacks: $error")
                             handle!!.hangUp()
-                            //serviceHandler.sendEmptyMessageDelayed(MSG_STOP_SELF_TIMEOUT, 2000)
-//                            serviceHandler.sendEmptyMessageDelayed(MSG_STOP_SELF_TIMEOUT, 2000)
-//                            stopRinging()
-//                            stopSelf()
                         }
                     })
                 }
-
                 override fun onCallbackError(error: String?) {
                     Log.e("JanusMangaer","onCallBackError: $error")
                 }
@@ -339,40 +370,23 @@ class JanusManager @Inject constructor(@ApplicationContext private val context: 
             Log.i("JanusMangaer",ex.toString())
         }
 
-/*
-        handle!!.createOffer(
-            object : IPluginHandleWebRTCCallbacks {
-                override fun onSuccess(obj: JSONObject?) {
-                    Timber.d("OnSuccess for CreateOffer called")
-                    try {
-                        val body = JSONObject()
-                        val msg = JSONObject()
-                        body.put("audio", true)
-                        body.put("video", true)
-                        msg.put("message", body)
-                        msg.put("jsep", obj)
-                        handle!!.sendMessage(PluginHandleSendMessageCallbacks(msg))
-                    } catch (ex: Exception) {
-                        Timber.e(ex)
-                    }
-                }
+    }
 
-                override fun getTrickle(): Boolean {
-                    return true
-                }
+    fun startRinging() {
+        stopRinging()
+        val notificationUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE)
+        mediaPlayer = MediaPlayer.create(context, notificationUri).apply {
+            //            prepare()
+            isLooping = true
+            start()
+        }
+    }
 
-                override fun onCallbackError(error: String?) {
-                    Timber.e(error)
-                }
-
-                override fun getJsep(): JSONObject? {
-                    return null
-                }
-
-                override fun getMedia(): JanusMediaConstraints {
-                    return JanusMediaConstraints()
-                }
-            })
-*/
+    fun stopRinging() {
+        mediaPlayer?.apply {
+            stop()
+            release()
+        }
+        mediaPlayer = null
     }
 }
