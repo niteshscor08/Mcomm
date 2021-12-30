@@ -8,6 +8,7 @@ import com.mvine.mcomm.presentation.common.GsonMessageAdapter
 import com.mvine.mcomm.janus.WebSocketService
 import com.mvine.mcomm.util.LOGIN_TOKEN
 import com.mvine.mcomm.util.MCOMM_SHARED_PREFERENCES
+import com.mvine.mcomm.util.PreferenceHandler
 import com.tinder.scarlet.Lifecycle
 import com.tinder.scarlet.Scarlet
 import com.tinder.scarlet.lifecycle.android.AndroidLifecycle
@@ -72,4 +73,8 @@ object ServiceModule {
     @Singleton
     @Provides
     fun provideWebSocketService(scarlet: Scarlet) : WebSocketService= scarlet.create(WebSocketService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideJanusManager(@ApplicationContext context: Context, preferenceHandler: PreferenceHandler) : JanusManager = JanusManager(context, preferenceHandler)
 }

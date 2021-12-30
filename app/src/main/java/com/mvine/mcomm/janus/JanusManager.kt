@@ -31,10 +31,7 @@ import org.webrtc.MediaStream
 import org.webrtc.PeerConnection
 import javax.inject.Inject
 
-class JanusManager @Inject constructor(@ApplicationContext private val context: Context) {
-
-    @Inject
-    lateinit var preferenceHandler: PreferenceHandler
+class JanusManager(private val context: Context, private val preferenceHandler: PreferenceHandler) {
 
     private val janusServer = JanusServer(JanusGlobalCallbacks())
     private var handle: JanusPluginHandle? = null
