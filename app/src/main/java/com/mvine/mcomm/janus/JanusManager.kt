@@ -34,7 +34,7 @@ import javax.inject.Inject
 class JanusManager(private val context: Context, private val preferenceHandler: PreferenceHandler) {
 
     private val janusServer = JanusServer(JanusGlobalCallbacks())
-    private var handle: JanusPluginHandle? = null
+    var handle: JanusPluginHandle? = null
     private var previousAudioMode: Int? = null
     private lateinit var audioManager: AudioManager
     private var audioFocusRequest: AudioFocusRequest? = null
@@ -46,7 +46,7 @@ class JanusManager(private val context: Context, private val preferenceHandler: 
     val janusConnectionStatus: LiveData<String> = _janusConnectionStatus
 
 
-    private val mediaConstraints = JanusMediaConstraints().apply {
+    internal val mediaConstraints = JanusMediaConstraints().apply {
         sendAudio = true
         recvAudio = true
         video = null
@@ -392,44 +392,4 @@ class JanusManager(private val context: Context, private val preferenceHandler: 
         mediaPlayer = null
     }
 
-    fun pickup() {
-        handle!!.createAnswer(object : PluginHandleWebRTCCallbacks(mediaConstraints, jsep, true) {
-            override fun onSuccess(obj: JSONObject?) {
-                super.onSuccess(obj)
-                Log.d("Janus Manager","createAnswer.onSuccess $obj")
-
-                val body = JSONObject().apply { put("request", "accept") }
-                val msg = JSONObject().apply {
-                    put("message", body)
-                    put("jsep", obj)
-                }
-                handle!!.sendMessage(object : PluginHandleSendMessageCallbacks(msg) {
-                    override fun onSuccessSynchronous(obj: JSONObject?) {
-                        super.onSuccessSynchronous(obj)
-                        Log.d("Janus Manager","PluginHandleSendMessageCallbacks.onSuccessSynchronous $obj")
-                    }
-
-                    override fun onSuccesAsynchronous() {
-                        super.onSuccesAsynchronous()
-                        Log.d("Janus Manager","PluginHandleSendMessageCallbacks.onSuccessAsynchronous")
-                    }
-
-                    override fun getMessage(): JSONObject {
-                        Log.d("Janus Manager","PluginHandleSendMessageCallbacks.getMessage")
-                        return super.getMessage()
-                    }
-
-                    override fun onCallbackError(error: String?) {
-                        super.onCallbackError(error)
-                        Log.d("Janus Manager","PluginHandleSendMessageCallbacks: $error")
-                    }
-                })
-            }
-
-            override fun onCallbackError(error: String?) {
-                super.onCallbackError(error)
-                Log.d("Janus Manager","createAnswer.onCallbackError: $error")
-            }
-        })
-    }
 }
