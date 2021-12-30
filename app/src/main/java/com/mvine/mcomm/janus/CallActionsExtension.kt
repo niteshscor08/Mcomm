@@ -7,7 +7,6 @@ import org.json.JSONObject
 
 fun JanusManager.call(sipRemoteAddress: String) {
     try {
-        //"sip:42010@portaluat.mvine.com:5068" // "sip:$callerInfo@${BuildConfig.SIP}"
         var jesp: JSONObject? = null
         Log.d("JanusManager", sipRemoteAddress)
         handle!!.createOffer(object :
