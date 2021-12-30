@@ -81,6 +81,7 @@
                         app:layout_constraintTop_toTopOf="@+id/audio_group" />
 
                     <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/timer"
                         style="@style/text_open_sans_14"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

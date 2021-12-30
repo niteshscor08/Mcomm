@@ -1,6 +1,7 @@
 package com.mvine.mcomm.presentation.audio.view
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import com.mvine.mcomm.domain.model.CallState
 class AudioDialogFragment(private val audioDialogListener: AudioDialogListener, private val callState: CallState) : DialogFragment(){
 
     private lateinit var audioDialogBinding: FragmentAudioDialogBinding
+    private var totalSecond = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,12 +54,37 @@ class AudioDialogFragment(private val audioDialogListener: AudioDialogListener, 
                 .error(R.mipmap.ic_launcher_round)
             Glide.with(this).load(url).apply(options).into(audioDialogBinding.userImage)
         }
+
+
     }
 
     private fun setUp(){
         audioDialogBinding.bottomBarCallLayout.bbEndCall.setOnClickListener {
             audioDialogListener.onEndCallClick()
         }
+        configureTimer()
+    }
+
+    private fun configureTimer(){
+        val timer = object: CountDownTimer(2000000000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                countdown()
+            }
+            override fun onFinish() {
+            }
+        }
+        timer.start()
+    }
+
+    fun countdown() {
+        var minutes: Int = 0
+        var seconds: Int = 0
+        totalSecond += 1
+        minutes = (totalSecond % 3600) / 60
+        seconds = (totalSecond % 3600) % 60
+        var displayMin = String.format("%02d",minutes )
+        var displaySec = String.format("%02d",seconds )
+        audioDialogBinding.timer.text = "$displayMin:$displaySec"
     }
 
 }
