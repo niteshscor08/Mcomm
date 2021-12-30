@@ -7,12 +7,18 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.mvine.mcomm.BuildConfig
 import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.DialogCallBinding
+import com.mvine.mcomm.domain.model.CallState
+
 
 class CallDialog(private val callDialogListener: CallDialogListener,
                  private val callDialogData: CallDialogData,
-                private val dialogType: String) : DialogFragment() {
+                private val dialogType: String,
+                private val callState: CallState) : DialogFragment() {
 
     private lateinit var dialogBaseBinding: DialogCallBinding
 
@@ -40,6 +46,7 @@ class CallDialog(private val callDialogListener: CallDialogListener,
 
     private fun setUp() {
         setDialogTypeAndUi()
+        setUiData()
         onButtonClickEvent()
     }
 
@@ -50,6 +57,20 @@ class CallDialog(private val callDialogListener: CallDialogListener,
         callDialogData.isIncomingDialog?.let {
             dialogBaseBinding.dialogCall.isVisible = it
             dialogBaseBinding.dialogTitle.text = if(it){ context?.getString(R.string.incoming_call)} else{ context?.getString(R.string.outgoing_call) }
+        }
+    }
+
+    private fun setUiData(){
+        callState.remoteDisplayName?.let {
+            dialogBaseBinding.dialogCallerName.text = it
+        }
+        callState.remoteUrl?.let {
+            val url = "${BuildConfig.BASE_URL}$it"
+            val options: RequestOptions = RequestOptions()
+                .centerCrop()
+                .placeholder(R.mipmap.ic_launcher_round)
+                .error(R.mipmap.ic_launcher_round)
+            Glide.with(this).load(url).apply(options).into(dialogBaseBinding.dialogTitleImg)
         }
     }
 

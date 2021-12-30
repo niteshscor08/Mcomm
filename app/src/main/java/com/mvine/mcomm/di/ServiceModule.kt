@@ -3,6 +3,7 @@ package com.mvine.mcomm.di
 import android.app.Application
 import android.content.Context
 import com.mvine.mcomm.BuildConfig
+import com.mvine.mcomm.domain.model.CallState
 import com.mvine.mcomm.janus.JanusManager
 import com.mvine.mcomm.presentation.common.GsonMessageAdapter
 import com.mvine.mcomm.janus.WebSocketService
@@ -76,5 +77,10 @@ object ServiceModule {
 
     @Singleton
     @Provides
-    fun provideJanusManager(@ApplicationContext context: Context, preferenceHandler: PreferenceHandler) : JanusManager = JanusManager(context, preferenceHandler)
+    fun provideCallState() : CallState= CallState()
+
+    @Singleton
+    @Provides
+    fun provideJanusManager(@ApplicationContext context: Context, preferenceHandler: PreferenceHandler, callState: CallState) : JanusManager =
+        JanusManager(context, preferenceHandler, callState)
 }

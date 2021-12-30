@@ -6,10 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.mvine.mcomm.BuildConfig
 import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.FragmentAudioDialogBinding
+import com.mvine.mcomm.domain.model.CallState
 
-class AudioDialogFragment(private val audioDialogListener: AudioDialogListener) : DialogFragment(){
+class AudioDialogFragment(private val audioDialogListener: AudioDialogListener, private val callState: CallState) : DialogFragment(){
 
     private lateinit var audioDialogBinding: FragmentAudioDialogBinding
 
@@ -29,11 +33,25 @@ class AudioDialogFragment(private val audioDialogListener: AudioDialogListener) 
         return audioDialogBinding.root
     }
 
-    override fun onStart() {
-        super.onStart()
-        val width = ViewGroup.LayoutParams.MATCH_PARENT
-        val height = ViewGroup.LayoutParams.MATCH_PARENT
-        dialog?.window?.setLayout(width, height)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(STYLE_NORMAL,
+            android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        callState.remoteDisplayName?.let {
+            audioDialogBinding.audioCallerName.text = it
+        }
+        callState.remoteUrl?.let {
+            val url = "${BuildConfig.BASE_URL}$it"
+            val options: RequestOptions = RequestOptions()
+                .centerCrop()
+                .placeholder(R.mipmap.ic_launcher_round)
+                .error(R.mipmap.ic_launcher_round)
+            Glide.with(this).load(url).apply(options).into(audioDialogBinding.userImage)
+        }
     }
 
     private fun setUp(){

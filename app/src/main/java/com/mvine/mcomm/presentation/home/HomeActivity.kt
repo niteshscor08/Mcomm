@@ -14,6 +14,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.ActivityHomeBinding
+import com.mvine.mcomm.domain.model.CallState
 import com.mvine.mcomm.janus.JanusManager
 import com.mvine.mcomm.janus.decline
 import com.mvine.mcomm.janus.hangUp
@@ -51,6 +52,9 @@ class HomeActivity : AppCompatActivity(), CallDialogListener, AudioDialogListene
 
     @Inject
     lateinit var janusManager: JanusManager
+
+    @Inject
+    lateinit var callState: CallState
 
     private lateinit var audioDialog : AudioDialogFragment
 
@@ -139,26 +143,43 @@ class HomeActivity : AppCompatActivity(), CallDialogListener, AudioDialogListene
                     isRegistered = false
                 }
                 JANUS_INCOMING_CALL -> {
-                    showCallsPopUp("", INCOMING)
+                    showCallsPopUp("", INCOMING, callState.remoteDisplayName, callState.remoteUrl)
                 }
                 JANUS_DECLINING, JANUS_HANGUP -> {
                     callDialog.dismiss()
+                    audioDialog.dismiss()
                 }
                 JANUS_ACCEPTED -> {
                     callDialog.dismiss()
-                    audioDialog = AudioDialogFragment(this)
+                    audioDialog = AudioDialogFragment(this, callState)
                     audioDialog.show(this.supportFragmentManager, AudioDialogFragment::class.java.simpleName)
                 }
             }
         })
     }
 
-    fun showCallsPopUp(callerName: String, dialogType: String ){
+    fun showCallsPopUp(callerName: String, dialogType: String, displayName: String?, url : String?){
         if(dialogType == INCOMING){
-            callDialog = CallDialog(callDialogListener= this,callDialogData = CallDialogData(callerName = callerName, isIncomingDialog = true), dialogType = INCOMING)
+            callDialog = CallDialog(
+                callDialogListener= this,
+                callDialogData = CallDialogData(callerName = callerName, isIncomingDialog = true),
+                dialogType = INCOMING,
+                callState = callState.apply {
+                    remoteDisplayName = displayName
+                    remoteUrl = url
+                }
+            )
             callDialog.show(this.supportFragmentManager, CallDialog::class.java.simpleName)
         }else{
-            callDialog = CallDialog(callDialogListener= this, callDialogData = CallDialogData(callerName = callerName, isIncomingDialog = false), dialogType = OUTGOING)
+            callDialog = CallDialog(
+                callDialogListener= this,
+                callDialogData = CallDialogData(callerName = callerName, isIncomingDialog = false),
+                dialogType = OUTGOING,
+                callState = callState.apply {
+                    remoteDisplayName = displayName
+                    remoteUrl = url
+                }
+            )
             callDialog.show(this.supportFragmentManager, CallDialog::class.java.simpleName)
         }
     }

@@ -98,7 +98,7 @@ class ContactsFragment : Fragment(), ListInteraction<ContactsData> {
     override fun onVoiceCallSelected(item: ContactsData) {
         if((activity as HomeActivity).isRegistered) {
             item.STX?.let { companyId ->
-                (activity as HomeActivity).showCallsPopUp(companyId, CommonValues.OUTGOING)
+                (activity as HomeActivity).showCallsPopUp(companyId, CommonValues.OUTGOING, item.username, item.image_src)
             }
             item.STX?.let { janusManager.call(it.toSIPRemoteAddress()) }
         }

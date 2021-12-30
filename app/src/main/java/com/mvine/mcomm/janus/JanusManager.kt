@@ -1,21 +1,16 @@
 package com.mvine.mcomm.janus
 
 import android.content.Context
-import android.content.Intent
 import android.media.*
 import android.opengl.EGLContext
 import android.os.Build
 import android.util.Log
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.mvine.janusclient.*
 import com.mvine.mcomm.BuildConfig
 import com.mvine.mcomm.data.model.response.PersonInfo
-import com.mvine.mcomm.domain.model.CallData
-import com.mvine.mcomm.domain.util.Resource
-import com.mvine.mcomm.janus.request.JanusRegister
+import com.mvine.mcomm.domain.model.CallState
 import com.mvine.mcomm.janus.utils.CommonValues.JANUS_ACCEPTED
 import com.mvine.mcomm.janus.utils.CommonValues.JANUS_CALLING
 import com.mvine.mcomm.janus.utils.CommonValues.JANUS_DECLINING
@@ -25,13 +20,11 @@ import com.mvine.mcomm.janus.utils.CommonValues.JANUS_REGISTERED
 import com.mvine.mcomm.janus.utils.CommonValues.JANUS_REGISTRATION_FAILED
 import com.mvine.mcomm.janus.utils.CommonValues.JANUS_RINGING
 import com.mvine.mcomm.util.*
-import dagger.hilt.android.qualifiers.ApplicationContext
 import org.json.JSONObject
 import org.webrtc.MediaStream
 import org.webrtc.PeerConnection
-import javax.inject.Inject
 
-class JanusManager(private val context: Context, private val preferenceHandler: PreferenceHandler) {
+class JanusManager(private val context: Context, private val preferenceHandler: PreferenceHandler, private val callState: CallState) {
 
     private val janusServer = JanusServer(JanusGlobalCallbacks())
     var handle: JanusPluginHandle? = null
@@ -153,6 +146,9 @@ class JanusManager(private val context: Context, private val preferenceHandler: 
                                 stopRinging()
                             }
                             JANUS_INCOMING_CALL -> {
+                                callState.remoteDisplayName = result.getString("displayname").trim('"')
+                                callState.remoteUsername  = result.getString("username")
+                                callState.remoteUrl =  "/images/profile.gif"
                                 startRinging()
                                 _janusConnectionStatus.postValue(JANUS_INCOMING_CALL)
                                 this@JanusManager.jsep = jsep
