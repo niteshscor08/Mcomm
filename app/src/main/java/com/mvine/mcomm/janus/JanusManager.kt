@@ -36,7 +36,7 @@ class JanusManager @Inject constructor(@ApplicationContext private val context: 
     lateinit var preferenceHandler: PreferenceHandler
 
     private val janusServer = JanusServer(JanusGlobalCallbacks())
-    private var handle: JanusPluginHandle? = null
+    var handle: JanusPluginHandle? = null
     private var previousAudioMode: Int? = null
     private lateinit var audioManager: AudioManager
     private var audioFocusRequest: AudioFocusRequest? = null
@@ -47,7 +47,7 @@ class JanusManager @Inject constructor(@ApplicationContext private val context: 
     val janusConnectionStatus: LiveData<String> = _janusConnectionStatus
 
 
-    private val mediaConstraints = JanusMediaConstraints().apply {
+    internal val mediaConstraints = JanusMediaConstraints().apply {
         sendAudio = true
         recvAudio = true
         video = null
@@ -319,57 +319,6 @@ class JanusManager @Inject constructor(@ApplicationContext private val context: 
             videoHwAcceleration,
             eglContext
         )
-    }
-
-    fun call(callerInfo: String) {
-        try {
-            val remoteAddress =  "sip:42010@portaluat.mvine.com:5068" // "sip:$callerInfo@${BuildConfig.SIP}"
-            var jesp: JSONObject? = null
-            Log.d("JanusMangaer", remoteAddress)
-            this@JanusManager.handle!!.createOffer(object :
-                PluginHandleWebRTCCallbacks(mediaConstraints, null, true) {
-                override fun onSuccess(obj: JSONObject?) {
-
-                    Log.d("JanusMangaer","createOffer.onSuccess $obj")
-                    val msg = JSONObject()
-                    val body = JSONObject()
-                    body.put("request", "call")
-                    var addr = remoteAddress
-                    body.put("uri", addr)
-                    msg.put("message", body)
-                    msg.put("jsep", obj)
-                    this@JanusManager.handle!!.sendMessage(object :
-                        PluginHandleSendMessageCallbacks(msg) {
-                        override fun onSuccessSynchronous(obj: JSONObject?) {
-                            super.onSuccessSynchronous(obj)
-                            Log.d("JanusMangaer","PluginHandleSendMessageCallbacks.onSuccessSynchronous $obj")
-                        }
-
-                        override fun onSuccesAsynchronous() {
-                            super.onSuccesAsynchronous()
-                            Log.d("JanusMangaer","PluginHandleSendMessageCallbacks.onSuccesAsynchronous")
-                        }
-
-                        override fun getMessage(): JSONObject {
-                            Log.d("JanusMangaer","PluginHandleSendMessageCallbacks.getMessage")
-                            return super.getMessage()
-                        }
-
-                        override fun onCallbackError(error: String?) {
-                            super.onCallbackError(error)
-                            Log.d("JanusMangaer","PluginHandleSendMessageCallbacks: $error")
-                            handle!!.hangUp()
-                        }
-                    })
-                }
-                override fun onCallbackError(error: String?) {
-                    Log.e("JanusMangaer","onCallBackError: $error")
-                }
-            })
-        } catch (ex: Exception) {
-            Log.i("JanusMangaer",ex.toString())
-        }
-
     }
 
     fun startRinging() {

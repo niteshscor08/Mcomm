@@ -22,6 +22,7 @@ import com.mvine.mcomm.databinding.FragmentCallsBinding
 import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.domain.util.Resource.*
 import com.mvine.mcomm.janus.JanusManager
+import com.mvine.mcomm.janus.call
 import com.mvine.mcomm.janus.utils.CommonValues
 import com.mvine.mcomm.janus.utils.CommonValues.JANUS_ACCEPTED
 import com.mvine.mcomm.janus.utils.CommonValues.JANUS_DECLINING
