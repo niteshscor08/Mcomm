@@ -1,7 +1,6 @@
 package com.mvine.mcomm.presentation.home
 
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
@@ -16,14 +15,23 @@ import androidx.navigation.ui.setupWithNavController
 import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.ActivityHomeBinding
 import com.mvine.mcomm.janus.JanusManager
+import com.mvine.mcomm.janus.decline
+import com.mvine.mcomm.janus.hangUp
+import com.mvine.mcomm.janus.pickup
 import com.mvine.mcomm.janus.utils.CommonValues
 import com.mvine.mcomm.janus.utils.CommonValues.INCOMING
+import com.mvine.mcomm.janus.utils.CommonValues.JANUS_ACCEPTED
+import com.mvine.mcomm.janus.utils.CommonValues.JANUS_DECLINING
+import com.mvine.mcomm.janus.utils.CommonValues.JANUS_HANGUP
 import com.mvine.mcomm.janus.utils.CommonValues.JANUS_INCOMING_CALL
 import com.mvine.mcomm.janus.utils.CommonValues.JANUS_REGISTERED
 import com.mvine.mcomm.janus.utils.CommonValues.JANUS_REGISTRATION_FAILED
-import com.mvine.mcomm.presentation.audio.view.AudioActivity
+import com.mvine.mcomm.janus.utils.CommonValues.OUTGOING
+import com.mvine.mcomm.presentation.audio.view.AudioDialogFragment
+import com.mvine.mcomm.presentation.audio.view.AudioDialogListener
 import com.mvine.mcomm.presentation.common.dialog.CallDialog
 import com.mvine.mcomm.presentation.common.dialog.CallDialogData
+import com.mvine.mcomm.presentation.common.dialog.CallDialogListener
 import com.mvine.mcomm.util.showKeyboard
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -33,7 +41,7 @@ import javax.inject.Inject
  */
 
 @AndroidEntryPoint
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(), CallDialogListener, AudioDialogListener {
 
     private lateinit var activityHomeBinding: ActivityHomeBinding
 
@@ -43,6 +51,8 @@ class HomeActivity : AppCompatActivity() {
 
     @Inject
     lateinit var janusManager: JanusManager
+
+    private lateinit var audioDialog : AudioDialogFragment
 
     var isRegistered : Boolean = false
     lateinit var callDialog: CallDialog
@@ -129,7 +139,15 @@ class HomeActivity : AppCompatActivity() {
                     isRegistered = false
                 }
                 JANUS_INCOMING_CALL -> {
-
+                    showCallsPopUp("", INCOMING)
+                }
+                JANUS_DECLINING, JANUS_HANGUP -> {
+                    callDialog.dismiss()
+                }
+                JANUS_ACCEPTED -> {
+                    callDialog.dismiss()
+                    audioDialog = AudioDialogFragment(this)
+                    audioDialog.show(this.supportFragmentManager, AudioDialogFragment::class.java.simpleName)
                 }
             }
         })
@@ -137,12 +155,31 @@ class HomeActivity : AppCompatActivity() {
 
     fun showCallsPopUp(callerName: String, dialogType: String ){
         if(dialogType == INCOMING){
-            callDialog = CallDialog(callDialogData = CallDialogData(callerName = callerName, isIncomingDialog = true))
+            callDialog = CallDialog(callDialogListener= this,callDialogData = CallDialogData(callerName = callerName, isIncomingDialog = true), dialogType = INCOMING)
             callDialog.show(this.supportFragmentManager, CallDialog::class.java.simpleName)
         }else{
-            callDialog = CallDialog(callDialogData = CallDialogData(callerName = callerName, isIncomingDialog = false))
+            callDialog = CallDialog(callDialogListener= this, callDialogData = CallDialogData(callerName = callerName, isIncomingDialog = false), dialogType = OUTGOING)
             callDialog.show(this.supportFragmentManager, CallDialog::class.java.simpleName)
         }
+    }
+
+    override fun onCallButtonClick() {
+        janusManager.pickup()
+        callDialog.dismiss()
+    }
+
+    override fun onCancelCallButtonClick(dialogType: String) {
+        if(dialogType == INCOMING){
+            janusManager.decline()
+        }else{
+            janusManager.hangUp()
+        }
+        callDialog.dismiss()
+    }
+
+    override fun onEndCallClick() {
+        audioDialog.dismiss()
+        janusManager.hangUp()
     }
 
 }

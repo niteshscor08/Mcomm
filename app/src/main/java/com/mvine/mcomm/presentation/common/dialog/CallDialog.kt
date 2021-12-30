@@ -10,8 +10,9 @@ import androidx.fragment.app.DialogFragment
 import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.DialogCallBinding
 
-class CallDialog(private val callDialogListener: CallDialogListener?= null,
-                 private val callDialogData: CallDialogData) : DialogFragment() {
+class CallDialog(private val callDialogListener: CallDialogListener,
+                 private val callDialogData: CallDialogData,
+                private val dialogType: String) : DialogFragment() {
 
     private lateinit var dialogBaseBinding: DialogCallBinding
 
@@ -57,7 +58,7 @@ class CallDialog(private val callDialogListener: CallDialogListener?= null,
             callDialogListener?.onCallButtonClick()
         }
         dialogBaseBinding.dialogCallEnd.setOnClickListener {
-            callDialogListener?.onCancelCallButtonClick()
+            callDialogListener?.onCancelCallButtonClick(dialogType)
         }
     }
 

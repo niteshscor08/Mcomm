@@ -15,17 +15,25 @@ import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.FragmentContactsBinding
 import com.mvine.mcomm.domain.model.ContactsData
 import com.mvine.mcomm.domain.util.Resource
+import com.mvine.mcomm.janus.JanusManager
+import com.mvine.mcomm.janus.call
+import com.mvine.mcomm.janus.utils.CommonValues
+import com.mvine.mcomm.janus.utils.toSIPRemoteAddress
 import com.mvine.mcomm.presentation.common.ListInteraction
 import com.mvine.mcomm.presentation.common.MultipleRowTypeAdapter
 import com.mvine.mcomm.presentation.home.HomeActivity
 import com.mvine.mcomm.presentation.home.HomeViewModel
 import com.mvine.mcomm.util.prepareRowTypesFromContactsData
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ContactsFragment : Fragment(), ListInteraction<ContactsData> {
 
     private val contactsViewModel: ContactsViewModel by viewModels()
+
+    @Inject
+    lateinit var janusManager: JanusManager
 
     private lateinit var fragmentContactsBinding: FragmentContactsBinding
 
@@ -88,10 +96,11 @@ class ContactsFragment : Fragment(), ListInteraction<ContactsData> {
     }
 
     override fun onVoiceCallSelected(item: ContactsData) {
-        Toast.makeText(
-            activity,
-            "Voice call selected for ${item.username}",
-            Toast.LENGTH_LONG
-        ).show()
+        if((activity as HomeActivity).isRegistered) {
+            item.STX?.let { companyId ->
+                (activity as HomeActivity).showCallsPopUp(companyId, CommonValues.OUTGOING)
+            }
+            item.STX?.let { janusManager.call(it.toSIPRemoteAddress()) }
+        }
     }
 }

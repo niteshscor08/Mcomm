@@ -55,7 +55,8 @@ fun JanusManager.call(sipRemoteAddress: String) {
 
 }
 
-fun JanusManager.pickup(jsep: JSONObject?) {
+fun JanusManager.pickup() {
+    val jsep: JSONObject? = jsep
     handle!!.createAnswer(object : PluginHandleWebRTCCallbacks(mediaConstraints, jsep, true) {
         override fun onSuccess(obj: JSONObject?) {
             super.onSuccess(obj)

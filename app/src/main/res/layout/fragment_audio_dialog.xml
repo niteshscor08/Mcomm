@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/mcomm_blue_light_tint"
-        tools:context=".presentation.audio.view.AudioActivity">
+        tools:context=".presentation.audio.view.AudioDialogFragment">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/audio_appbar"
@@ -99,7 +99,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_mcomm_blue_circle"
-            app:layout_constraintBottom_toTopOf="@+id/include"
+            app:layout_constraintBottom_toTopOf="@+id/bottom_bar_call_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/audio_appbar" />
@@ -115,7 +115,7 @@
             app:layout_constraintTop_toTopOf="@+id/appCompatImageView4" />
 
         <include
-            android:id="@+id/include"
+            android:id="@+id/bottom_bar_call_layout"
             layout="@layout/item_bottom_call_layout"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

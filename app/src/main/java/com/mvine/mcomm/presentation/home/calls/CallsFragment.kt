@@ -12,7 +12,6 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,15 +22,14 @@ import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.domain.util.Resource.*
 import com.mvine.mcomm.janus.JanusManager
 import com.mvine.mcomm.janus.call
-import com.mvine.mcomm.janus.utils.CommonValues
+import com.mvine.mcomm.janus.hangUp
 import com.mvine.mcomm.janus.utils.CommonValues.JANUS_ACCEPTED
 import com.mvine.mcomm.janus.utils.CommonValues.JANUS_DECLINING
 import com.mvine.mcomm.janus.utils.CommonValues.JANUS_HANGUP
-import com.mvine.mcomm.janus.utils.CommonValues.JANUS_INCOMING_CALL
-import com.mvine.mcomm.janus.utils.CommonValues.JANUS_REGISTERED
-import com.mvine.mcomm.janus.utils.CommonValues.JANUS_REGISTRATION_FAILED
 import com.mvine.mcomm.janus.utils.CommonValues.OUTGOING
-import com.mvine.mcomm.presentation.audio.view.AudioActivity
+import com.mvine.mcomm.janus.utils.toSIPRemoteAddress
+import com.mvine.mcomm.presentation.audio.view.AudioDialogFragment
+import com.mvine.mcomm.presentation.audio.view.AudioDialogListener
 import com.mvine.mcomm.presentation.common.ListInteraction
 import com.mvine.mcomm.presentation.common.MultipleRowTypeAdapter
 import com.mvine.mcomm.presentation.common.dialog.CallDialog
@@ -39,13 +37,12 @@ import com.mvine.mcomm.presentation.common.dialog.CallDialogData
 import com.mvine.mcomm.presentation.common.dialog.CallDialogListener
 import com.mvine.mcomm.presentation.home.HomeActivity
 import com.mvine.mcomm.presentation.home.HomeViewModel
-import com.mvine.mcomm.presentation.login.view.ChangePasswordActivity
 import com.mvine.mcomm.util.*
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CallsFragment : Fragment(), ListInteraction<CallData>, CallDialogListener {
+class CallsFragment : Fragment(), ListInteraction<CallData> {
 
     @Inject
     lateinit var preferenceHandler: PreferenceHandler
@@ -153,18 +150,6 @@ class CallsFragment : Fragment(), ListInteraction<CallData>, CallDialogListener 
                 callsAdapter.updateData(prepareRowTypesFromCallData(callData, this))
             }
         })
-        janusManager.janusConnectionStatus.observe(viewLifecycleOwner, {
-            when(it){
-                JANUS_DECLINING, JANUS_HANGUP -> {
-                    (activity as HomeActivity).callDialog.dismiss()
-                }
-                JANUS_ACCEPTED -> {
-                    (activity as HomeActivity).callDialog.dismiss()
-                    val intent = Intent(activity, AudioActivity::class.java)
-                    startActivity(intent)
-                }
-            }
-        })
     }
 
     override fun onItemSelectedForExpansion(position: Int, item: CallData, isExpanded: Boolean) {
@@ -180,16 +165,8 @@ class CallsFragment : Fragment(), ListInteraction<CallData>, CallDialogListener 
             item.othercaller_company_id?.let { companyId ->
                 (activity as HomeActivity).showCallsPopUp(companyId, OUTGOING)
             }
-            janusManager.call("42010")
+            item.othercaller_stx?.let { janusManager.call(it.toSIPRemoteAddress()) }
         }
-    }
-    override fun onCallButtonClick() {
-        janusManager.pickup()
-        (activity as HomeActivity).callDialog.dismiss()
-    }
-
-    override fun onCancelCallButtonClick() {
-        (activity as HomeActivity). callDialog.dismiss()
     }
 
 }
