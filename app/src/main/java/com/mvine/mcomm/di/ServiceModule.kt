@@ -4,7 +4,9 @@ import android.app.Application
 import android.content.Context
 import com.mvine.mcomm.BuildConfig
 import com.mvine.mcomm.domain.model.CallState
+import com.mvine.mcomm.janus.AudioFocusHandler
 import com.mvine.mcomm.janus.JanusManager
+import com.mvine.mcomm.janus.MediaPlayerHandler
 import com.mvine.mcomm.presentation.common.GsonMessageAdapter
 import com.mvine.mcomm.janus.WebSocketService
 import com.mvine.mcomm.util.LOGIN_TOKEN
@@ -77,10 +79,26 @@ object ServiceModule {
 
     @Singleton
     @Provides
+    fun provideMediaPlayerHandler(@ApplicationContext context: Context) : MediaPlayerHandler = MediaPlayerHandler(context)
+
+    @Singleton
+    @Provides
+    fun provideAudioFocusHandler(@ApplicationContext context: Context) : AudioFocusHandler = AudioFocusHandler(context)
+
+    @Singleton
+    @Provides
     fun provideCallState() : CallState= CallState()
 
     @Singleton
     @Provides
-    fun provideJanusManager(@ApplicationContext context: Context, preferenceHandler: PreferenceHandler, callState: CallState) : JanusManager =
-        JanusManager(context, preferenceHandler, callState)
+    fun provideJanusManager(@ApplicationContext context: Context,
+                            preferenceHandler: PreferenceHandler,
+                            mediaPlayerHandler: MediaPlayerHandler,
+                            audioFocusHandler: AudioFocusHandler,
+                            callState: CallState) : JanusManager =
+        JanusManager(context,
+            preferenceHandler,
+            mediaPlayerHandler,
+            callState,
+            audioFocusHandler)
 }

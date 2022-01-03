@@ -1,7 +1,6 @@
 package com.mvine.mcomm.presentation.home.calls
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Typeface
 import android.os.Bundle
@@ -21,20 +20,11 @@ import com.mvine.mcomm.databinding.FragmentCallsBinding
 import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.domain.util.Resource.*
 import com.mvine.mcomm.janus.JanusManager
-import com.mvine.mcomm.janus.call
-import com.mvine.mcomm.janus.hangUp
-import com.mvine.mcomm.janus.utils.CommonValues.JANUS_ACCEPTED
-import com.mvine.mcomm.janus.utils.CommonValues.JANUS_DECLINING
-import com.mvine.mcomm.janus.utils.CommonValues.JANUS_HANGUP
-import com.mvine.mcomm.janus.utils.CommonValues.OUTGOING
+import com.mvine.mcomm.janus.extension.call
+import com.mvine.mcomm.janus.utils.CommonStringValues.Companion.OUTGOING
 import com.mvine.mcomm.janus.utils.toSIPRemoteAddress
-import com.mvine.mcomm.presentation.audio.view.AudioDialogFragment
-import com.mvine.mcomm.presentation.audio.view.AudioDialogListener
 import com.mvine.mcomm.presentation.common.ListInteraction
 import com.mvine.mcomm.presentation.common.MultipleRowTypeAdapter
-import com.mvine.mcomm.presentation.common.dialog.CallDialog
-import com.mvine.mcomm.presentation.common.dialog.CallDialogData
-import com.mvine.mcomm.presentation.common.dialog.CallDialogListener
 import com.mvine.mcomm.presentation.home.HomeActivity
 import com.mvine.mcomm.presentation.home.HomeViewModel
 import com.mvine.mcomm.util.*

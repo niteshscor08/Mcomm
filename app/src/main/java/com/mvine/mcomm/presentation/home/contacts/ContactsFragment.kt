@@ -9,15 +9,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.FragmentContactsBinding
 import com.mvine.mcomm.domain.model.ContactsData
 import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.janus.JanusManager
-import com.mvine.mcomm.janus.call
-import com.mvine.mcomm.janus.utils.CommonValues
+import com.mvine.mcomm.janus.extension.call
+import com.mvine.mcomm.janus.utils.CommonStringValues.Companion.OUTGOING
 import com.mvine.mcomm.janus.utils.toSIPRemoteAddress
 import com.mvine.mcomm.presentation.common.ListInteraction
 import com.mvine.mcomm.presentation.common.MultipleRowTypeAdapter
@@ -98,7 +97,7 @@ class ContactsFragment : Fragment(), ListInteraction<ContactsData> {
     override fun onVoiceCallSelected(item: ContactsData) {
         if((activity as HomeActivity).isRegistered) {
             item.STX?.let { companyId ->
-                (activity as HomeActivity).showCallsPopUp(companyId, CommonValues.OUTGOING, item.username, item.image_src)
+                (activity as HomeActivity).showCallsPopUp(companyId, OUTGOING, item.username, item.image_src)
             }
             item.STX?.let { janusManager.call(it.toSIPRemoteAddress()) }
         }

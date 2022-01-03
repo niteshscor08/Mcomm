@@ -16,18 +16,17 @@ import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.ActivityHomeBinding
 import com.mvine.mcomm.domain.model.CallState
 import com.mvine.mcomm.janus.JanusManager
-import com.mvine.mcomm.janus.decline
-import com.mvine.mcomm.janus.hangUp
-import com.mvine.mcomm.janus.pickup
-import com.mvine.mcomm.janus.utils.CommonValues
-import com.mvine.mcomm.janus.utils.CommonValues.INCOMING
-import com.mvine.mcomm.janus.utils.CommonValues.JANUS_ACCEPTED
-import com.mvine.mcomm.janus.utils.CommonValues.JANUS_DECLINING
-import com.mvine.mcomm.janus.utils.CommonValues.JANUS_HANGUP
-import com.mvine.mcomm.janus.utils.CommonValues.JANUS_INCOMING_CALL
-import com.mvine.mcomm.janus.utils.CommonValues.JANUS_REGISTERED
-import com.mvine.mcomm.janus.utils.CommonValues.JANUS_REGISTRATION_FAILED
-import com.mvine.mcomm.janus.utils.CommonValues.OUTGOING
+import com.mvine.mcomm.janus.extension.decline
+import com.mvine.mcomm.janus.extension.hangUp
+import com.mvine.mcomm.janus.extension.pickup
+import com.mvine.mcomm.janus.utils.CommonStringValues.Companion.INCOMING
+import com.mvine.mcomm.janus.utils.CommonStringValues.Companion.JANUS_ACCEPTED
+import com.mvine.mcomm.janus.utils.CommonStringValues.Companion.JANUS_DECLINING
+import com.mvine.mcomm.janus.utils.CommonStringValues.Companion.JANUS_HANGUP
+import com.mvine.mcomm.janus.utils.CommonStringValues.Companion.JANUS_INCOMING_CALL
+import com.mvine.mcomm.janus.utils.CommonStringValues.Companion.JANUS_REGISTERED
+import com.mvine.mcomm.janus.utils.CommonStringValues.Companion.JANUS_REGISTRATION_FAILED
+import com.mvine.mcomm.janus.utils.CommonStringValues.Companion.OUTGOING
 import com.mvine.mcomm.presentation.audio.view.AudioDialogFragment
 import com.mvine.mcomm.presentation.audio.view.AudioDialogListener
 import com.mvine.mcomm.presentation.common.dialog.CallDialog
@@ -69,6 +68,7 @@ class HomeActivity : AppCompatActivity(), CallDialogListener, AudioDialogListene
         checkPermissionsAndStartService()
         startJanusSession()
         subscribeObservers()
+        audioDialog = AudioDialogFragment(this, callState)
     }
     private fun initListeners() {
         activityHomeBinding.homeNavBar.setOnNavigationItemSelectedListener { menuItem ->
@@ -147,7 +147,11 @@ class HomeActivity : AppCompatActivity(), CallDialogListener, AudioDialogListene
                 }
                 JANUS_DECLINING, JANUS_HANGUP -> {
                     callDialog.dismiss()
-                    audioDialog.dismiss()
+                    audioDialog?.let { dialog ->
+                        if(dialog.isVisible){
+                            dialog.dismiss()
+                        }
+                    }
                 }
                 JANUS_ACCEPTED -> {
                     callDialog.dismiss()

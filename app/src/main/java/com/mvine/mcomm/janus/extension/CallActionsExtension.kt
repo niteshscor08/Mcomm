@@ -1,8 +1,9 @@
-package com.mvine.mcomm.janus
+package com.mvine.mcomm.janus.extension
 
 import android.util.Log
 import com.mvine.janusclient.PluginHandleSendMessageCallbacks
 import com.mvine.janusclient.PluginHandleWebRTCCallbacks
+import com.mvine.mcomm.janus.JanusManager
 import org.json.JSONObject
 
 fun JanusManager.call(sipRemoteAddress: String) {
@@ -98,7 +99,6 @@ fun JanusManager.pickup() {
 }
 
 fun JanusManager.hangUp() {
-        stopRinging()
         val msg  = JSONObject()
         val body = JSONObject()
         body.put("request", "hangup")
@@ -107,7 +107,6 @@ fun JanusManager.hangUp() {
 }
 
 fun JanusManager.decline() {
-    stopRinging()
     val msg = JSONObject()
     val body = JSONObject()
     body.put("request", "decline")
