@@ -4,13 +4,13 @@ import android.content.Context
 import android.util.Log
 import com.mvine.janusclient.*
 import com.mvine.mcomm.domain.model.CallState
+import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_ACCEPTED
+import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_CALLING
+import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_DECLINING
+import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_HANGUP
+import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_INCOMING_CALL
+import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_RINGING
 import com.mvine.mcomm.janus.extension.startSIPRegistration
-import com.mvine.mcomm.janus.utils.CommonStringValues.Companion.JANUS_ACCEPTED
-import com.mvine.mcomm.janus.utils.CommonStringValues.Companion.JANUS_CALLING
-import com.mvine.mcomm.janus.utils.CommonStringValues.Companion.JANUS_DECLINING
-import com.mvine.mcomm.janus.utils.CommonStringValues.Companion.JANUS_HANGUP
-import com.mvine.mcomm.janus.utils.CommonStringValues.Companion.JANUS_INCOMING_CALL
-import com.mvine.mcomm.janus.utils.CommonStringValues.Companion.JANUS_RINGING
 import org.json.JSONObject
 import org.webrtc.MediaStream
 

@@ -16,8 +16,8 @@ import com.mvine.mcomm.domain.model.ContactsData
 import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.janus.JanusManager
 import com.mvine.mcomm.janus.extension.call
-import com.mvine.mcomm.janus.utils.CommonStringValues.Companion.OUTGOING
-import com.mvine.mcomm.janus.utils.toSIPRemoteAddress
+import com.mvine.mcomm.janus.commonvalues.CommonValues.Companion.OUTGOING
+import com.mvine.mcomm.janus.extension.toSIPRemoteAddress
 import com.mvine.mcomm.presentation.common.ListInteraction
 import com.mvine.mcomm.presentation.common.MultipleRowTypeAdapter
 import com.mvine.mcomm.presentation.home.HomeActivity

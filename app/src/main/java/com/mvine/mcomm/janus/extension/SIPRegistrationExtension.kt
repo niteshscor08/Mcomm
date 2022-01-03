@@ -3,6 +3,10 @@ package com.mvine.mcomm.janus.extension
 import android.util.Log
 import com.mvine.janusclient.PluginHandleSendMessageCallbacks
 import com.mvine.mcomm.janus.JanusManager
+import com.mvine.mcomm.janus.JanusManager.Companion.TAG
+import com.mvine.mcomm.janus.commonvalues.CallStatus.Companion.MESSAGE
+import com.mvine.mcomm.janus.commonvalues.CallStatus.Companion.REGISTER
+import com.mvine.mcomm.janus.commonvalues.CallStatus.Companion.REQUEST
 import org.json.JSONObject
 
 fun JanusManager.startSIPRegistration() {
@@ -10,7 +14,7 @@ fun JanusManager.startSIPRegistration() {
     personInfo?.let { personInfo ->
         personInfo.view.apply {
             obj =  JSONObject().apply {
-                put("request", "register")
+                put(REQUEST, REGISTER)
                 put("authuser", nSTX)
                 put("username", "sip:$nSTX@portaluat.mvine.com")
                 put("secret", nastrpass)
@@ -20,7 +24,7 @@ fun JanusManager.startSIPRegistration() {
         }
     }
     val message = JSONObject().apply {
-        put("message", obj)
+        put(MESSAGE, obj)
     }
     handle?.sendMessage(object : PluginHandleSendMessageCallbacks(message) {
         override fun onSuccessSynchronous(obj: JSONObject?) {
@@ -29,12 +33,12 @@ fun JanusManager.startSIPRegistration() {
 
         override fun onCallbackError(error: String?) {
             super.onCallbackError(error)
-            Log.d("JanusManager========", error.toString())
+            Log.d(TAG, error.toString())
         }
 
         override fun onSuccesAsynchronous() {
             super.onSuccesAsynchronous()
-            Log.d("JanusManager", "onSuccesAsynchronous")
+            Log.d(TAG, "onSuccesAsynchronous")
         }
     })
 }
