@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <variable
+            name="callsViewModel"
+            type="com.mvine.mcomm.presentation.home.calls.CallsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

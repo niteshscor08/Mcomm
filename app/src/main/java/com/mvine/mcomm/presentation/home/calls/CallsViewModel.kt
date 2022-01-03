@@ -9,6 +9,7 @@ import com.mvine.mcomm.data.model.response.PersonInfo
 import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.domain.usecase.GetCallsUseCase
 import com.mvine.mcomm.domain.util.Resource
+import com.mvine.mcomm.presentation.common.base.BaseViewModel
 import com.mvine.mcomm.util.LOGIN_TOKEN
 import com.mvine.mcomm.util.MCOMM_SHARED_PREFERENCES
 import com.mvine.mcomm.util.USER_INFO
@@ -23,7 +24,7 @@ class CallsViewModel @Inject constructor(
     private val getCallsUseCase: GetCallsUseCase,
     private val dispatcher: CoroutineDispatcher,
     @ApplicationContext context: Context
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val _recentCallsLiveData: MutableLiveData<Resource<ArrayList<CallData>>> =
         MutableLiveData()

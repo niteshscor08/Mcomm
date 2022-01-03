@@ -15,6 +15,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
+import com.mvine.mcomm.BR
 import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.FragmentCallsBinding
 import com.mvine.mcomm.domain.model.CallData
@@ -25,6 +26,7 @@ import com.mvine.mcomm.janus.extension.call
 import com.mvine.mcomm.janus.extension.toSIPRemoteAddress
 import com.mvine.mcomm.presentation.common.ListInteraction
 import com.mvine.mcomm.presentation.common.MultipleRowTypeAdapter
+import com.mvine.mcomm.presentation.common.base.BaseFragment
 import com.mvine.mcomm.presentation.home.HomeActivity
 import com.mvine.mcomm.presentation.home.HomeViewModel
 import com.mvine.mcomm.util.*
@@ -32,7 +34,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CallsFragment : Fragment(), ListInteraction<CallData> {
+class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListInteraction<CallData> {
 
     @Inject
     lateinit var preferenceHandler: PreferenceHandler
@@ -46,18 +48,16 @@ class CallsFragment : Fragment(), ListInteraction<CallData> {
 
     private val callsAdapter: MultipleRowTypeAdapter = MultipleRowTypeAdapter(arrayListOf())
 
-    private lateinit var fragmentCallsBinding: FragmentCallsBinding
-
     private lateinit var sharedPreferences: SharedPreferences
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        fragmentCallsBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_calls, container, false)
-        return fragmentCallsBinding.root
+    override val bindingVariable: Int
+        get() = BR.callsViewModel
+
+    override val layoutId: Int
+        get() = R.layout.fragment_calls
+
+    override fun getViewModel(): CallsViewModel {
+        return callsViewModel
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,7 +72,7 @@ class CallsFragment : Fragment(), ListInteraction<CallData> {
     }
 
     private fun setUpViews() {
-        fragmentCallsBinding.rvCalls.apply {
+        binding?.rvCalls?.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = callsAdapter
         }
@@ -80,25 +80,29 @@ class CallsFragment : Fragment(), ListInteraction<CallData> {
     }
 
     private fun initListeners() {
-        fragmentCallsBinding.callsAll.apply {
+        binding?.callsAll?.apply {
             setOnClickListener {
                 background = ContextCompat.getDrawable(context, R.drawable.ic_white_filled_rounded_rectangle)
                 setTextColor(ContextCompat.getColor(context, R.color.mcomm_blue))
                 setTypeface(typeface, Typeface.BOLD)
-                fragmentCallsBinding.callsRecents.background = ContextCompat.getDrawable(context, R.drawable.ic_mcomm_blue_light_rounded_rectangle)
-                fragmentCallsBinding.callsRecents.setTextColor(ContextCompat.getColor(context, R.color.white))
-                fragmentCallsBinding.callsRecents.setTypeface(typeface, Typeface.NORMAL)
+                binding?.apply {
+                    callsRecents.background = ContextCompat.getDrawable(context, R.drawable.ic_mcomm_blue_light_rounded_rectangle)
+                    callsRecents.setTextColor(ContextCompat.getColor(context, R.color.white))
+                    callsRecents.setTypeface(typeface, Typeface.NORMAL)
+                }
             }
         }
 
-        fragmentCallsBinding.callsRecents.apply {
+        binding?.callsRecents?.apply {
             setOnClickListener {
                 background = ContextCompat.getDrawable(context, R.drawable.ic_white_filled_rounded_rectangle)
                 setTextColor(ContextCompat.getColor(context, R.color.mcomm_blue))
                 setTypeface(typeface, Typeface.BOLD)
-                fragmentCallsBinding.callsAll.background = ContextCompat.getDrawable(context, R.drawable.ic_mcomm_blue_light_rounded_rectangle)
-                fragmentCallsBinding.callsAll.setTextColor(ContextCompat.getColor(context, R.color.white))
-                fragmentCallsBinding.callsAll.setTypeface(typeface, Typeface.NORMAL)
+                binding?.apply {
+                   callsAll.background = ContextCompat.getDrawable(context, R.drawable.ic_mcomm_blue_light_rounded_rectangle)
+                   callsAll.setTextColor(ContextCompat.getColor(context, R.color.white))
+                   callsAll.setTypeface(typeface, Typeface.NORMAL)
+                }
             }
         }
     }
@@ -117,17 +121,17 @@ class CallsFragment : Fragment(), ListInteraction<CallData> {
             result?.let { response ->
                 when (response) {
                     is Success -> {
-                        fragmentCallsBinding.progressCalls.visibility = View.GONE
+                        binding?.progressCalls?.visibility = View.GONE
                         response.data?.let { callData ->
                             callsAdapter.updateData(prepareRowTypesFromCallData(callData, this))
                         }
                     }
                     is Error -> {
-                        fragmentCallsBinding.progressCalls.visibility = View.GONE
+                        binding?.progressCalls?.visibility = View.GONE
                         Toast.makeText(activity, response.message, Toast.LENGTH_LONG).show()
                     }
                     is Loading -> {
-                        fragmentCallsBinding.progressCalls.visibility = View.VISIBLE
+                        binding?.progressCalls?.visibility = View.VISIBLE
                     }
                 }
             }

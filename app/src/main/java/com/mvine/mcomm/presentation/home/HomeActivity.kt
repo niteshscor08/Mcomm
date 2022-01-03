@@ -29,6 +29,7 @@ import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_REGISTERED
 import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_REGISTRATION_FAILED
 import com.mvine.mcomm.presentation.audio.view.AudioDialogFragment
 import com.mvine.mcomm.presentation.audio.view.AudioDialogListener
+import com.mvine.mcomm.presentation.common.base.BaseActivity
 import com.mvine.mcomm.presentation.common.dialog.CallDialog
 import com.mvine.mcomm.presentation.common.dialog.CallDialogData
 import com.mvine.mcomm.presentation.common.dialog.CallDialogListener
@@ -41,9 +42,7 @@ import javax.inject.Inject
  */
 
 @AndroidEntryPoint
-class HomeActivity : AppCompatActivity(), CallDialogListener, AudioDialogListener {
-
-    private lateinit var activityHomeBinding: ActivityHomeBinding
+class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, AudioDialogListener {
 
     private val homeViewModel: HomeViewModel by viewModels()
 
@@ -60,9 +59,12 @@ class HomeActivity : AppCompatActivity(), CallDialogListener, AudioDialogListene
     var isRegistered : Boolean = false
     lateinit var callDialog: CallDialog
 
+    override val layoutId: Int
+        get() =  R.layout.activity_home
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activityHomeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home)
         setUpNavController()
         initListeners()
         checkPermissionsAndStartService()
@@ -71,7 +73,7 @@ class HomeActivity : AppCompatActivity(), CallDialogListener, AudioDialogListene
         audioDialog = AudioDialogFragment(this, callState)
     }
     private fun initListeners() {
-        activityHomeBinding.homeNavBar.setOnNavigationItemSelectedListener { menuItem ->
+        binding?.homeNavBar?.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.action_chats -> navController.navigate(R.id.chatsFragment)
                 R.id.action_calls -> navController.navigate(R.id.callsFragment)
@@ -80,12 +82,12 @@ class HomeActivity : AppCompatActivity(), CallDialogListener, AudioDialogListene
             return@setOnNavigationItemSelectedListener true
         }
 
-        activityHomeBinding.ivAppBarMenu.setOnClickListener {
-            activityHomeBinding.tlSearch.visibility = View.GONE
+        binding?.ivAppBarMenu?.setOnClickListener {
+            binding?.tlSearch?.visibility = View.GONE
             navController.navigate(R.id.loginMenuFragment)
         }
 
-        activityHomeBinding.etSearch.apply {
+        binding?.etSearch?.apply {
             showKeyboard()
             doOnTextChanged { text, _, _, _ ->
                 text?.let {
@@ -98,11 +100,11 @@ class HomeActivity : AppCompatActivity(), CallDialogListener, AudioDialogListene
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
-        activityHomeBinding.homeNavBar.setupWithNavController(navController)
+        binding?.homeNavBar?.setupWithNavController(navController)
     }
 
     fun showSearchBar() {
-        activityHomeBinding.tlSearch.visibility = View.VISIBLE
+        binding?.tlSearch?.visibility = View.VISIBLE
     }
 
     private fun checkPermissionsAndStartService() {
@@ -206,5 +208,6 @@ class HomeActivity : AppCompatActivity(), CallDialogListener, AudioDialogListene
         audioDialog.dismiss()
         janusManager.hangUp()
     }
+
 
 }
