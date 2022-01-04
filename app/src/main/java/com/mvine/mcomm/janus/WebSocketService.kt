@@ -1,7 +1,6 @@
 package com.mvine.mcomm.janus
 
 import com.mvine.mcomm.janus.request.JanusCreate
-import com.mvine.mcomm.presentation.home.chats.JanusMessage
 import com.tinder.scarlet.WebSocket
 import com.tinder.scarlet.ws.Receive
 import com.tinder.scarlet.ws.Send

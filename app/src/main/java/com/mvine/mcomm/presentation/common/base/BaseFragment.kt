@@ -10,11 +10,11 @@ import androidx.fragment.app.Fragment
 
 abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel> : Fragment() {
 
-    private var rootView: View? = null
+   private lateinit var rootView: View
 
-    protected var binding: T? = null
+   protected lateinit var binding: T
 
-    private var mViewModel: V? = null
+   private lateinit var viewModel: V
 
     /**
      * @desc Override for set binding variable
@@ -40,7 +40,7 @@ abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel> : Fragment()
      **/
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mViewModel = getViewModel()
+        viewModel = getViewModel()
     }
 
     /**
@@ -48,7 +48,7 @@ abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel> : Fragment()
      **/
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, layoutId, container, false)
-        rootView = binding?.root
+        rootView = binding.root
         return rootView
     }
 
@@ -59,9 +59,9 @@ abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel> : Fragment()
      **/
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding?.setVariable(bindingVariable, mViewModel)
-        binding?.lifecycleOwner = this
-        binding?.executePendingBindings()
+        binding.setVariable(bindingVariable, viewModel)
+        binding.lifecycleOwner = this
+        binding.executePendingBindings()
     }
 
 }

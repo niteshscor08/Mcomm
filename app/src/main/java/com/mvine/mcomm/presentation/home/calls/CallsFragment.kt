@@ -72,7 +72,7 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
     }
 
     private fun setUpViews() {
-        binding?.rvCalls?.apply {
+        binding.rvCalls.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = callsAdapter
         }
@@ -80,12 +80,12 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
     }
 
     private fun initListeners() {
-        binding?.callsAll?.apply {
+        binding.callsAll.apply {
             setOnClickListener {
                 background = ContextCompat.getDrawable(context, R.drawable.ic_white_filled_rounded_rectangle)
                 setTextColor(ContextCompat.getColor(context, R.color.mcomm_blue))
                 setTypeface(typeface, Typeface.BOLD)
-                binding?.apply {
+                binding.apply {
                     callsRecents.background = ContextCompat.getDrawable(context, R.drawable.ic_mcomm_blue_light_rounded_rectangle)
                     callsRecents.setTextColor(ContextCompat.getColor(context, R.color.white))
                     callsRecents.setTypeface(typeface, Typeface.NORMAL)
@@ -93,12 +93,12 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
             }
         }
 
-        binding?.callsRecents?.apply {
+        binding.callsRecents.apply {
             setOnClickListener {
                 background = ContextCompat.getDrawable(context, R.drawable.ic_white_filled_rounded_rectangle)
                 setTextColor(ContextCompat.getColor(context, R.color.mcomm_blue))
                 setTypeface(typeface, Typeface.BOLD)
-                binding?.apply {
+                binding.apply {
                    callsAll.background = ContextCompat.getDrawable(context, R.drawable.ic_mcomm_blue_light_rounded_rectangle)
                    callsAll.setTextColor(ContextCompat.getColor(context, R.color.white))
                    callsAll.setTypeface(typeface, Typeface.NORMAL)
@@ -121,17 +121,17 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
             result?.let { response ->
                 when (response) {
                     is Success -> {
-                        binding?.progressCalls?.visibility = View.GONE
+                        binding.progressCalls.visibility = View.GONE
                         response.data?.let { callData ->
                             callsAdapter.updateData(prepareRowTypesFromCallData(callData, this))
                         }
                     }
                     is Error -> {
-                        binding?.progressCalls?.visibility = View.GONE
+                        binding.progressCalls.visibility = View.GONE
                         Toast.makeText(activity, response.message, Toast.LENGTH_LONG).show()
                     }
                     is Loading -> {
-                        binding?.progressCalls?.visibility = View.VISIBLE
+                        binding.progressCalls.visibility = View.VISIBLE
                     }
                 }
             }

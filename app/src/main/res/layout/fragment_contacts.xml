@@ -4,6 +4,9 @@
 
     <data>
 
+        <variable
+            name="contactsViewModel"
+            type="com.mvine.mcomm.presentation.home.contacts.ContactsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
