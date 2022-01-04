@@ -4,13 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Typeface
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,9 +16,7 @@ import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.FragmentCallsBinding
 import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.domain.util.Resource.*
-import com.mvine.mcomm.janus.JanusManager
 import com.mvine.mcomm.janus.commonvalues.CommonValues.Companion.OUTGOING
-import com.mvine.mcomm.janus.extension.call
 import com.mvine.mcomm.janus.extension.toSIPRemoteAddress
 import com.mvine.mcomm.presentation.common.ListInteraction
 import com.mvine.mcomm.presentation.common.MultipleRowTypeAdapter
@@ -38,9 +32,6 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
 
     @Inject
     lateinit var preferenceHandler: PreferenceHandler
-
-    @Inject
-    lateinit var janusManager: JanusManager
 
     private val callsViewModel: CallsViewModel by viewModels()
 
@@ -155,12 +146,11 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
     }
 
     override fun onVoiceCallSelected(item: CallData) {
-        if((activity as HomeActivity).isRegistered) {
             item.othercaller_company_id?.let { companyId ->
-                (activity as HomeActivity).showCallsPopUp(companyId, OUTGOING, item.othercaller_company_id, item.image_src)
+                (activity as HomeActivity).startOutgoingCall( sTX = companyId,
+                    userName = item.othercaller_company_id,
+                    uri = item.image_src?: EMPTY_STRING )
             }
-            item.othercaller_stx?.let { janusManager.call(it.toSIPRemoteAddress()) }
-        }
     }
 
 }

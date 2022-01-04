@@ -15,7 +15,7 @@ import com.mvine.mcomm.janus.commonvalues.CommonValues.Companion.JSEP
 import com.mvine.mcomm.janus.commonvalues.CommonValues.Companion.URI
 import org.json.JSONObject
 
-fun JanusManager.call(sipRemoteAddress: String) {
+fun JanusManager.call() {
     try {
         Log.d(TAG, sipRemoteAddress)
         handle!!.createOffer(object :
@@ -110,7 +110,7 @@ fun JanusManager.hangUp() {
         val body = JSONObject()
         body.put(REQUEST, HANGUP)
         msg.put(MESSAGE, body)
-        handle!!.sendMessage(PluginHandleSendMessageCallbacks(msg))
+        handle?.sendMessage(PluginHandleSendMessageCallbacks(msg))
 }
 
 fun JanusManager.decline() {
@@ -118,5 +118,5 @@ fun JanusManager.decline() {
     val body = JSONObject()
     body.put(REQUEST, DECLINE)
     msg.put(MESSAGE, body)
-    handle!!.sendMessage(PluginHandleSendMessageCallbacks(msg))
+    handle?.sendMessage(PluginHandleSendMessageCallbacks(msg))
 }

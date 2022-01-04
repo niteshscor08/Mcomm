@@ -9,7 +9,10 @@ import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_CALLING
 import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_DECLINING
 import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_HANGUP
 import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_INCOMING_CALL
+import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_REGISTERED
+import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_REGISTERING
 import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_RINGING
+import com.mvine.mcomm.janus.extension.call
 import com.mvine.mcomm.janus.extension.startSIPRegistration
 import org.json.JSONObject
 import org.webrtc.MediaStream
@@ -19,7 +22,8 @@ class JanusPluginCallbacks(
     private val janusManager : JanusManager,
     private val mediaPlayerHandler: MediaPlayerHandler,
     private val callState: CallState,
-    private val audioFocusHandler: AudioFocusHandler
+    private val audioFocusHandler: AudioFocusHandler,
+    private val serviceHandler: ServiceHandler
 ) : IJanusPluginCallbacks {
 
     override fun onCallbackError(error: String?) {
@@ -28,6 +32,7 @@ class JanusPluginCallbacks(
 
     override fun success(handle: JanusPluginHandle?) {
         janusManager.handle = handle
+        handle?.h = serviceHandler
         janusManager.startSIPRegistration()
     }
 
@@ -87,14 +92,15 @@ class JanusPluginCallbacks(
                     val connectionStatus = result.getString(EVENT)
                     when(connectionStatus){
                         JANUS_ACCEPTED -> {
-                            audioFocusHandler.configureAudio(true)
                             mediaPlayerHandler.stopRinging()
+                            audioFocusHandler.configureAudio(true)
                         }
                         JANUS_CALLING , JANUS_RINGING-> {
-                            mediaPlayerHandler.startRinging()
+
                         }
                         JANUS_DECLINING, JANUS_HANGUP -> {
                             mediaPlayerHandler.stopRinging()
+                            janusManager.endJanusSession()
                         }
                         JANUS_INCOMING_CALL -> {
                             configureCallState(result)

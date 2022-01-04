@@ -4,6 +4,7 @@ import androidx.annotation.StringDef
 
 @StringDef(
     JanusStatus.JANUS_REGISTERED,
+    JanusStatus.JANUS_REGISTERING,
     JanusStatus.JANUS_REGISTRATION_FAILED,
     JanusStatus.JANUS_ACCEPTED,
     JanusStatus.JANUS_CALLING,
@@ -18,6 +19,7 @@ import androidx.annotation.StringDef
 annotation class JanusStatus {
     companion object {
         const val JANUS_REGISTERED = "registered"
+        const val JANUS_REGISTERING = "registering"
         const val JANUS_REGISTRATION_FAILED = "registration_failed"
         const val JANUS_ACCEPTED = "accepted"
         const val JANUS_CALLING = "calling"

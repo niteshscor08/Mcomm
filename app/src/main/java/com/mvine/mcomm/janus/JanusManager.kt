@@ -13,6 +13,7 @@ import com.mvine.mcomm.domain.model.CallState
 import com.mvine.mcomm.util.*
 import org.json.JSONObject
 import org.webrtc.PeerConnection
+import java.lang.ref.WeakReference
 
 class JanusManager(private val context: Context,
                    private val preferenceHandler: PreferenceHandler,
@@ -22,11 +23,13 @@ class JanusManager(private val context: Context,
 
     private val janusServer = JanusServer(JanusGlobalCallbacks())
     var handle: JanusPluginHandle? = null
-    var personInfo: PersonInfo?= null
+    var personInfo: PersonInfo = preferenceHandler.get(USER_INFO)
     internal var jsep: JSONObject?= null
     private val _janusConnectionStatus: MutableLiveData<String> =
         MutableLiveData(EMPTY_STRING)
     val janusConnectionStatus: LiveData<String> = _janusConnectionStatus
+    lateinit var sipRemoteAddress : String
+    private val serviceHandler = ServiceHandler(WeakReference(this@JanusManager))
 
 
     val mediaConstraints = JanusMediaConstraints().apply {
@@ -36,11 +39,8 @@ class JanusManager(private val context: Context,
         recvVideo = true
     }
 
-    init {
-        personInfo = preferenceHandler.get(USER_INFO)
-    }
-
-    fun connect() {
+    fun connect(address: String) {
+        sipRemoteAddress = address
         createJanusSession()
         initializeMediaContext(context,
             audio = true,
@@ -55,6 +55,22 @@ class JanusManager(private val context: Context,
         }
     }
 
+    private fun initializeMediaContext(
+        context: Context?,
+        audio: Boolean,
+        video: Boolean,
+        videoHwAcceleration: Boolean,
+        eglContext: EGLContext?= null
+    ): Boolean {
+        return janusServer.initializeMediaContext(
+            context,
+            audio,
+            video,
+            videoHwAcceleration,
+            eglContext
+        )
+    }
+
     inner class JanusGlobalCallbacks : IJanusGatewayCallbacks {
         override fun onCallbackError(error: String?) {
             Log.d(TAG, error.toString())
@@ -66,7 +82,8 @@ class JanusManager(private val context: Context,
                 this@JanusManager,
                 mediaPlayerHandler,
                 callState,
-                audioFocusHandler
+                audioFocusHandler,
+                serviceHandler
             ))
         }
 
@@ -92,24 +109,15 @@ class JanusManager(private val context: Context,
 
     }
 
-    private fun initializeMediaContext(
-        context: Context?,
-        audio: Boolean,
-        video: Boolean,
-        videoHwAcceleration: Boolean,
-        eglContext: EGLContext?= null
-    ): Boolean {
-        return janusServer.initializeMediaContext(
-            context,
-            audio,
-            video,
-            videoHwAcceleration,
-            eglContext
-        )
-    }
-
     fun postConnectionStatus(status : String){
         _janusConnectionStatus.postValue(status)
+    }
+
+    fun endJanusSession(){
+        mediaPlayerHandler.stopRinging()
+        audioFocusHandler.resetAudioControls()
+        handle?.detach()
+        janusServer?.Destroy()
     }
 
     companion object{

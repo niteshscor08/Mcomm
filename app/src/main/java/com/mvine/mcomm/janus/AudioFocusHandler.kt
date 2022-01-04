@@ -65,4 +65,10 @@ class AudioFocusHandler (private val context: Context) {
         }
     }
 
+     fun resetAudioControls() {
+        audioManager.isSpeakerphoneOn = false
+        audioManager.isMicrophoneMute = false
+        configureAudio(false)
+    }
+
 }

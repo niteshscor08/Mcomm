@@ -60,7 +60,7 @@ class AudioDialogFragment(private val audioDialogListener: AudioDialogListener, 
 
     private fun setUp(){
         audioDialogBinding.bottomBarCallLayout.bbEndCall.setOnClickListener {
-            audioDialogListener.onEndCallClick()
+            audioDialogListener.onCallHangUp()
         }
         configureTimer()
     }

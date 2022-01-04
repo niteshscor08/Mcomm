@@ -5,10 +5,8 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.widget.doOnTextChanged
-import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -16,9 +14,6 @@ import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.ActivityHomeBinding
 import com.mvine.mcomm.domain.model.CallState
 import com.mvine.mcomm.janus.JanusManager
-import com.mvine.mcomm.janus.extension.decline
-import com.mvine.mcomm.janus.extension.hangUp
-import com.mvine.mcomm.janus.extension.pickup
 import com.mvine.mcomm.janus.commonvalues.CommonValues.Companion.INCOMING
 import com.mvine.mcomm.janus.commonvalues.CommonValues.Companion.OUTGOING
 import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_ACCEPTED
@@ -27,12 +22,14 @@ import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_HANGUP
 import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_INCOMING_CALL
 import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_REGISTERED
 import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_REGISTRATION_FAILED
+import com.mvine.mcomm.janus.extension.*
 import com.mvine.mcomm.presentation.audio.view.AudioDialogFragment
 import com.mvine.mcomm.presentation.audio.view.AudioDialogListener
 import com.mvine.mcomm.presentation.common.base.BaseActivity
 import com.mvine.mcomm.presentation.common.dialog.CallDialog
 import com.mvine.mcomm.presentation.common.dialog.CallDialogData
 import com.mvine.mcomm.presentation.common.dialog.CallDialogListener
+import com.mvine.mcomm.util.EMPTY_STRING
 import com.mvine.mcomm.util.showKeyboard
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -44,34 +41,43 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, AudioDialogListener {
 
-    private val homeViewModel: HomeViewModel by viewModels()
-
-    private lateinit var navController: NavController
-
     @Inject
     lateinit var janusManager: JanusManager
 
     @Inject
     lateinit var callState: CallState
 
+    private val homeViewModel: HomeViewModel by viewModels()
+
+    private lateinit var navController: NavController
+
     private lateinit var audioDialog : AudioDialogFragment
 
-    var isRegistered : Boolean = false
     lateinit var callDialog: CallDialog
 
     override val layoutId: Int
         get() =  R.layout.activity_home
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setUp()
+    }
+
+    private fun setUp(){
         setUpNavController()
         initListeners()
         checkPermissionsAndStartService()
-        startJanusSession()
+        initializeAudioScreen()
         subscribeObservers()
-        audioDialog = AudioDialogFragment(this, callState)
     }
+
+    private fun setUpNavController() {
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
+        binding?.homeNavBar?.setupWithNavController(navController)
+    }
+
     private fun initListeners() {
         binding?.homeNavBar?.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -95,16 +101,6 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Au
                 }
             }
         }
-    }
-    private fun setUpNavController() {
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navController = navHostFragment.navController
-        binding?.homeNavBar?.setupWithNavController(navController)
-    }
-
-    fun showSearchBar() {
-        binding?.tlSearch?.visibility = View.VISIBLE
     }
 
     private fun checkPermissionsAndStartService() {
@@ -131,40 +127,50 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Au
         return true
     }
 
-    private fun startJanusSession(){
-        janusManager.connect()
+    private fun initializeAudioScreen(){
+        audioDialog = AudioDialogFragment(this, callState)
     }
 
     private fun subscribeObservers(){
         janusManager.janusConnectionStatus.observe(this, {
             when(it){
-                JANUS_REGISTERED -> {
-                    isRegistered = true
-                }
                 JANUS_REGISTRATION_FAILED -> {
-                    isRegistered = false
+                    dismissCallDialog()
                 }
                 JANUS_INCOMING_CALL -> {
-                    showCallsPopUp("", INCOMING, callState.remoteDisplayName, callState.remoteUrl)
+                    showCallsPopUp(EMPTY_STRING, INCOMING, callState.remoteDisplayName, callState.remoteUrl)
                 }
                 JANUS_DECLINING, JANUS_HANGUP -> {
-                    callDialog.dismiss()
-                    audioDialog?.let { dialog ->
-                        if(dialog.isVisible){
-                            dialog.dismiss()
-                        }
-                    }
+                    dismissCallDialog()
+                    dismissAudioDialog()
                 }
                 JANUS_ACCEPTED -> {
-                    callDialog.dismiss()
-                    audioDialog = AudioDialogFragment(this, callState)
+                    dismissCallDialog()
                     audioDialog.show(this.supportFragmentManager, AudioDialogFragment::class.java.simpleName)
+                }
+                JANUS_REGISTERED -> {
+                    if(callDialog.isVisible){
+                        janusManager.call()
+                    }
+                    else{
+                        janusManager.endJanusSession()
+                    }
                 }
             }
         })
     }
 
-    fun showCallsPopUp(callerName: String, dialogType: String, displayName: String?, url : String?){
+    fun showSearchBar() {
+        binding?.tlSearch?.visibility = View.VISIBLE
+    }
+
+    fun startOutgoingCall(sTX: String, userName : String, uri : String) {
+        showCallsPopUp(sTX, OUTGOING, userName, uri )
+        janusManager.connect(sTX.toSIPRemoteAddress())
+    }
+
+
+    private fun showCallsPopUp(callerName: String, dialogType: String, displayName: String?, url : String?){
         if(dialogType == INCOMING){
             callDialog = CallDialog(
                 callDialogListener= this,
@@ -175,7 +181,6 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Au
                     remoteUrl = url
                 }
             )
-            callDialog.show(this.supportFragmentManager, CallDialog::class.java.simpleName)
         }else{
             callDialog = CallDialog(
                 callDialogListener= this,
@@ -186,28 +191,43 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Au
                     remoteUrl = url
                 }
             )
-            callDialog.show(this.supportFragmentManager, CallDialog::class.java.simpleName)
         }
+        callDialog.show(this.supportFragmentManager, CallDialog::class.java.simpleName)
     }
 
-    override fun onCallButtonClick() {
+    override fun onCallReceived() {
         janusManager.pickup()
-        callDialog.dismiss()
+        dismissCallDialog()
     }
 
-    override fun onCancelCallButtonClick(dialogType: String) {
+    override fun onCallEnded(dialogType: String) {
         if(dialogType == INCOMING){
             janusManager.decline()
         }else{
             janusManager.hangUp()
         }
-        callDialog.dismiss()
+        dismissCallDialog()
     }
 
-    override fun onEndCallClick() {
-        audioDialog.dismiss()
+    override fun onCallHangUp() {
         janusManager.hangUp()
+        dismissAudioDialog()
     }
 
+    private fun dismissCallDialog(){
+        callDialog?.let {
+            if(it.isVisible){
+                it.dismiss()
+            }
+        }
+    }
+
+    private fun dismissAudioDialog(){
+        audioDialog?.let {
+            if(it.isVisible){
+                it.dismiss()
+            }
+        }
+    }
 
 }

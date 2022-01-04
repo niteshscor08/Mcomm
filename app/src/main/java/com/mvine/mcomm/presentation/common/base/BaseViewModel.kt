@@ -4,6 +4,7 @@ import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.ViewModel
 import java.lang.ref.WeakReference
 
+
 abstract class BaseViewModel : ViewModel() {
 
     private val isLoading = ObservableBoolean(false)

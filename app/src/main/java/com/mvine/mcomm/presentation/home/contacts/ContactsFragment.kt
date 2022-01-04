@@ -24,6 +24,7 @@ import com.mvine.mcomm.presentation.common.MultipleRowTypeAdapter
 import com.mvine.mcomm.presentation.common.base.BaseFragment
 import com.mvine.mcomm.presentation.home.HomeActivity
 import com.mvine.mcomm.presentation.home.HomeViewModel
+import com.mvine.mcomm.util.EMPTY_STRING
 import com.mvine.mcomm.util.prepareRowTypesFromContactsData
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -95,11 +96,10 @@ class ContactsFragment : BaseFragment<FragmentContactsBinding,ContactsViewModel>
     }
 
     override fun onVoiceCallSelected(item: ContactsData) {
-        if((activity as HomeActivity).isRegistered) {
             item.STX?.let { companyId ->
-                (activity as HomeActivity).showCallsPopUp(companyId, OUTGOING, item.username, item.image_src)
+                (activity as HomeActivity).startOutgoingCall( sTX = companyId,
+                    userName = item.username ?: EMPTY_STRING,
+                    uri = item.image_src?: EMPTY_STRING )
             }
-            item.STX?.let { janusManager.call(it.toSIPRemoteAddress()) }
-        }
     }
 }

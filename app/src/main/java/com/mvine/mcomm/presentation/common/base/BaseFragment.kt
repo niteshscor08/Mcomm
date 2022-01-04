@@ -6,7 +6,9 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-
+import com.mvine.mcomm.janus.JanusManager
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel> : Fragment() {
 

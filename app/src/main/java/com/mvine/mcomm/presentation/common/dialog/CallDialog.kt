@@ -76,10 +76,10 @@ class CallDialog(private val callDialogListener: CallDialogListener,
 
     private fun onButtonClickEvent(){
         dialogBaseBinding.dialogCall.setOnClickListener {
-            callDialogListener?.onCallButtonClick()
+            callDialogListener?.onCallReceived()
         }
         dialogBaseBinding.dialogCallEnd.setOnClickListener {
-            callDialogListener?.onCancelCallButtonClick(dialogType)
+            callDialogListener?.onCallEnded(dialogType)
         }
     }
 
