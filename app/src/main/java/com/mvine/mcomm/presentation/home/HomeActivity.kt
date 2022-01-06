@@ -55,6 +55,8 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Au
 
     lateinit var callDialog: CallDialog
 
+    private var isCalling : Boolean = false
+
     override val layoutId: Int
         get() =  R.layout.activity_home
 
@@ -69,6 +71,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Au
         checkPermissionsAndStartService()
         initializeAudioScreen()
         subscribeObservers()
+        janusManager.connect()
     }
 
     private fun setUpNavController() {
@@ -149,11 +152,11 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Au
                     audioDialog.show(this.supportFragmentManager, AudioDialogFragment::class.java.simpleName)
                 }
                 JANUS_REGISTERED -> {
-                    if(callDialog.isVisible){
-                        janusManager.call()
-                    }
-                    else{
-                        janusManager.endJanusSession()
+                    if(isCalling){
+                        if(callDialog.isVisible){
+                            janusManager.call()
+                        }
+                        isCalling = false
                     }
                 }
             }
@@ -165,8 +168,10 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Au
     }
 
     fun startOutgoingCall(sTX: String, userName : String, uri : String) {
+        isCalling = true
         showCallsPopUp(sTX, OUTGOING, userName, uri )
-        janusManager.connect(sTX.toSIPRemoteAddress())
+        janusManager.sipRemoteAddress = sTX.toSIPRemoteAddress()
+        janusManager.call()
     }
 
 

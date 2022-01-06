@@ -39,8 +39,7 @@ class JanusManager(private val context: Context,
         recvVideo = true
     }
 
-    fun connect(address: String) {
-        sipRemoteAddress = address
+    fun connect() {
         createJanusSession()
         initializeMediaContext(context,
             audio = true,

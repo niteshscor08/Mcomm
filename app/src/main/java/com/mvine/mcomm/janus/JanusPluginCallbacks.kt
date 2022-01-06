@@ -100,7 +100,6 @@ class JanusPluginCallbacks(
                         }
                         JANUS_DECLINING, JANUS_HANGUP -> {
                             mediaPlayerHandler.stopRinging()
-                            janusManager.endJanusSession()
                         }
                         JANUS_INCOMING_CALL -> {
                             configureCallState(result)
