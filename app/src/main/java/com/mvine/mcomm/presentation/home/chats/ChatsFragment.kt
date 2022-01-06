@@ -1,30 +1,25 @@
 package com.mvine.mcomm.presentation.home.chats
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.mvine.mcomm.BR
 import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.FragmentChatsBinding
+import com.mvine.mcomm.presentation.common.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ChatsFragment : Fragment() {
+class ChatsFragment : BaseFragment<FragmentChatsBinding,ChatsViewModel >() {
 
     private val chatsViewModel: ChatsViewModel by viewModels()
 
-    private lateinit var fragmentChatsBinding: FragmentChatsBinding
+    override val bindingVariable: Int
+        get() = BR.chatsViewModel
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        fragmentChatsBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_chats, container, false)
-        return fragmentChatsBinding.root
+    override val layoutId: Int
+        get() = R.layout.fragment_chats
+
+    override fun getViewModel(): ChatsViewModel {
+       return chatsViewModel
     }
+
 }

@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.mvine.mcomm.domain.model.ContactsData
 import com.mvine.mcomm.domain.usecase.GetContactsUseCase
 import com.mvine.mcomm.domain.util.Resource
+import com.mvine.mcomm.presentation.common.base.BaseViewModel
 import com.mvine.mcomm.util.LOGIN_TOKEN
 import com.mvine.mcomm.util.MCOMM_SHARED_PREFERENCES
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +22,7 @@ class ContactsViewModel @Inject constructor(
     private val getContactsUseCase: GetContactsUseCase,
     private val dispatcher: CoroutineDispatcher,
     @ApplicationContext context: Context
-): ViewModel() {
+): BaseViewModel() {
 
     private val _contactsLiveData: MutableLiveData<Resource<ArrayList<ContactsData>>> =
         MutableLiveData()

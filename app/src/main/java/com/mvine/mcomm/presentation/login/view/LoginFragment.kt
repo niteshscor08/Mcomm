@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.google.gson.Gson
 import com.mvine.mcomm.BuildConfig
 import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.FragmentLoginBinding
@@ -20,16 +21,16 @@ import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.domain.util.Resource.Success
 import com.mvine.mcomm.presentation.home.HomeActivity
 import com.mvine.mcomm.presentation.login.viewmodel.LoginViewModel
-import com.mvine.mcomm.util.LOGIN_TOKEN
-import com.mvine.mcomm.util.MCOMM_SHARED_PREFERENCES
-import com.mvine.mcomm.util.hideKeyboard
-import com.mvine.mcomm.util.showKeyboard
+import com.mvine.mcomm.util.*
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : Fragment(R.layout.fragment_login) {
+
+    @Inject
+    lateinit var preferenceHandler: PreferenceHandler
 
     private val loginViewModel: LoginViewModel by viewModels()
 
@@ -64,14 +65,13 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             result?.let { response ->
                 when (response) {
                     is Success -> {
-                        fragmentLoginBinding.loginProgress.visibility = View.GONE
                         sharedPreferences.edit()?.let { editor ->
                             editor.putString(LOGIN_TOKEN, response.data)
                             editor.apply()
                         }
-                        Toast.makeText(activity, "Login Successful!", Toast.LENGTH_LONG).show()
-                        val intent = Intent(activity, HomeActivity::class.java)
-                        startActivity(intent)
+                        sharedPreferences.getString(LOGIN_TOKEN, null)?.let {
+                            loginViewModel.getUserInfo(it)
+                        }
                     }
                     is Resource.Error -> {
                         fragmentLoginBinding.loginProgress.visibility = View.GONE
@@ -81,6 +81,25 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         fragmentLoginBinding.loginProgress.visibility = View.VISIBLE
                     }
                 }
+            }
+        })
+
+        loginViewModel.userInfo.observe(viewLifecycleOwner, { result ->
+            result?.let { response ->
+                when(response){
+                    is Success -> {
+                        preferenceHandler.save(USER_INFO, Gson().toJson(response.data))
+                        fragmentLoginBinding.loginProgress.visibility = View.GONE
+                        Toast.makeText(activity, "Login Successful!", Toast.LENGTH_LONG).show()
+                        val intent = Intent(activity, HomeActivity::class.java)
+                        startActivity(intent)
+                    }
+                    is Resource.Error -> {
+                        fragmentLoginBinding.loginProgress.visibility = View.GONE
+                        Toast.makeText(activity, "Login Failure! Please try again.", Toast.LENGTH_LONG).show()
+                    }
+                }
+
             }
         })
     }

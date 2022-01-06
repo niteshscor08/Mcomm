@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/mcomm_blue_light_tint"
-        tools:context=".presentation.audio.view.AudioActivity">
+        tools:context=".presentation.audio.view.AudioDialogFragment">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/audio_appbar"
@@ -81,6 +81,7 @@
                         app:layout_constraintTop_toTopOf="@+id/audio_group" />
 
                     <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/timer"
                         style="@style/text_open_sans_14"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -99,7 +100,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_mcomm_blue_circle"
-            app:layout_constraintBottom_toTopOf="@+id/include"
+            app:layout_constraintBottom_toTopOf="@+id/bottom_bar_call_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/audio_appbar" />
@@ -108,6 +109,7 @@
             android:layout_width="122dp"
             android:layout_height="122dp"
             android:layout_marginTop="40dp"
+            android:id="@+id/user_image"
             android:src="@drawable/ic_launcher_background"
             app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
             app:layout_constraintEnd_toEndOf="@+id/appCompatImageView4"
@@ -115,7 +117,7 @@
             app:layout_constraintTop_toTopOf="@+id/appCompatImageView4" />
 
         <include
-            android:id="@+id/include"
+            android:id="@+id/bottom_bar_call_layout"
             layout="@layout/item_bottom_call_layout"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

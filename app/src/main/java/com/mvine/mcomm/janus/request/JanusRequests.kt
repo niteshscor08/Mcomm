@@ -4,8 +4,6 @@ import android.os.Parcelable
 import com.mvine.janusclient.JanusMessageType
 import com.mvine.janusclient.JanusSupportedPluginPackages
 import com.mvine.janusclient.TransactionType
-import com.mvine.mcomm.janus.utils.CommonValues
-import com.mvine.mcomm.janus.utils.RandomString
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

@@ -4,9 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mvine.mcomm.data.model.response.PersonInfo
 import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.domain.usecase.LoginUseCase
 import com.mvine.mcomm.domain.util.Resource.*
+import com.mvine.mcomm.util.LOGIN_TOKEN
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
@@ -28,6 +30,10 @@ class LoginViewModel @Inject constructor(
         MutableLiveData()
     val cookieLiveData: LiveData<Resource<String?>> = _cookieLiveData
 
+    private val _userInfo: MutableLiveData<Resource<PersonInfo>> =
+        MutableLiveData()
+    val userInfo: LiveData<Resource<PersonInfo>> = _userInfo
+
     fun login(username: String, password: String) {
         viewModelScope.launch(dispatcher) {
             with(_cookieLiveData) {
@@ -35,6 +41,14 @@ class LoginViewModel @Inject constructor(
                 postValue(loginUseCase.login(username, password))
             }
         }
+    }
+
+    fun getUserInfo(cookie: String){
+            viewModelScope.launch(dispatcher) {
+                _userInfo.apply {
+                    postValue(loginUseCase.getUserInfo(cookie))
+                }
+            }
     }
 
 }
