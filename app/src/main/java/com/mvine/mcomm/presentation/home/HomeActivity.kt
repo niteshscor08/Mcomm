@@ -66,7 +66,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Au
         checkPermissionsAndStartService()
         initializeAudioScreen()
         subscribeObservers()
-        janusManager.connect()
+        startJanusSession()
     }
 
     private fun setUpNavController() {
@@ -228,6 +228,19 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Au
                 it.dismiss()
             }
         }
+    }
+
+    private fun startJanusSession(){
+        janusManager.connect()
+    }
+
+    private fun endJanusSession(){
+        janusManager.endJanusSession()
+    }
+
+    override fun onDestroy() {
+        endJanusSession()
+        super.onDestroy()
     }
 
 }
