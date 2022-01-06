@@ -1,27 +1,42 @@
 package com.mvine.mcomm.janus.commonvalues
 
-import androidx.annotation.StringDef
+enum class CallStatus(
+     val status: String
+) {
 
-@StringDef(
-    CallStatus.CREATE,
-    CallStatus.REGISTER,
-    CallStatus.REQUEST,
-    CallStatus.CALL,
-    CallStatus.MESSAGE,
-    CallStatus.ACCEPT,
-    CallStatus.HANGUP,
-    CallStatus.DECLINE
-)
-@Retention(AnnotationRetention.SOURCE)
-annotation class CallStatus {
-    companion object {
-        const val CREATE = "create"
-        const val REGISTER = "register"
-        const val REQUEST = "request"
-        const val CALL = "call"
-        const val MESSAGE = "message"
-        const val ACCEPT = "accept"
-        const val HANGUP = "hangup"
-        const val DECLINE = "decline"
-    }
+    CREATE("create"),
+
+    REGISTERED ("registered"),
+
+    REGISTERING ("registering"),
+
+    REGISTER("register"),
+
+    REGISTRATION_FAILED ("registration_failed"),
+
+    ACCEPT("accept"),
+
+    ACCEPTED ("accepted"),
+
+    CALL("call"),
+
+    CALLING ("calling"),
+
+    RINGING ("ringing"),
+
+    PROCEEDING (  "proceeding"),
+
+    DECLINING (  "declining"),
+
+    HANGINGUP ("hangingup"),
+
+    HANGUP ("hangup"),
+
+    INCOMING_CALL ("incomingcall"),
+
+    REQUEST("request"),
+
+    MESSAGE("message"),
+
+    DECLINE("decline");
 }

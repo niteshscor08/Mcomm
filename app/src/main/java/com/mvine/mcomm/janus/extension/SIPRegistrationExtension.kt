@@ -4,17 +4,15 @@ import android.util.Log
 import com.mvine.janusclient.PluginHandleSendMessageCallbacks
 import com.mvine.mcomm.janus.JanusManager
 import com.mvine.mcomm.janus.JanusManager.Companion.TAG
-import com.mvine.mcomm.janus.commonvalues.CallStatus.Companion.MESSAGE
-import com.mvine.mcomm.janus.commonvalues.CallStatus.Companion.REGISTER
-import com.mvine.mcomm.janus.commonvalues.CallStatus.Companion.REQUEST
+import com.mvine.mcomm.janus.commonvalues.CallStatus
 import org.json.JSONObject
 
 fun JanusManager.startSIPRegistration() {
-    var obj: JSONObject?= null
-    personInfo?.let { personInfo ->
+    var obj: JSONObject?
+    personInfo.let { personInfo ->
         personInfo.view.apply {
             obj =  JSONObject().apply {
-                put(REQUEST, REGISTER)
+                put(CallStatus.REQUEST.status, CallStatus.REGISTER.status)
                 put("authuser", nSTX)
                 put("username", "sip:$nSTX@portaluat.mvine.com")
                 put("secret", nastrpass)
@@ -24,7 +22,7 @@ fun JanusManager.startSIPRegistration() {
         }
     }
     val message = JSONObject().apply {
-        put(MESSAGE, obj)
+        put(CallStatus.MESSAGE.status, obj)
     }
     handle?.sendMessage(object : PluginHandleSendMessageCallbacks(message) {
         override fun onSuccessSynchronous(obj: JSONObject?) {

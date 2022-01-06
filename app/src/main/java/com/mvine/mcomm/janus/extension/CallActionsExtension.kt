@@ -5,12 +5,7 @@ import com.mvine.janusclient.PluginHandleSendMessageCallbacks
 import com.mvine.janusclient.PluginHandleWebRTCCallbacks
 import com.mvine.mcomm.janus.JanusManager
 import com.mvine.mcomm.janus.JanusManager.Companion.TAG
-import com.mvine.mcomm.janus.commonvalues.CallStatus.Companion.ACCEPT
-import com.mvine.mcomm.janus.commonvalues.CallStatus.Companion.CALL
-import com.mvine.mcomm.janus.commonvalues.CallStatus.Companion.DECLINE
-import com.mvine.mcomm.janus.commonvalues.CallStatus.Companion.HANGUP
-import com.mvine.mcomm.janus.commonvalues.CallStatus.Companion.MESSAGE
-import com.mvine.mcomm.janus.commonvalues.CallStatus.Companion.REQUEST
+import com.mvine.mcomm.janus.commonvalues.CallStatus
 import com.mvine.mcomm.janus.commonvalues.CommonValues.Companion.JSEP
 import com.mvine.mcomm.janus.commonvalues.CommonValues.Companion.URI
 import org.json.JSONObject
@@ -24,10 +19,10 @@ fun JanusManager.call() {
                 Log.d(TAG,"createOffer.onSuccess $obj")
                 val msg = JSONObject()
                 val body = JSONObject()
-                body.put(REQUEST, CALL)
+                body.put(CallStatus.REQUEST.status, CallStatus.CALL.status)
                 var addr = sipRemoteAddress
                 body.put(URI, addr)
-                msg.put(MESSAGE, body)
+                msg.put(CallStatus.MESSAGE.status, body)
                 msg.put(JSEP, obj)
                 handle!!.sendMessage(object :
                     PluginHandleSendMessageCallbacks(msg) {
@@ -70,9 +65,9 @@ fun JanusManager.pickup() {
             super.onSuccess(obj)
             Log.d(TAG,"createAnswer.onSuccess $obj")
 
-            val body = JSONObject().apply { put(REQUEST, ACCEPT) }
+            val body = JSONObject().apply { put(CallStatus.REQUEST.status, CallStatus.ACCEPT.status) }
             val msg = JSONObject().apply {
-                put(MESSAGE, body)
+                put(CallStatus.MESSAGE.status, body)
                 put(JSEP, obj)
             }
             handle!!.sendMessage(object : PluginHandleSendMessageCallbacks(msg) {
@@ -108,15 +103,15 @@ fun JanusManager.pickup() {
 fun JanusManager.hangUp() {
         val msg  = JSONObject()
         val body = JSONObject()
-        body.put(REQUEST, HANGUP)
-        msg.put(MESSAGE, body)
+        body.put(CallStatus.REQUEST.status, CallStatus.HANGUP.status)
+        msg.put(CallStatus.MESSAGE.status, body)
         handle?.sendMessage(PluginHandleSendMessageCallbacks(msg))
 }
 
 fun JanusManager.decline() {
     val msg = JSONObject()
     val body = JSONObject()
-    body.put(REQUEST, DECLINE)
-    msg.put(MESSAGE, body)
+    body.put(CallStatus.REQUEST.status, CallStatus.DECLINE.status)
+    msg.put(CallStatus.MESSAGE.status, body)
     handle?.sendMessage(PluginHandleSendMessageCallbacks(msg))
 }

@@ -14,14 +14,9 @@ import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.ActivityHomeBinding
 import com.mvine.mcomm.domain.model.CallState
 import com.mvine.mcomm.janus.JanusManager
+import com.mvine.mcomm.janus.commonvalues.CallStatus
 import com.mvine.mcomm.janus.commonvalues.CommonValues.Companion.INCOMING
 import com.mvine.mcomm.janus.commonvalues.CommonValues.Companion.OUTGOING
-import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_ACCEPTED
-import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_DECLINING
-import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_HANGUP
-import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_INCOMING_CALL
-import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_REGISTERED
-import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_REGISTRATION_FAILED
 import com.mvine.mcomm.janus.extension.*
 import com.mvine.mcomm.presentation.audio.view.AudioDialogFragment
 import com.mvine.mcomm.presentation.audio.view.AudioDialogListener
@@ -137,21 +132,21 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Au
     private fun subscribeObservers(){
         janusManager.janusConnectionStatus.observe(this, {
             when(it){
-                JANUS_REGISTRATION_FAILED -> {
+                CallStatus.REGISTRATION_FAILED.status -> {
                     dismissCallDialog()
                 }
-                JANUS_INCOMING_CALL -> {
+                CallStatus.INCOMING_CALL.status -> {
                     showCallsPopUp(EMPTY_STRING, INCOMING, callState.remoteDisplayName, callState.remoteUrl)
                 }
-                JANUS_DECLINING, JANUS_HANGUP -> {
+                CallStatus.DECLINING.status, CallStatus.HANGUP.status -> {
                     dismissCallDialog()
                     dismissAudioDialog()
                 }
-                JANUS_ACCEPTED -> {
+                CallStatus.ACCEPTED.status -> {
                     dismissCallDialog()
                     audioDialog.show(this.supportFragmentManager, AudioDialogFragment::class.java.simpleName)
                 }
-                JANUS_REGISTERED -> {
+                CallStatus.REGISTERED.status -> {
                     if(isCalling){
                         if(callDialog.isVisible){
                             janusManager.call()

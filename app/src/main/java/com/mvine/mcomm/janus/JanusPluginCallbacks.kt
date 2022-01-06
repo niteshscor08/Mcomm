@@ -4,15 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.mvine.janusclient.*
 import com.mvine.mcomm.domain.model.CallState
-import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_ACCEPTED
-import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_CALLING
-import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_DECLINING
-import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_HANGUP
-import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_INCOMING_CALL
-import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_REGISTERED
-import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_REGISTERING
-import com.mvine.mcomm.janus.commonvalues.JanusStatus.Companion.JANUS_RINGING
-import com.mvine.mcomm.janus.extension.call
+import com.mvine.mcomm.janus.commonvalues.CallStatus
 import com.mvine.mcomm.janus.extension.startSIPRegistration
 import org.json.JSONObject
 import org.webrtc.MediaStream
@@ -91,17 +83,17 @@ class JanusPluginCallbacks(
                     val result = msg.getJSONObject(RESULT)
                     val connectionStatus = result.getString(EVENT)
                     when(connectionStatus){
-                        JANUS_ACCEPTED -> {
+                        CallStatus.ACCEPTED.status -> {
                             mediaPlayerHandler.stopRinging()
                             audioFocusHandler.configureAudio(true)
                         }
-                        JANUS_CALLING , JANUS_RINGING-> {
+                        CallStatus.CALLING.status, CallStatus.RINGING.status -> {
 
                         }
-                        JANUS_DECLINING, JANUS_HANGUP -> {
+                        CallStatus.DECLINING.status, CallStatus.HANGUP.status -> {
                             mediaPlayerHandler.stopRinging()
                         }
-                        JANUS_INCOMING_CALL -> {
+                        CallStatus.INCOMING_CALL.status -> {
                             configureCallState(result)
                             mediaPlayerHandler.startRinging()
                         }
