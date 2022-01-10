@@ -26,6 +26,10 @@
             android:name=".presentation.home.HomeActivity"
             android:theme="@style/Theme.MaterialComponents.NoActionBar" />
 
+        <activity
+            android:name=".presentation.audio.view.AudioActivity"
+            android:theme="@style/Theme.MaterialComponents.NoActionBar" />
+
         <activity android:name=".presentation.login.view.ChangePasswordActivity"
             android:theme="@style/Theme.MaterialComponents.NoActionBar"/>
     </application>
