@@ -50,7 +50,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Au
 
     lateinit var callDialog: CallDialog
 
-    private var isCalling : Boolean = false
+    private var isRegistered : Boolean = false
 
     override val layoutId: Int
         get() =  R.layout.activity_home
@@ -147,12 +147,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Au
                     audioDialog.show(this.supportFragmentManager, AudioDialogFragment::class.java.simpleName)
                 }
                 CallStatus.REGISTERED.status -> {
-                    if(isCalling){
-                        if(callDialog.isVisible){
-                            janusManager.call()
-                        }
-                        isCalling = false
-                    }
+                    isRegistered = true
                 }
             }
         })
@@ -163,10 +158,10 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Au
     }
 
     fun startOutgoingCall(sTX: String, userName : String, uri : String) {
-        isCalling = true
-        showCallsPopUp(sTX, OUTGOING, userName, uri )
-        janusManager.sipRemoteAddress = sTX.toSIPRemoteAddress()
-        janusManager.call()
+        if(isRegistered) {
+            showCallsPopUp(sTX, OUTGOING, userName, uri)
+            janusManager.call(sTX.toSIPRemoteAddress())
+        }
     }
 
 

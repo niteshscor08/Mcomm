@@ -28,7 +28,6 @@ class JanusManager(private val context: Context,
     private val _janusConnectionStatus: MutableLiveData<String> =
         MutableLiveData(EMPTY_STRING)
     val janusConnectionStatus: LiveData<String> = _janusConnectionStatus
-    lateinit var sipRemoteAddress : String
     private val serviceHandler = ServiceHandler(WeakReference(this@JanusManager))
 
 
@@ -117,6 +116,11 @@ class JanusManager(private val context: Context,
         audioFocusHandler.resetAudioControls()
         handle?.detach()
         janusServer?.Destroy()
+    }
+
+    fun startCallDialing(){
+        audioFocusHandler.configureAudio(true)
+        mediaPlayerHandler.startCallDialing()
     }
 
     companion object{
