@@ -10,6 +10,4 @@ import com.mvine.mcomm.domain.util.Resource
 interface CallsRepository {
 
     suspend fun getRecentCalls(cookie: String): Resource<ArrayList<CallData>>
-
-    suspend fun getUserInfo(cookie: String):  Resource<PersonInfo>
 }

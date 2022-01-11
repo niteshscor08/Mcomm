@@ -21,6 +21,10 @@ class PreferenceHandler @Inject constructor(@ApplicationContext val context: Con
         }
     }
 
+    fun getValue(key: String): String? {
+        return sharedPreferences.getString(key, null)
+    }
+
     fun get(key: String): PersonInfo {
        val value = sharedPreferences.getString(key, null)
        return Gson().fromJson(value, PersonInfo::class.java)

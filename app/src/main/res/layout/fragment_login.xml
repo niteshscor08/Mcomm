@@ -49,7 +49,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="textEmailAddress"
-                android:onTextChanged="@{loginViewModel.onEmailTextChange}"
+                android:onTextChanged="@{loginViewModel::onEmailTextChange}"
                 style="@style/text_open_sans_medium"
                 android:textColorHint="@color/white"
                 android:hint="@string/email" />
@@ -80,7 +80,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_password"
                 android:layout_width="match_parent"
-                android:onTextChanged="@{loginViewModel.onPasswordTextChange}"
+                android:onTextChanged="@{loginViewModel::onPasswordTextChange}"
                 style="@style/text_open_sans_medium"
                 android:inputType="textPassword"
                 android:textColorHint="@color/white"

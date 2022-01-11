@@ -47,8 +47,7 @@ class JanusManager(private val context: Context,
     }
 
     private fun createJanusSession() {
-        val sharedPreferences = context.getSharedPreferences(MCOMM_SHARED_PREFERENCES, Context.MODE_PRIVATE)
-        sharedPreferences.getString(LOGIN_TOKEN, null)?.let { cookie ->
+        preferenceHandler.getValue(LOGIN_TOKEN)?.let { cookie ->
             janusServer.Connect(cookie)
         }
     }

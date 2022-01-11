@@ -1,8 +1,6 @@
 package com.mvine.mcomm.presentation.login.view
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -30,8 +28,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
 
     private val loginViewModel: LoginViewModel by viewModels()
 
-    private lateinit var sharedPreferences: SharedPreferences
-
     override val bindingVariable: Int
         get() = BR.loginViewModel
 
@@ -46,10 +42,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
         super.onViewCreated(view, savedInstanceState)
         subscribeObservers()
         initListeners()
-        sharedPreferences = requireContext().getSharedPreferences(
-            MCOMM_SHARED_PREFERENCES,
-            Context.MODE_PRIVATE
-        )
         setUpData()
     }
 
@@ -58,13 +50,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
             result?.let { response ->
                 when (response) {
                     is Success -> {
-                        sharedPreferences.edit()?.let { editor ->
-                            editor.putString(LOGIN_TOKEN, response.data)
-                            editor.apply()
-                        }
-                        sharedPreferences.getString(LOGIN_TOKEN, null)?.let {
-                            loginViewModel.getUserInfo(it)
-                        }?: showToastMessage(R.string.login_failure)
+                        response.data?.let { token ->
+                            preferenceHandler.save(LOGIN_TOKEN, token)
+                            loginViewModel.getUserInfo(token)
+                        } ?: showToastMessage(R.string.login_failure)
                     }
                     is Resource.Error -> {
                         showToastMessage(R.string.login_failure)
