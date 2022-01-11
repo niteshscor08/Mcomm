@@ -5,6 +5,14 @@
 
     <data>
 
+        <variable
+            name="view"
+            type="android.view.View" />
+
+        <variable
+            name="loginViewModel"
+            type="com.mvine.mcomm.presentation.login.viewmodel.LoginViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -41,10 +49,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="textEmailAddress"
+                android:onTextChanged="@{loginViewModel.onEmailTextChange}"
                 style="@style/text_open_sans_medium"
                 android:textColorHint="@color/white"
                 android:hint="@string/email" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/email_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/email_error"
+            android:textSize="@dimen/size_11dp"
+            android:visibility="@{loginViewModel.hideEmailErrorMsg? view.GONE : view.VISIBLE}"
+            android:textColor="@android:color/holo_red_dark"
+            app:layout_constraintStart_toStartOf="@+id/tl_email"
+            app:layout_constraintTop_toBottomOf="@+id/tl_email" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tl_password"
@@ -60,12 +80,25 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_password"
                 android:layout_width="match_parent"
+                android:onTextChanged="@{loginViewModel.onPasswordTextChange}"
                 style="@style/text_open_sans_medium"
                 android:inputType="textPassword"
                 android:textColorHint="@color/white"
                 android:layout_height="wrap_content"
                 android:hint="@string/password" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/password_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/password_error"
+            android:visibility="@{loginViewModel.hidePasswordErrorMsg? view.GONE : view.VISIBLE}"
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="@dimen/size_11dp"
+            app:layout_constraintEnd_toEndOf="@+id/tl_password"
+            app:layout_constraintStart_toStartOf="@+id/tl_password"
+            app:layout_constraintTop_toBottomOf="@+id/tl_password" />
 
         <TextView
             android:id="@+id/btn_login"
