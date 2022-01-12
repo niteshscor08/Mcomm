@@ -1,6 +1,7 @@
 package com.mvine.mcomm.presentation.home
 
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
@@ -18,12 +19,13 @@ import com.mvine.mcomm.janus.commonvalues.CallStatus
 import com.mvine.mcomm.janus.commonvalues.CommonValues.Companion.INCOMING
 import com.mvine.mcomm.janus.commonvalues.CommonValues.Companion.OUTGOING
 import com.mvine.mcomm.janus.extension.*
-import com.mvine.mcomm.presentation.audio.view.AudioDialogFragment
+import com.mvine.mcomm.presentation.audio.view.AudioActivity
 import com.mvine.mcomm.presentation.audio.view.AudioDialogListener
 import com.mvine.mcomm.presentation.common.base.BaseActivity
 import com.mvine.mcomm.presentation.common.dialog.CallDialog
 import com.mvine.mcomm.presentation.common.dialog.CallDialogData
 import com.mvine.mcomm.presentation.common.dialog.CallDialogListener
+import com.mvine.mcomm.presentation.login.view.ChangePasswordActivity
 import com.mvine.mcomm.util.EMPTY_STRING
 import com.mvine.mcomm.util.showKeyboard
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,7 +36,7 @@ import javax.inject.Inject
  */
 
 @AndroidEntryPoint
-class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, AudioDialogListener {
+class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener {
 
     @Inject
     lateinit var janusManager: JanusManager
@@ -46,11 +48,9 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Au
 
     private lateinit var navController: NavController
 
-    private lateinit var audioDialog : AudioDialogFragment
-
     lateinit var callDialog: CallDialog
 
-    private var isCalling : Boolean = false
+    private var isRegistered : Boolean = false
 
     override val layoutId: Int
         get() =  R.layout.activity_home
@@ -126,7 +126,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Au
     }
 
     private fun initializeAudioScreen(){
-        audioDialog = AudioDialogFragment(this, callState)
+       // audioDialog = AudioDialogFragment(this, callState)
     }
 
     private fun subscribeObservers(){
@@ -140,19 +140,14 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Au
                 }
                 CallStatus.DECLINING.status, CallStatus.HANGUP.status -> {
                     dismissCallDialog()
-                    dismissAudioDialog()
                 }
                 CallStatus.ACCEPTED.status -> {
                     dismissCallDialog()
-                    audioDialog.show(this.supportFragmentManager, AudioDialogFragment::class.java.simpleName)
+                    val intent = Intent(this, AudioActivity::class.java)
+                    startActivity(intent)
                 }
                 CallStatus.REGISTERED.status -> {
-                    if(isCalling){
-                        if(callDialog.isVisible){
-                            janusManager.call()
-                        }
-                        isCalling = false
-                    }
+                    isRegistered = true
                 }
             }
         })
@@ -163,10 +158,10 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Au
     }
 
     fun startOutgoingCall(sTX: String, userName : String, uri : String) {
-        isCalling = true
-        showCallsPopUp(sTX, OUTGOING, userName, uri )
-        janusManager.sipRemoteAddress = sTX.toSIPRemoteAddress()
-        janusManager.call()
+        if(isRegistered) {
+            showCallsPopUp(sTX, OUTGOING, userName, uri)
+            janusManager.call(sTX.toSIPRemoteAddress())
+        }
     }
 
 
@@ -209,21 +204,8 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Au
         dismissCallDialog()
     }
 
-    override fun onCallHangUp() {
-        janusManager.hangUp()
-        dismissAudioDialog()
-    }
-
     private fun dismissCallDialog(){
         callDialog?.let {
-            if(it.isVisible){
-                it.dismiss()
-            }
-        }
-    }
-
-    private fun dismissAudioDialog(){
-        audioDialog?.let {
             if(it.isVisible){
                 it.dismiss()
             }

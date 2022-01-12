@@ -22,6 +22,17 @@ class MediaPlayerHandler (private val context: Context) {
         }
     }
 
+    fun startCallDialing(){
+        val fd = context.assets.openFd("dialing.ogg")
+        mediaPlayer = MediaPlayer().apply {
+            setDataSource(fd.fileDescriptor, fd.startOffset, fd.length)
+            fd.close()
+            prepare()
+            isLooping = true
+            start()
+        }
+    }
+
     fun startRinging() {
         stopRinging()
         val notificationUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE)

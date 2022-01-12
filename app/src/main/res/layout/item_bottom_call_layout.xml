@@ -11,81 +11,65 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/mcomm_blue"
-        android:paddingLeft="27dp"
-        android:paddingRight="27dp"
+        android:paddingLeft="@dimen/size_27dp"
+        android:paddingRight="@dimen/size_27dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/bb_end_call"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="11dp"
-            android:layout_marginBottom="35dp"
+            android:layout_width="@dimen/space_14x"
+            android:layout_height="@dimen/space_14x"
+            android:layout_marginTop="@dimen/size_11dp"
+            android:layout_marginBottom="@dimen/size_35dp"
             android:src="@drawable/ic_call_red"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/bb_mic_bck"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_toggle_background"
-            app:layout_constraintBottom_toBottomOf="@+id/bb_end_call"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatToggleButton
             android:id="@+id/bb_mic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_mic_toggle"
-            app:layout_constraintBottom_toBottomOf="@+id/bb_mic_bck"
-            app:layout_constraintEnd_toEndOf="@+id/bb_mic_bck"
-            app:layout_constraintStart_toStartOf="@+id/bb_mic_bck"
-            app:layout_constraintTop_toTopOf="@+id/bb_mic_bck" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/bb_speaker_bck"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_toggle_background"
+            android:layout_width="@dimen/space_14x"
+            android:layout_height="@dimen/space_14x"
+            android:textOff=""
+            android:textOn=""
+            android:background="@drawable/ic_toggle_background"
+            android:drawableTop="@drawable/ic_mic_toggle"
+            android:paddingTop="@dimen/size_15dp"
             app:layout_constraintBottom_toBottomOf="@+id/bb_end_call"
-            app:layout_constraintEnd_toStartOf="@+id/bb_video_bck"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/bb_mic_bck" />
+            app:layout_constraintStart_toStartOf="parent"
+            />
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <ToggleButton
             android:id="@+id/bb_speaker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_speaker_toggle"
-            app:layout_constraintBottom_toBottomOf="@+id/bb_speaker_bck"
-            app:layout_constraintEnd_toEndOf="@+id/bb_speaker_bck"
-            app:layout_constraintStart_toStartOf="@+id/bb_speaker_bck"
-            app:layout_constraintTop_toTopOf="@+id/bb_speaker_bck" />
+            android:layout_width="@dimen/space_14x"
+            android:layout_height="@dimen/space_14x"
+            android:textOff=""
+            android:textOn=""
+            android:paddingTop="@dimen/space_4x"
+            android:background="@drawable/ic_toggle_background"
+            android:drawableTop="@drawable/ic_speaker_toggle"
+            app:layout_constraintBottom_toBottomOf="@+id/bb_end_call"
+            app:layout_constraintEnd_toStartOf="@+id/bb_video"
+            app:layout_constraintHorizontal_bias="@dimen/point_zero_five"
+            app:layout_constraintStart_toEndOf="@+id/bb_mic"
+            />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/bb_video_bck"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_toggle_background"
-            app:layout_constraintBottom_toBottomOf="@+id/bb_speaker_bck"
-            app:layout_constraintEnd_toStartOf="@+id/bb_end_call"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/bb_speaker_bck" />
-
-        <androidx.appcompat.widget.AppCompatImageView
+        <ToggleButton
             android:id="@+id/bb_video"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_video_toggle"
-            app:layout_constraintBottom_toBottomOf="@+id/bb_video_bck"
-            app:layout_constraintEnd_toEndOf="@+id/bb_video_bck"
-            app:layout_constraintStart_toStartOf="@+id/bb_video_bck"
-            app:layout_constraintTop_toTopOf="@+id/bb_video_bck" />
-
+            android:layout_width="@dimen/space_14x"
+            android:layout_height="@dimen/space_14x"
+            android:paddingTop="@dimen/size_19dp"
+            android:background="@drawable/ic_toggle_background"
+            android:drawableTop="@drawable/ic_video_toggle"
+            android:textOff=""
+            android:textOn=""
+            app:layout_constraintBottom_toBottomOf="@+id/bb_speaker"
+            app:layout_constraintEnd_toStartOf="@+id/bb_end_call"
+            app:layout_constraintHorizontal_bias="@dimen/point_zero_five"
+            app:layout_constraintStart_toEndOf="@+id/bb_speaker"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

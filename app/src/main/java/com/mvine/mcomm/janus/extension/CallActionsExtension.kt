@@ -10,8 +10,9 @@ import com.mvine.mcomm.janus.commonvalues.CommonValues.Companion.JSEP
 import com.mvine.mcomm.janus.commonvalues.CommonValues.Companion.URI
 import org.json.JSONObject
 
-fun JanusManager.call() {
+fun JanusManager.call(sipRemoteAddress: String) {
     try {
+        startCallDialing()
         Log.d(TAG, sipRemoteAddress)
         handle!!.createOffer(object :
             PluginHandleWebRTCCallbacks(mediaConstraints, null, true) {
