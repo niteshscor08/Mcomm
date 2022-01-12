@@ -7,11 +7,7 @@ import com.mvine.mcomm.data.api.CallsApiService
 import com.mvine.mcomm.data.api.ChatsApiService
 import com.mvine.mcomm.data.api.ContactsApiService
 import com.mvine.mcomm.data.api.LoginApiService
-import com.mvine.mcomm.data.repository.CallsRepoImpl
-import com.mvine.mcomm.data.repository.ChatsRepoImpl
-import com.mvine.mcomm.data.repository.ContactsRepoImpl
-import com.mvine.mcomm.data.repository.LoginRepoImpl
-import com.mvine.mcomm.data.repository.ChangePasswordRepositoryImpl
+import com.mvine.mcomm.data.repository.*
 import com.mvine.mcomm.data.repository.dataSource.CallsRemoteRepo
 import com.mvine.mcomm.data.repository.dataSource.ChatsRemoteRepo
 import com.mvine.mcomm.data.repository.dataSource.ContactsRemoteRepo
@@ -22,11 +18,7 @@ import com.mvine.mcomm.data.repository.dataSourceImpl.ChatsRemoteRepoImpl
 import com.mvine.mcomm.data.repository.dataSourceImpl.ContactsRemoteRepoImpl
 import com.mvine.mcomm.data.repository.dataSourceImpl.LoginRemoteRepoImpl
 import com.mvine.mcomm.data.repository.dataSourceImpl.ChangePasswordRemoteRepoImpl
-import com.mvine.mcomm.domain.repository.CallsRepository
-import com.mvine.mcomm.domain.repository.ChatsRepository
-import com.mvine.mcomm.domain.repository.ContactsRepository
-import com.mvine.mcomm.domain.repository.LoginRepository
-import com.mvine.mcomm.domain.repository.ChangePasswordRepository
+import com.mvine.mcomm.domain.repository.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -88,5 +80,10 @@ object RepositoryModule {
     @Provides
     fun provideChangePasswordRepositoryImpl(changePasswordRemoteRepo: ChangePasswordRemoteRepo): ChangePasswordRepository =
         ChangePasswordRepositoryImpl(changePasswordRemoteRepo)
+
+    @Singleton
+    @Provides
+    fun provideLogoutRepositoryImpl(logoutApiService: LogoutApiService): LogoutRepository =
+        LogoutRepositoryImpl(logoutApiService)
 
 }

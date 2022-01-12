@@ -3,11 +3,7 @@ package com.mvine.mcomm.di
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.mvine.mcomm.BuildConfig
-import com.mvine.mcomm.data.api.CallsApiService
-import com.mvine.mcomm.data.api.ChatsApiService
-import com.mvine.mcomm.data.api.ContactsApiService
-import com.mvine.mcomm.data.api.LoginApiService
-import com.mvine.mcomm.data.api.ChangePasswordApiService
+import com.mvine.mcomm.data.api.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -74,5 +70,12 @@ object RetrofitModule {
     fun provideChangePasswordApiService(retrofit: Retrofit.Builder): ChangePasswordApiService {
         return retrofit.build().create(ChangePasswordApiService::class.java)
     }
+
+    @Singleton
+    @Provides
+    fun provideLogoutApiService(retrofit: Retrofit.Builder): LogoutApiService {
+        return retrofit.build().create(LogoutApiService::class.java)
+    }
+
 
 }

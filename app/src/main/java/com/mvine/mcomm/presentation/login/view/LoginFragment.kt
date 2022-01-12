@@ -75,6 +75,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
                         showToastMessage(R.string.login_successful)
                         val intent = Intent(activity, HomeActivity::class.java)
                         startActivity(intent)
+                        activity?.finish()
                     }
                     is Resource.Error -> {
                         showToastMessage(R.string.login_failure)
