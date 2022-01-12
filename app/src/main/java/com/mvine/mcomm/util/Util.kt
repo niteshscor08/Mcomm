@@ -14,3 +14,7 @@ fun extractEpochTime(token : String): Long {
     }
     return epochTime.toLong()
 }
+
+fun getSubStringBasedOnIndex(input: String, index : Int): String {
+    return input.substring(0,index)
+}

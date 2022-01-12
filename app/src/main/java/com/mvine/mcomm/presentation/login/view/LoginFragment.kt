@@ -52,17 +52,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
                         response.data?.let { token ->
                             val savedToken = loginViewModel.getCredentialData().token
                             savedToken?.let {
-                                if(loginViewModel.checkTokenValidity(savedToken)){
-                                    loginViewModel.getUserInfo(it)
-                                }else{
-                                    if(loginViewModel.getCredentialData().isRefresh == false){
-                                        saveUserdata(token,true)
-                                    }else {
-                                        clearData()
-                                        showToastMessage(R.string.login_failure)
-                                    }
-                                }
-                            }?: saveUserdata(token)
+                                subsequenceLaunched(token, it)
+                            }?: firstLaunch(token)
 
                         } ?: showToastMessage(R.string.login_failure)
                     }
@@ -95,6 +86,23 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
 
             }
         })
+    }
+
+    private fun firstLaunch(token: String){
+        saveUserdata(token)
+    }
+
+    private fun subsequenceLaunched(token: String, savedToken : String){
+        if(loginViewModel.checkTokenValidity(savedToken)){
+            loginViewModel.getUserInfo(savedToken)
+        }else{
+            if(loginViewModel.getCredentialData().isRefresh == false){
+                saveUserdata(token,true)
+            }else {
+                loginViewModel.clearSavedUserInformation()
+                showToastMessage(R.string.login_failure)
+            }
+        }
     }
 
     private fun saveUserdata(token: String, isRefesh : Boolean = false) {
@@ -157,10 +165,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
                 }
             }
         }
-    }
-
-    private fun clearData(){
-        preferenceHandler.clearData()
     }
 
     private fun showToastMessage(msgId : Int){

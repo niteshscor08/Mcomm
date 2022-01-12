@@ -12,10 +12,7 @@ import com.mvine.mcomm.domain.usecase.LoginUseCase
 import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.domain.util.Resource.*
 import com.mvine.mcomm.presentation.common.base.BaseViewModel
-import com.mvine.mcomm.util.CREDENTIAL_DATA
-import com.mvine.mcomm.util.LOGIN_TOKEN
-import com.mvine.mcomm.util.PreferenceHandler
-import com.mvine.mcomm.util.extractEpochTime
+import com.mvine.mcomm.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
@@ -75,25 +72,17 @@ class LoginViewModel @Inject constructor(
         _hideEmailErrorMsg.postValue(Patterns.EMAIL_ADDRESS.matcher(s.toString()).matches())
     }
 
-
-     fun checkTokenValidity(token : String?): Boolean{
+    fun checkTokenValidity(token : String?): Boolean{
          if(token.isNullOrEmpty()){
              return false
          }
         val tokenTime: Long = extractEpochTime(token.substringAfter(TIME_EXTRACTOR))
-        val currentTime: Long = System.currentTimeMillis().let {
-            it.toString().substring(0, it.toString().length - 3).toLong()
-        }
-        val timeDifference = if(currentTime > tokenTime){
-             currentTime - tokenTime
-         }else {
-             tokenTime - currentTime
-         }
-         Log.i("timeDifference", timeDifference.toString())
+        val currentTime: Long = getSubStringBasedOnIndex(System.currentTimeMillis().toString(), tokenTime.toString().length ).toLong()
+        val timeDifference = currentTime - tokenTime
         if(timeDifference >= TIME_DIFF ){
             return false
         }
-         return true
+        return true
     }
 
     fun saveCredentialData(username: String?, password: String?, token: String?, isRefresh : Boolean?= false){
@@ -115,10 +104,14 @@ class LoginViewModel @Inject constructor(
       }?:  return CredentialData()
     }
 
+    fun clearSavedUserInformation(){
+        preferenceHandler.clearData()
+    }
+
     companion object{
         const val PASSWORD_LENGTH = 5
         const val TIME_EXTRACTOR = "time:"
-        const val TIME_DIFF = 200L
+        const val TIME_DIFF = 14040L
     }
 
 }
