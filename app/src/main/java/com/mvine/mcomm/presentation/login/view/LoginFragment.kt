@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import com.google.gson.Gson
 import com.mvine.mcomm.BR
-import com.mvine.mcomm.BuildConfig
 import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.FragmentLoginBinding
 import com.mvine.mcomm.domain.util.Resource
@@ -51,8 +50,20 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
                 when (response) {
                     is Success -> {
                         response.data?.let { token ->
-                            preferenceHandler.save(LOGIN_TOKEN, token)
-                            loginViewModel.getUserInfo(token)
+                            val savedToken = loginViewModel.getCredentialData().token
+                            savedToken?.let {
+                                if(loginViewModel.checkTokenValidity(savedToken)){
+                                    loginViewModel.getUserInfo(it)
+                                }else{
+                                    if(loginViewModel.getCredentialData().isRefresh == false){
+                                        saveUserdata(token,true)
+                                    }else {
+                                        clearData()
+                                        showToastMessage(R.string.login_failure)
+                                    }
+                                }
+                            }?: saveUserdata(token)
+
                         } ?: showToastMessage(R.string.login_failure)
                     }
                     is Resource.Error -> {
@@ -86,11 +97,33 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
         })
     }
 
+    private fun saveUserdata(token: String, isRefesh : Boolean = false) {
+        loginViewModel.saveCredentialData(
+            token = token,
+           username =  binding.etEmail.text.toString(),
+           password =  binding.etPassword.text.toString(),
+           isRefresh =  isRefesh
+        )
+        loginViewModel.getUserInfo(token)
+    }
+
     private fun setUpData() {
-        if (BuildConfig.DEBUG) {
-            binding.etEmail.setText("jordan+1@mvine.com", TextView.BufferType.EDITABLE)
-            binding.etPassword.setText("Abcd1!", TextView.BufferType.EDITABLE)
-        }
+        val credentialData = loginViewModel.getCredentialData()
+            val username = credentialData.userName
+            val password = credentialData.password
+            username?.let {
+                binding.etEmail.setText(it, TextView.BufferType.EDITABLE)
+            }
+            password?.let {
+                binding.etPassword.setText(it, TextView.BufferType.EDITABLE)
+            }
+            credentialData.token?.let {
+                username?.let { userName -> password?.let { password ->
+                    loginViewModel?.login(userName,
+                        password
+                    )
+                } }
+            }
     }
 
     private fun initListeners() {
@@ -124,6 +157,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
                 }
             }
         }
+    }
+
+    private fun clearData(){
+        preferenceHandler.clearData()
     }
 
     private fun showToastMessage(msgId : Int){

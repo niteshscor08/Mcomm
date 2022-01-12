@@ -1,14 +1,21 @@
 package com.mvine.mcomm.presentation.login.viewmodel
 
+import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import com.mvine.mcomm.data.model.response.PersonInfo
-import com.mvine.mcomm.domain.util.Resource
+import com.mvine.mcomm.domain.model.CredentialData
 import com.mvine.mcomm.domain.usecase.LoginUseCase
+import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.domain.util.Resource.*
 import com.mvine.mcomm.presentation.common.base.BaseViewModel
+import com.mvine.mcomm.util.CREDENTIAL_DATA
+import com.mvine.mcomm.util.LOGIN_TOKEN
+import com.mvine.mcomm.util.PreferenceHandler
+import com.mvine.mcomm.util.extractEpochTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
@@ -23,7 +30,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val dispatcher: CoroutineDispatcher
+    private val dispatcher: CoroutineDispatcher,
+    private val preferenceHandler: PreferenceHandler
 ): BaseViewModel() {
 
     private val _cookieLiveData: MutableLiveData<Resource<String?>> =
@@ -67,8 +75,50 @@ class LoginViewModel @Inject constructor(
         _hideEmailErrorMsg.postValue(Patterns.EMAIL_ADDRESS.matcher(s.toString()).matches())
     }
 
+
+     fun checkTokenValidity(token : String?): Boolean{
+         if(token.isNullOrEmpty()){
+             return false
+         }
+        val tokenTime: Long = extractEpochTime(token.substringAfter(TIME_EXTRACTOR))
+        val currentTime: Long = System.currentTimeMillis().let {
+            it.toString().substring(0, it.toString().length - 3).toLong()
+        }
+        val timeDifference = if(currentTime > tokenTime){
+             currentTime - tokenTime
+         }else {
+             tokenTime - currentTime
+         }
+         Log.i("timeDifference", timeDifference.toString())
+        if(timeDifference >= TIME_DIFF ){
+            return false
+        }
+         return true
+    }
+
+    fun saveCredentialData(username: String?, password: String?, token: String?, isRefresh : Boolean?= false){
+        val credentialData = CredentialData(
+            userName = username,
+            password = password,
+            token = token,
+            isRefresh = isRefresh
+        )
+        preferenceHandler.save(LOGIN_TOKEN, token)
+        preferenceHandler.save( CREDENTIAL_DATA,
+            Gson().toJson(credentialData)
+        )
+    }
+
+    fun getCredentialData(): CredentialData {
+      preferenceHandler.getValue(CREDENTIAL_DATA)?.let {
+          return   Gson().fromJson(it, CredentialData::class.java)
+      }?:  return CredentialData()
+    }
+
     companion object{
         const val PASSWORD_LENGTH = 5
+        const val TIME_EXTRACTOR = "time:"
+        const val TIME_DIFF = 200L
     }
 
 }
