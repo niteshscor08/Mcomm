@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mvine.mcomm.data.model.response.PersonInfo
+import com.mvine.mcomm.domain.model.CredentialData
 import com.mvine.mcomm.domain.usecase.LoginUseCase
 import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.domain.util.Resource.*
@@ -97,7 +98,12 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun saveUserCredentials(token: String, username: String, password: String, isRefresh : Boolean = false) {
-        saveCredentials(preferenceHandler, token, username,password, isRefresh )
+        saveCredentials(preferenceHandler, CredentialData(
+            userName = username,
+            password = password,
+            token = token,
+            isRefresh = isRefresh
+        ))
         getUserInfo(token)
     }
 

@@ -22,18 +22,8 @@ fun getSubStringBasedOnIndex(input: String, index : Int): String {
     return input.substring(0,index)
 }
 
-fun saveCredentials(preferenceHandler: PreferenceHandler,
-                                token : String,
-                                username: String,
-                                password: String,
-                                isRefresh : Boolean = false) {
-    val credentialData = CredentialData(
-        userName = username,
-        password = password,
-        token = token,
-        isRefresh = isRefresh
-    )
-    preferenceHandler.save(LOGIN_TOKEN, token)
+fun saveCredentials(preferenceHandler: PreferenceHandler, credentialData : CredentialData) {
+    preferenceHandler.save(LOGIN_TOKEN, credentialData.token)
     preferenceHandler.save( CREDENTIAL_DATA, Gson().toJson(credentialData))
 }
 
