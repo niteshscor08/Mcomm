@@ -4,39 +4,27 @@ import com.mvine.mcomm.data.model.response.CallablesResponse
 import com.mvine.mcomm.domain.model.AllCalls
 import com.mvine.mcomm.domain.model.AllCallsClass
 import com.mvine.mcomm.domain.model.AllCallsCompanyData
+import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.domain.util.Resource
+import com.mvine.mcomm.util.getSpinnerItems
 
 class AllCallsMapper {
 
-    fun entityToModel(callsResponse: CallablesResponse?) : Resource<AllCalls> {
-
-        val allCalls : AllCalls = AllCalls()
-        val allCallsClassList = arrayListOf<AllCallsClass>()
-        val allCallsCompanyData  = arrayListOf<AllCallsCompanyData>()
-
+    fun entityToModel(callsResponse: CallablesResponse?) : Resource<ArrayList<CallData>> {
+        val allCalls = arrayListOf<CallData>()
         callsResponse?.let {
             it.callables?.forEach { callable ->
-                allCallsClassList.add(
-                    AllCallsClass(
-                        callable.Company,
-                        callable.Department,
-                        callable.STX,
-                        callable.admin,
-                        callable.companyid,
-                        callable.email,
-                        callable.id,
-                        callable.image_src,
-                        callable.usename,
-                        callable.username
-                    )
-                )
-            }
-            it.companies?.forEach { company ->
-                allCallsCompanyData.add(
-                    AllCallsCompanyData(
-                        company.ID,
-                        company.Value,
-                        company.image_src
+                allCalls.add(
+                    CallData(
+                        dialstatus = null,
+                        image_src = callable.image_src,
+                        othercaller_company = callable.Company,
+                        othercaller_company_id = callable.companyid,
+                        othercaller_department = callable.Department,
+                        othercaller_stx = callable.STX,
+                        timestamp = null,
+                        type = null,
+                        callHistory = getSpinnerItems(),
                     )
                 )
             }

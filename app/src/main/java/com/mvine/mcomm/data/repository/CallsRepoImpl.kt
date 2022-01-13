@@ -4,7 +4,6 @@ import com.mvine.mcomm.data.mapper.AllCallsMapper
 import com.mvine.mcomm.data.mapper.CallsMapper
 import com.mvine.mcomm.data.model.response.PersonInfo
 import com.mvine.mcomm.data.repository.dataSource.CallsRemoteRepo
-import com.mvine.mcomm.domain.model.AllCalls
 import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.domain.repository.CallsRepository
 import com.mvine.mcomm.domain.util.Resource
@@ -21,7 +20,7 @@ class CallsRepoImpl @Inject constructor(
         return callsMapper.entityToModel(recentCalls.data)
     }
 
-    override suspend fun getAllCalls(cookie: String): Resource<AllCalls> {
+    override suspend fun getAllCalls(cookie: String): Resource<ArrayList<CallData>> {
         val allCalls = callsRemoteRepo.getAllCalls(cookie)
         return allCallsMapper.entityToModel(allCalls.data)
     }

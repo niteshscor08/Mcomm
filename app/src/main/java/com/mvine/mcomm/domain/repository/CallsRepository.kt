@@ -12,7 +12,7 @@ interface CallsRepository {
 
     suspend fun getRecentCalls(cookie: String): Resource<ArrayList<CallData>>
 
-    suspend fun getAllCalls(cookie: String): Resource<AllCalls>
+    suspend fun getAllCalls(cookie: String): Resource<ArrayList<CallData>>
 
     suspend fun getUserInfo(cookie: String):  Resource<PersonInfo>
 }

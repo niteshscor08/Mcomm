@@ -34,6 +34,7 @@ data class CallableClass(
     val email:String?,
     val id: String?,
     val image_src: String?,
+    val surname : String?,
     val usename: String?,
     val username: String?
 )
