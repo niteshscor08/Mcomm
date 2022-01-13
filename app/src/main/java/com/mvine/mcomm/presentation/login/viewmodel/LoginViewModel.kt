@@ -31,6 +31,10 @@ class LoginViewModel @Inject constructor(
     private val preferenceHandler: PreferenceHandler
 ): BaseViewModel() {
 
+    private val _loginError: MutableLiveData<Boolean> =
+        MutableLiveData(false)
+    val loginError: LiveData<Boolean> = _loginError
+
     private val _cookieLiveData: MutableLiveData<Resource<String?>> =
         MutableLiveData()
     val cookieLiveData: LiveData<Resource<String?>> = _cookieLiveData
@@ -56,23 +60,58 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun getUserInfo(cookie: String){
-            viewModelScope.launch(dispatcher) {
-                _userInfo.apply {
-                    postValue(loginUseCase.getUserInfo(cookie))
-                }
+    private fun getUserInfo(cookie: String){
+        viewModelScope.launch(dispatcher) {
+            _userInfo.apply {
+                postValue(loginUseCase.getUserInfo(cookie))
             }
+        }
     }
 
     fun onPasswordTextChange(s: CharSequence, start: Int, before: Int, count: Int) {
-       _hidePasswordErrorMsg.postValue(s.toString().length > PASSWORD_LENGTH)
+        _hidePasswordErrorMsg.postValue(s.toString().length > PASSWORD_LENGTH)
     }
 
     fun onEmailTextChange(s: CharSequence, start: Int, before: Int, count: Int){
         _hideEmailErrorMsg.postValue(Patterns.EMAIL_ADDRESS.matcher(s.toString()).matches())
     }
 
-    fun checkTokenValidity(token : String?): Boolean{
+    fun updateTokenAndLogin(token: String, username: String, password: String){
+        getCredentialData().token?.let { oldToken ->
+            loginWithOldToken(token, oldToken, username, password)
+        }?: loginWithNewToken(token, username, password)
+    }
+
+    private fun loginWithNewToken(token: String, username: String, password: String){
+        saveUserCredentials(token, username, password)
+    }
+
+    private fun loginWithOldToken(token: String, savedToken : String, username: String, password: String){
+        if(isTokenValid(savedToken)){
+            getUserInfo(savedToken)
+        }else{
+            if(getCredentialData().isRefresh == false){
+                saveUserCredentials(token,username, password,true)
+            }else {
+                preferenceHandler.clearData()
+                _loginError.postValue(true)
+            }
+        }
+    }
+
+    private fun saveUserCredentials(token: String, username: String, password: String, isRefresh : Boolean = false) {
+        val credentialData = CredentialData(
+            userName = username,
+            password = password,
+            token = token,
+            isRefresh = isRefresh
+        )
+        preferenceHandler.save(LOGIN_TOKEN, token)
+        preferenceHandler.save( CREDENTIAL_DATA, Gson().toJson(credentialData))
+        getUserInfo(token)
+    }
+
+   private fun isTokenValid(token : String?): Boolean{
          if(token.isNullOrEmpty()){
              return false
          }
@@ -85,27 +124,11 @@ class LoginViewModel @Inject constructor(
         return true
     }
 
-    fun saveCredentialData(username: String?, password: String?, token: String?, isRefresh : Boolean?= false){
-        val credentialData = CredentialData(
-            userName = username,
-            password = password,
-            token = token,
-            isRefresh = isRefresh
-        )
-        preferenceHandler.save(LOGIN_TOKEN, token)
-        preferenceHandler.save( CREDENTIAL_DATA,
-            Gson().toJson(credentialData)
-        )
-    }
 
     fun getCredentialData(): CredentialData {
       preferenceHandler.getValue(CREDENTIAL_DATA)?.let {
           return   Gson().fromJson(it, CredentialData::class.java)
       }?:  return CredentialData()
-    }
-
-    fun clearSavedUserInformation(){
-        preferenceHandler.clearData()
     }
 
     companion object{
