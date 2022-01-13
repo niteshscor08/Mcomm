@@ -1,6 +1,5 @@
 package com.mvine.mcomm.presentation.login.viewmodel
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.mvine.mcomm.domain.usecase.ChangePasswordUseCase
 import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.util.EMPTY_STRING
-import com.mvine.mcomm.util.LOGIN_TOKEN
 import com.mvine.mcomm.util.PreferenceHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -31,14 +29,12 @@ class ChangePasswordViewModel @Inject constructor(
     val passwordUpdated: LiveData<Resource<String>> = _passwordUpdatedLiveData
 
     fun submitButtonClick(){
-        preferenceHandler.getValue(LOGIN_TOKEN)?.let { cookie ->
             viewModelScope.launch(dispatcher) {
                 _passwordUpdatedLiveData.apply {
                     postValue(Resource.Loading())
-                    postValue(changePasswordUseCase.changePassword(cookie, newPassword,reEnteredPassword))
+                    postValue(changePasswordUseCase.changePassword(newPassword,reEnteredPassword))
                 }
             }
-        }
     }
 
 
