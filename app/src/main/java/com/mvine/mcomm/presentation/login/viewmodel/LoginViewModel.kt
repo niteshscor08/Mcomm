@@ -1,13 +1,10 @@
 package com.mvine.mcomm.presentation.login.viewmodel
 
-import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
 import com.mvine.mcomm.data.model.response.PersonInfo
-import com.mvine.mcomm.domain.model.CredentialData
 import com.mvine.mcomm.domain.usecase.LoginUseCase
 import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.domain.util.Resource.*
@@ -77,7 +74,7 @@ class LoginViewModel @Inject constructor(
     }
 
     fun updateTokenAndLogin(token: String, username: String, password: String){
-        getCredentialData().token?.let { oldToken ->
+        getCredentials(preferenceHandler).token?.let { oldToken ->
             loginWithOldToken(token, oldToken, username, password)
         }?: loginWithNewToken(token, username, password)
     }
@@ -90,7 +87,7 @@ class LoginViewModel @Inject constructor(
         if(isTokenValid(savedToken)){
             getUserInfo(savedToken)
         }else{
-            if(getCredentialData().isRefresh == false){
+            if(getCredentials(preferenceHandler).isRefresh == false){
                 saveUserCredentials(token,username, password,true)
             }else {
                 preferenceHandler.clearData()
@@ -100,14 +97,7 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun saveUserCredentials(token: String, username: String, password: String, isRefresh : Boolean = false) {
-        val credentialData = CredentialData(
-            userName = username,
-            password = password,
-            token = token,
-            isRefresh = isRefresh
-        )
-        preferenceHandler.save(LOGIN_TOKEN, token)
-        preferenceHandler.save( CREDENTIAL_DATA, Gson().toJson(credentialData))
+        saveCredentials(preferenceHandler, token, username,password, isRefresh )
         getUserInfo(token)
     }
 
@@ -122,13 +112,6 @@ class LoginViewModel @Inject constructor(
             return false
         }
         return true
-    }
-
-
-    fun getCredentialData(): CredentialData {
-      preferenceHandler.getValue(CREDENTIAL_DATA)?.let {
-          return   Gson().fromJson(it, CredentialData::class.java)
-      }?:  return CredentialData()
     }
 
     companion object{

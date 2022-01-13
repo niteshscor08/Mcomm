@@ -41,7 +41,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
         super.onViewCreated(view, savedInstanceState)
         subscribeObservers()
         initListeners()
-        setUpData()
+        loadUserInformation()
     }
 
     private fun subscribeObservers() {
@@ -89,8 +89,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
         })
     }
 
-    private fun setUpData() {
-        val credentialData = loginViewModel.getCredentialData()
+    private fun loadUserInformation() {
+        val credentialData = getCredentials(preferenceHandler)
             val username = credentialData.userName
             val password = credentialData.password
             username?.let {
