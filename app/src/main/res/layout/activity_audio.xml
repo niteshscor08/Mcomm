@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/mcomm_blue_light_tint"
+        tools:context=".presentation.audio.view.AudioDialogFragment">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/audio_appbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/mcomm_blue"
+            app:elevation="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            >
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/audio_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:contentInsetLeft="0dp"
+                app:contentInsetStart="0dp"
+                app:contentInsetEnd="0dp"
+                app:contentInsetRight="0dp"
+                >
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/audio_chat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_chat_empty"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="34dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/audio_group"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/ic_create_group_rec"
+                        app:layout_constraintBottom_toBottomOf="@+id/audio_chat"
+                        app:layout_constraintEnd_toStartOf="@+id/audio_chat"
+                        app:layout_constraintTop_toTopOf="@+id/audio_chat" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/audio_back"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_icon_awesome_arrow_left"
+                        app:layout_constraintBottom_toBottomOf="@+id/audio_group"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/audio_group" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/audio_caller_name"
+                        style="@style/text_open_sans_medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Yordan Uzunova"
+                        android:layout_marginLeft="10dp"
+                        app:layout_constraintStart_toEndOf="@+id/audio_back"
+                        app:layout_constraintTop_toTopOf="@+id/audio_group" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/timer"
+                        style="@style/text_open_sans_14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="00:35"
+                        app:layout_constraintStart_toStartOf="@+id/audio_caller_name"
+                        app:layout_constraintTop_toBottomOf="@+id/audio_caller_name" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.appcompat.widget.Toolbar>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/appCompatImageView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_mcomm_blue_circle"
+            app:layout_constraintBottom_toTopOf="@+id/bottom_bar_call_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/audio_appbar" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_width="122dp"
+            android:layout_height="122dp"
+            android:layout_marginTop="40dp"
+            android:id="@+id/user_image"
+            android:src="@drawable/ic_launcher_background"
+            app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+            app:layout_constraintEnd_toEndOf="@+id/appCompatImageView4"
+            app:layout_constraintStart_toStartOf="@+id/appCompatImageView4"
+            app:layout_constraintTop_toTopOf="@+id/appCompatImageView4" />
+
+        <include
+            android:id="@+id/bottom_bar_call_layout"
+            layout="@layout/item_bottom_call_layout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

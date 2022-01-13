@@ -5,12 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mvine.mcomm.domain.model.AllCalls
+import com.mvine.mcomm.data.model.response.PersonInfo
 import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.domain.usecase.GetCallsUseCase
 import com.mvine.mcomm.domain.util.Resource
+import com.mvine.mcomm.presentation.common.base.BaseViewModel
 import com.mvine.mcomm.util.LOGIN_TOKEN
 import com.mvine.mcomm.util.MCOMM_SHARED_PREFERENCES
+import com.mvine.mcomm.util.USER_INFO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
@@ -22,15 +24,16 @@ class CallsViewModel @Inject constructor(
     private val getCallsUseCase: GetCallsUseCase,
     private val dispatcher: CoroutineDispatcher,
     @ApplicationContext context: Context
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val _recentCallsLiveData: MutableLiveData<Resource<ArrayList<CallData>>> =
         MutableLiveData()
     val recentCalls: LiveData<Resource<ArrayList<CallData>>> = _recentCallsLiveData
 
-    private val _allCallsLiveData: MutableLiveData<Resource<AllCalls>> =
+
+    private val _userInfo: MutableLiveData<Resource<PersonInfo>> =
         MutableLiveData()
-    val allCalls: LiveData<Resource<AllCalls>> = _allCallsLiveData
+    val userInfo: LiveData<Resource<PersonInfo>> = _userInfo
 
     private val _searchCallsLiveData: MutableLiveData<ArrayList<CallData>> =
         MutableLiveData()
@@ -41,7 +44,17 @@ class CallsViewModel @Inject constructor(
 
     init {
         getRecentCalls()
-        getAllCalls()
+        //getUserInfo()
+    }
+
+    private fun getUserInfo(){
+        sharedPreferences.getString(LOGIN_TOKEN,null)?.let { cookie ->
+            viewModelScope.launch(dispatcher) {
+                _userInfo.apply {
+                    postValue(getCallsUseCase.getUserInfo(cookie))
+                }
+            }
+        }
     }
 
     private fun getRecentCalls() {
@@ -50,17 +63,6 @@ class CallsViewModel @Inject constructor(
                 _recentCallsLiveData.apply {
                     postValue(Resource.Loading())
                     postValue(getCallsUseCase.getRecentCalls(cookie))
-                }
-            }
-        }
-    }
-
-    private fun getAllCalls(){
-        sharedPreferences.getString(LOGIN_TOKEN, null)?.let { cookie ->
-            viewModelScope.launch(dispatcher) {
-                _allCallsLiveData.apply {
-                    postValue(Resource.Loading())
-                    postValue(getCallsUseCase.getAllCalls(cookie))
                 }
             }
         }

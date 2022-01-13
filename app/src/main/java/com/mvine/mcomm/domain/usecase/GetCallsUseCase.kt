@@ -11,4 +11,7 @@ class GetCallsUseCase @Inject constructor(
 
     suspend fun getAllCalls(cookie: String) =
         callsRepository.getAllCalls(cookie)
+
+    suspend fun getUserInfo(cookie: String) = callsRepository.getUserInfo(cookie)
+
 }

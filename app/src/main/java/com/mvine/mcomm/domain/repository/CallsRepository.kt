@@ -1,6 +1,7 @@
 package com.mvine.mcomm.domain.repository
 
 import com.mvine.mcomm.domain.model.AllCalls
+import com.mvine.mcomm.data.model.response.PersonInfo
 import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.domain.util.Resource
 
@@ -13,4 +14,5 @@ interface CallsRepository {
 
     suspend fun getAllCalls(cookie: String): Resource<AllCalls>
 
+    suspend fun getUserInfo(cookie: String):  Resource<PersonInfo>
 }

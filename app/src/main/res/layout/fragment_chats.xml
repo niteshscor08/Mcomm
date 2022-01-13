@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <variable
+            name="chatsViewModel"
+            type="com.mvine.mcomm.presentation.home.chats.ChatsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

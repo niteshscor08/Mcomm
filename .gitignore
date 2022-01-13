@@ -1,6 +1,7 @@
 # Built application files
 *.apk
 *.aar
+!libwebrtc.aar
 *.ap_
 *.aab
 

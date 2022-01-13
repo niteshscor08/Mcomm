@@ -2,6 +2,7 @@ package com.mvine.mcomm.data.repository
 
 import com.mvine.mcomm.data.mapper.AllCallsMapper
 import com.mvine.mcomm.data.mapper.CallsMapper
+import com.mvine.mcomm.data.model.response.PersonInfo
 import com.mvine.mcomm.data.repository.dataSource.CallsRemoteRepo
 import com.mvine.mcomm.domain.model.AllCalls
 import com.mvine.mcomm.domain.model.CallData
@@ -21,8 +22,12 @@ class CallsRepoImpl @Inject constructor(
     }
 
     override suspend fun getAllCalls(cookie: String): Resource<AllCalls> {
-        val allCalls =  callsRemoteRepo.getAllCalls(cookie)
+        val allCalls = callsRemoteRepo.getAllCalls(cookie)
         return allCallsMapper.entityToModel(allCalls.data)
+    }
+
+    override suspend fun getUserInfo(cookie: String): Resource<PersonInfo> {
+        return callsRemoteRepo.getUserInfo(cookie)
     }
 
 }

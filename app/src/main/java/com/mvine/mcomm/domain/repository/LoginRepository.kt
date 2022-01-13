@@ -1,5 +1,6 @@
 package com.mvine.mcomm.domain.repository
 
+import com.mvine.mcomm.data.model.response.PersonInfo
 import com.mvine.mcomm.domain.util.Resource
 
 /**
@@ -14,4 +15,7 @@ interface LoginRepository {
      * @param password The password of the user
      */
     suspend fun login(username: String, password: String): Resource<String?>
+
+    suspend fun getUserInfo(cookie: String):  Resource<PersonInfo>
+
 }

@@ -3,6 +3,9 @@
     package="com.mvine.mcomm">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
 
     <application
         android:name=".McommApplication"
@@ -19,12 +22,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".presentation.home.HomeActivity"
             android:theme="@style/Theme.MaterialComponents.NoActionBar" />
 
-        <activity android:name=".presentation.login.view.ChangePasswordActivity" />
+        <activity
+            android:name=".presentation.audio.view.AudioActivity"
+            android:theme="@style/Theme.MaterialComponents.NoActionBar" />
+
+        <activity android:name=".presentation.login.view.ChangePasswordActivity"
+            android:theme="@style/Theme.MaterialComponents.NoActionBar"/>
     </application>
 
 </manifest>
