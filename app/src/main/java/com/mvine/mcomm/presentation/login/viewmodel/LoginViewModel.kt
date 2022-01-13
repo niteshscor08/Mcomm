@@ -1,13 +1,10 @@
 package com.mvine.mcomm.presentation.login.viewmodel
 
-import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
 import com.mvine.mcomm.data.model.response.PersonInfo
-import com.mvine.mcomm.domain.model.CredentialData
 import com.mvine.mcomm.domain.usecase.LoginUseCase
 import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.domain.util.Resource.*
@@ -30,6 +27,10 @@ class LoginViewModel @Inject constructor(
     private val dispatcher: CoroutineDispatcher,
     private val preferenceHandler: PreferenceHandler
 ): BaseViewModel() {
+
+    private val _loginError: MutableLiveData<Boolean> =
+        MutableLiveData(false)
+    val loginError: LiveData<Boolean> = _loginError
 
     private val _cookieLiveData: MutableLiveData<Resource<String?>> =
         MutableLiveData()
@@ -56,23 +57,51 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun getUserInfo(cookie: String){
-            viewModelScope.launch(dispatcher) {
-                _userInfo.apply {
-                    postValue(loginUseCase.getUserInfo(cookie))
-                }
+    private fun getUserInfo(cookie: String){
+        viewModelScope.launch(dispatcher) {
+            _userInfo.apply {
+                postValue(loginUseCase.getUserInfo(cookie))
             }
+        }
     }
 
     fun onPasswordTextChange(s: CharSequence, start: Int, before: Int, count: Int) {
-       _hidePasswordErrorMsg.postValue(s.toString().length > PASSWORD_LENGTH)
+        _hidePasswordErrorMsg.postValue(s.toString().length > PASSWORD_LENGTH)
     }
 
     fun onEmailTextChange(s: CharSequence, start: Int, before: Int, count: Int){
         _hideEmailErrorMsg.postValue(Patterns.EMAIL_ADDRESS.matcher(s.toString()).matches())
     }
 
-    fun checkTokenValidity(token : String?): Boolean{
+    fun updateTokenAndLogin(token: String, username: String, password: String){
+        getCredentials(preferenceHandler).token?.let { oldToken ->
+            loginWithOldToken(token, oldToken, username, password)
+        }?: loginWithNewToken(token, username, password)
+    }
+
+    private fun loginWithNewToken(token: String, username: String, password: String){
+        saveUserCredentials(token, username, password)
+    }
+
+    private fun loginWithOldToken(token: String, savedToken : String, username: String, password: String){
+        if(isTokenValid(savedToken)){
+            getUserInfo(savedToken)
+        }else{
+            if(getCredentials(preferenceHandler).isRefresh == false){
+                saveUserCredentials(token,username, password,true)
+            }else {
+                preferenceHandler.clearData()
+                _loginError.postValue(true)
+            }
+        }
+    }
+
+    private fun saveUserCredentials(token: String, username: String, password: String, isRefresh : Boolean = false) {
+        saveCredentials(preferenceHandler, token, username,password, isRefresh )
+        getUserInfo(token)
+    }
+
+   private fun isTokenValid(token : String?): Boolean{
          if(token.isNullOrEmpty()){
              return false
          }
@@ -83,29 +112,6 @@ class LoginViewModel @Inject constructor(
             return false
         }
         return true
-    }
-
-    fun saveCredentialData(username: String?, password: String?, token: String?, isRefresh : Boolean?= false){
-        val credentialData = CredentialData(
-            userName = username,
-            password = password,
-            token = token,
-            isRefresh = isRefresh
-        )
-        preferenceHandler.save(LOGIN_TOKEN, token)
-        preferenceHandler.save( CREDENTIAL_DATA,
-            Gson().toJson(credentialData)
-        )
-    }
-
-    fun getCredentialData(): CredentialData {
-      preferenceHandler.getValue(CREDENTIAL_DATA)?.let {
-          return   Gson().fromJson(it, CredentialData::class.java)
-      }?:  return CredentialData()
-    }
-
-    fun clearSavedUserInformation(){
-        preferenceHandler.clearData()
     }
 
     companion object{

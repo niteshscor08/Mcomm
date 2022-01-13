@@ -7,7 +7,6 @@ import com.mvine.mcomm.domain.model.ContactsData
 import com.mvine.mcomm.domain.usecase.GetContactsUseCase
 import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.presentation.common.base.BaseViewModel
-import com.mvine.mcomm.util.LOGIN_TOKEN
 import com.mvine.mcomm.util.PreferenceHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -34,13 +33,12 @@ class ContactsViewModel @Inject constructor(
     }
 
     private fun getContacts() {
-        preferenceHandler.getValue(LOGIN_TOKEN)?.let { cookie ->
             viewModelScope.launch(dispatcher) {
                 _contactsLiveData.apply {
                     postValue(Resource.Loading())
-                    postValue(getContactsUseCase.getContacts(cookie))
+                    postValue(getContactsUseCase.getContacts())
                 }
-            }
+
         }
     }
 

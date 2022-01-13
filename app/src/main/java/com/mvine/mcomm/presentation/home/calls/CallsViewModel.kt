@@ -8,7 +8,6 @@ import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.domain.usecase.GetCallsUseCase
 import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.presentation.common.base.BaseViewModel
-import com.mvine.mcomm.util.LOGIN_TOKEN
 import com.mvine.mcomm.util.PreferenceHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -40,13 +39,11 @@ class CallsViewModel @Inject constructor(
     }
 
     private fun getRecentCalls() {
-        preferenceHandler.getValue(LOGIN_TOKEN)?.let { cookie ->
             viewModelScope.launch(dispatcher) {
                 _recentCallsLiveData.apply {
                     postValue(Resource.Loading())
-                    postValue(getCallsUseCase.getRecentCalls(cookie))
+                    postValue(getCallsUseCase.getRecentCalls())
                 }
-            }
         }
     }
 

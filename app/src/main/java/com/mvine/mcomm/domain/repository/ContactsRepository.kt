@@ -8,5 +8,5 @@ import com.mvine.mcomm.domain.util.Resource
  */
 interface ContactsRepository {
 
-    suspend fun getContacts(cookie: String): Resource<ArrayList<ContactsData>>
+    suspend fun getContacts(): Resource<ArrayList<ContactsData>>
 }

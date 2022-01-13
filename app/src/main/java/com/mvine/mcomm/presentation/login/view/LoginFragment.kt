@@ -41,7 +41,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
         super.onViewCreated(view, savedInstanceState)
         subscribeObservers()
         initListeners()
-        setUpData()
+        loadUserInformation()
     }
 
     private fun subscribeObservers() {
@@ -50,11 +50,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
                 when (response) {
                     is Success -> {
                         response.data?.let { token ->
-                            val savedToken = loginViewModel.getCredentialData().token
-                            savedToken?.let {
-                                subsequenceLaunched(token, it)
-                            }?: firstLaunch(token)
-
+                            loginViewModel.updateTokenAndLogin(token, binding.etEmail.text.toString(), binding.etPassword.text.toString())
                         } ?: showToastMessage(R.string.login_failure)
                     }
                     is Resource.Error -> {
@@ -87,37 +83,15 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
 
             }
         })
-    }
 
-    private fun firstLaunch(token: String){
-        saveUserdata(token)
-    }
-
-    private fun subsequenceLaunched(token: String, savedToken : String){
-        if(loginViewModel.checkTokenValidity(savedToken)){
-            loginViewModel.getUserInfo(savedToken)
-        }else{
-            if(loginViewModel.getCredentialData().isRefresh == false){
-                saveUserdata(token,true)
-            }else {
-                loginViewModel.clearSavedUserInformation()
+        loginViewModel.loginError.observe(viewLifecycleOwner, {
+            if(it)
                 showToastMessage(R.string.login_failure)
-            }
-        }
+        })
     }
 
-    private fun saveUserdata(token: String, isRefesh : Boolean = false) {
-        loginViewModel.saveCredentialData(
-            token = token,
-           username =  binding.etEmail.text.toString(),
-           password =  binding.etPassword.text.toString(),
-           isRefresh =  isRefesh
-        )
-        loginViewModel.getUserInfo(token)
-    }
-
-    private fun setUpData() {
-        val credentialData = loginViewModel.getCredentialData()
+    private fun loadUserInformation() {
+        val credentialData = getCredentials(preferenceHandler)
             val username = credentialData.userName
             val password = credentialData.password
             username?.let {
@@ -136,7 +110,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
     }
 
     private fun initListeners() {
-
         binding.etEmail.apply {
             setOnClickListener {
                 showKeyboard()
