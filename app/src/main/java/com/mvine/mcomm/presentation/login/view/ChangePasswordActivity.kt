@@ -41,6 +41,9 @@ class ChangePasswordActivity: AppCompatActivity() {
             result?.let { response ->
                 when(response){
                     is Resource.Success -> {
+                        changePasswordViewModel.updatePassword(
+                            activityChangePasswordBinding.etNewPassword.text.toString()
+                        )
                         activityChangePasswordBinding.progressBar.visibility = View.GONE
                         response.data?.let { this.toast(it) }
                     }

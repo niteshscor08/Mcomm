@@ -14,6 +14,4 @@ interface CallsApiService {
     @GET("call/recents")
     suspend fun getRecentCalls(@Header("Cookie") cookie: String): Response<CallsResponse>
 
-    @GET("call/userview")
-    suspend fun getUserView(@Header("Cookie") cookie: String): Response<PersonInfo>
 }

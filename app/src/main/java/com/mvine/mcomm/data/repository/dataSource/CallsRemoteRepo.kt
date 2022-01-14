@@ -10,5 +10,4 @@ import com.mvine.mcomm.domain.util.Resource
  */
 interface CallsRemoteRepo {
     suspend fun getRecentCalls(cookie: String): Resource<CallsResponse>
-    suspend fun getUserInfo(cookie: String): Resource<PersonInfo>
 }

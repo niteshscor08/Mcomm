@@ -27,4 +27,13 @@
     <string name="caller_name">Yordan Uzunov</string>
     <string name="outgoing_call">Outgoing Call…</string>
 
+    <!-- Login -->
+    <string name="email_error">Please provide valid email.</string>
+    <string name="password_error">Password must be > 5 characters.</string>
+    <string name="empty_credential">Username or Password should not be empty.</string>
+    <string name="invalid_email">Please provide valid email Id.</string>
+    <string name="invalid_password">Please provide valid password.</string>
+    <string name="login_failure">Login Failure! Please try again.</string>
+    <string name="something_wrong">Something went wrong, Please try again later.</string>
+    <string name="login_successful">Login Successful!</string>
 </resources>
