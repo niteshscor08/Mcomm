@@ -17,6 +17,7 @@
         android:theme="@style/Theme.Mcomm">
         <activity android:name=".presentation.LoginActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.MaterialComponents.NoActionBar"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,6 +27,7 @@
         <activity
             android:name=".presentation.home.HomeActivity"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:theme="@style/Theme.MaterialComponents.NoActionBar" />
 
         <activity

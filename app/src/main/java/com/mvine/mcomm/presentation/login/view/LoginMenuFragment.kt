@@ -43,6 +43,7 @@ class LoginMenuFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initListeners()
         subscribeObservers()
+        (activity as HomeActivity).hideBottomTabBar()
     }
 
     private fun initListeners() {

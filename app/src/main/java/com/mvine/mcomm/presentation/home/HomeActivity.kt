@@ -8,7 +8,9 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.mvine.mcomm.R
@@ -20,12 +22,10 @@ import com.mvine.mcomm.janus.commonvalues.CommonValues.Companion.INCOMING
 import com.mvine.mcomm.janus.commonvalues.CommonValues.Companion.OUTGOING
 import com.mvine.mcomm.janus.extension.*
 import com.mvine.mcomm.presentation.audio.view.AudioActivity
-import com.mvine.mcomm.presentation.audio.view.AudioDialogListener
 import com.mvine.mcomm.presentation.common.base.BaseActivity
 import com.mvine.mcomm.presentation.common.dialog.CallDialog
 import com.mvine.mcomm.presentation.common.dialog.CallDialogData
 import com.mvine.mcomm.presentation.common.dialog.CallDialogListener
-import com.mvine.mcomm.presentation.login.view.ChangePasswordActivity
 import com.mvine.mcomm.util.EMPTY_STRING
 import com.mvine.mcomm.util.hideKeyboard
 import com.mvine.mcomm.util.showKeyboard
@@ -146,6 +146,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener {
     }
 
     fun showSearchBar() {
+        binding?.homeNavBar?.visibility = View.VISIBLE
         binding?.etSearch?.hideKeyboard()
         binding?.etSearch?.text?.clear()
         binding?.tlSearch?.visibility = View.VISIBLE
@@ -217,6 +218,10 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener {
     override fun onDestroy() {
         endJanusSession()
         super.onDestroy()
+    }
+
+    fun hideBottomTabBar(){
+        binding?.homeNavBar?.visibility = View.GONE
     }
 
 }
