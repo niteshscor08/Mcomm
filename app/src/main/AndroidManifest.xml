@@ -15,22 +15,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Mcomm">
-        <activity android:name=".presentation.LoginActivity">
+        <activity android:name=".presentation.LoginActivity"
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".presentation.home.HomeActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.MaterialComponents.NoActionBar" />
 
         <activity
             android:name=".presentation.audio.view.AudioActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.MaterialComponents.NoActionBar" />
 
         <activity android:name=".presentation.login.view.ChangePasswordActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.MaterialComponents.NoActionBar"/>
     </application>
 
