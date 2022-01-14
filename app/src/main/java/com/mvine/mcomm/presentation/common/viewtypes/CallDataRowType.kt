@@ -23,7 +23,7 @@ data class CallDataRowType(
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         val rowViewHolder = viewHolder as ViewHolderFactory.CallDataViewHolder
         rowViewHolder.apply {
-            callName?.text = callData.othercaller_company
+            callName?.text = callData.othercaller_department
             lastCallHistory?.text = callData.timestamp
             lastCallStatus?.setImageResource(getCallIcon(callData.type))
             callData.image_src?.let {

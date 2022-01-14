@@ -37,6 +37,11 @@ class CallsViewModel @Inject constructor(
         MutableLiveData()
     val searchCalls: LiveData<ArrayList<CallData>> = _searchCallsLiveData
 
+    private val _searchAllCallsLiveData: MutableLiveData<ArrayList<CallData>> =
+        MutableLiveData()
+    val searchAllCalls: LiveData<ArrayList<CallData>> = _searchAllCallsLiveData
+
+
     init {
         getRecentCalls()
     }
@@ -62,17 +67,16 @@ class CallsViewModel @Inject constructor(
 
     fun filterData(query: String) {
         _recentCallsLiveData.value?.data?.filter {
-            it.othercaller_company?.contains(query, ignoreCase = true) == true
-        }?.let {
-            _searchCallsLiveData.postValue(it as ArrayList<CallData>)
-        }
-    }
-
-    fun filterAllCallData(query: String){
-        _allCallsLiveData.value?.data?.filter {
             it.othercaller_department?.contains(query, ignoreCase = true) == true
         }?.let {
             _searchCallsLiveData.postValue(it as ArrayList<CallData>)
         }
+
+        _allCallsLiveData.value?.data?.filter {
+            it.othercaller_department?.contains(query, ignoreCase = true) == true
+        }?.let {
+            _searchAllCallsLiveData.postValue(it as ArrayList<CallData>)
+        }
     }
+
 }

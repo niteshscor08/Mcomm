@@ -171,6 +171,12 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
                 callsAdapter.updateData(prepareRowTypesFromCallData(callData, this))
             }
         })
+
+        callsViewModel.searchAllCalls.observe(viewLifecycleOwner, {
+            it?.let {
+                allCallsAdapter.updateData(prepareRowTypesFromAllCallData(it, this))
+            }
+        })
     }
 
     override fun onItemSelectedForExpansion(position: Int, item: CallData, isExpanded: Boolean) {
