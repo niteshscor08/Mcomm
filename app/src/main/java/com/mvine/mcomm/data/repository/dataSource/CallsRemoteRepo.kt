@@ -14,5 +14,4 @@ interface CallsRemoteRepo {
 
     suspend fun getAllCalls(cookie: String): Resource<CallablesResponse>
 
-    suspend fun getUserInfo(cookie: String): Resource<PersonInfo>
 }
