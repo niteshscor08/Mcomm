@@ -10,6 +10,7 @@
     <color name="mcomm_blue">#0C2438</color>
     <color name="mcomm_blue_light_tint">#123551</color>
     <color name="mcomm_green">#4DB966</color>
+    <color name="mcomm_red">#b94d4d</color>
     <color name="mcomm_grey">#CCCCCC</color>
     <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">#fff</color>
 </resources>
