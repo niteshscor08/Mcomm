@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -171,11 +172,20 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
     }
 
     override fun onItemSelectedForExpansion(position: Int, item: CallData, isExpanded: Boolean) {
-        if (isExpanded) {
-            callsAdapter.expandCallHistory(position, item)
-        } else {
-            callsAdapter.dissolveCallHistory(position, item)
+        if(binding.rvCalls.isVisible){
+            if (isExpanded) {
+                callsAdapter.expandCallHistory(position, item)
+            } else {
+                callsAdapter.dissolveCallHistory(position, item)
+            }
+        }else{
+            if (isExpanded) {
+                allCallsAdapter.expandCallHistory(position, item)
+            } else {
+                allCallsAdapter.dissolveCallHistory(position, item)
+            }
         }
+
     }
 
     override fun onVoiceCallSelected(item: CallData) {

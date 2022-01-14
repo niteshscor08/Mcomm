@@ -52,14 +52,12 @@ class CallsViewModel @Inject constructor(
     }
 
     fun getAllCalls() {
-        sharedPreferences.getString(LOGIN_TOKEN, null)?.let { cookie ->
             viewModelScope.launch(dispatcher) {
                 _allCallsLiveData.apply {
                     postValue(Resource.Loading())
-                    postValue(getCallsUseCase.getAllCalls(cookie))
+                    postValue(getCallsUseCase.getAllCalls())
                 }
             }
-        }
     }
 
 

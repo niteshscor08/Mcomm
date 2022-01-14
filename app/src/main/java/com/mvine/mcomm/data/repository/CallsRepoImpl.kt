@@ -6,7 +6,6 @@ import com.mvine.mcomm.data.repository.dataSource.CallsRemoteRepo
 import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.domain.repository.CallsRepository
 import com.mvine.mcomm.domain.util.Resource
-import com.mvine.mcomm.util.EMPTY_STRING
 import com.mvine.mcomm.util.LOGIN_TOKEN
 import com.mvine.mcomm.util.NO_LOGIN_KEY_ERROR
 import com.mvine.mcomm.util.PreferenceHandler
@@ -27,9 +26,12 @@ class CallsRepoImpl @Inject constructor(
         return Resource.Error(NO_LOGIN_KEY_ERROR)
     }
 
-    override suspend fun getAllCalls(cookie: String): Resource<ArrayList<CallData>> {
-        val allCalls = callsRemoteRepo.getAllCalls(cookie)
-        return allCallsMapper.entityToModel(allCalls.data)
+    override suspend fun getAllCalls(): Resource<ArrayList<CallData>> {
+        preferenceHandler.getValue(LOGIN_TOKEN)?.let { cookie ->
+            val allCalls = callsRemoteRepo.getAllCalls(cookie)
+            return allCallsMapper.entityToModel(allCalls.data)
+        }
+        return Resource.Error(NO_LOGIN_KEY_ERROR)
     }
 
 }
