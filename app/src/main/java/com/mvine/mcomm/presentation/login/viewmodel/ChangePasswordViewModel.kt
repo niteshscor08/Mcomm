@@ -4,13 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
 import com.mvine.mcomm.domain.model.CredentialData
 import com.mvine.mcomm.domain.usecase.ChangePasswordUseCase
 import com.mvine.mcomm.domain.util.Resource
-import com.mvine.mcomm.util.CREDENTIAL_DATA
-import com.mvine.mcomm.util.EMPTY_STRING
-import com.mvine.mcomm.util.PreferenceHandler
+import com.mvine.mcomm.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
@@ -43,16 +40,11 @@ class ChangePasswordViewModel @Inject constructor(
     fun updatePassword(newPassword : String){
         val credentialData : CredentialData= getCredentialData()
         credentialData.password = newPassword
-        preferenceHandler.save( CREDENTIAL_DATA,
-            Gson().toJson(credentialData)
-        )
+        saveCredentials(preferenceHandler,credentialData)
     }
 
     private fun getCredentialData(): CredentialData {
-        preferenceHandler.getValue(CREDENTIAL_DATA)?.let {
-            return   Gson().fromJson(it, CredentialData::class.java)
-        }?:  return CredentialData()
+      return  getCredentials(preferenceHandler)
     }
-
 
 }
