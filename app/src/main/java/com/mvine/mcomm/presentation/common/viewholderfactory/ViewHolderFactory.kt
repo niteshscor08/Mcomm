@@ -57,6 +57,11 @@ object ViewHolderFactory {
                     .inflate(R.layout.item_call, parent, false)
                 CallDataViewHolder(callDataVIew)
             }
+            is Row.AllCallDataRowType -> {
+                val callDataVIew: View = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_call, parent, false)
+                CallDataViewHolder(callDataVIew)
+            }
             is CallSpinnerRowType -> {
                 val callSpinnerView: View = LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_spinner_call, parent, false)

@@ -146,7 +146,7 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
                     is Success -> {
                         binding.progressCalls.visibility = View.GONE
                         res.data?.let { callData ->
-                            allCallsAdapter.updateData(prepareRowTypesFromCallData(callData, this))
+                            allCallsAdapter.updateData(prepareRowTypesFromAllCallData(callData, this))
                         }
                     }
                     is Error -> {
@@ -162,7 +162,9 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
 
         })
         homeViewModel.searchLiveData.observe(viewLifecycleOwner, {
-            it?.let { callsViewModel.filterData(it) }
+            it?.let {
+                callsViewModel.filterData(it)
+            }
         })
         callsViewModel.searchCalls.observe(viewLifecycleOwner, {
             it?.let { callData ->

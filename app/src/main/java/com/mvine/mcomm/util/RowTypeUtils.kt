@@ -4,6 +4,7 @@ import com.mvine.mcomm.util.Row.CallDataRowType
 import com.mvine.mcomm.util.Row.ContactRowType
 import com.mvine.mcomm.util.Row.InvalidRowType
 import com.mvine.mcomm.util.Row.CallSpinnerRowType
+import com.mvine.mcomm.util.Row.AllCallDataRowType
 
 /**
  * A Util function to return a [Row] Instance
@@ -17,6 +18,7 @@ fun getRowTypeInstance(rowType: Int): Row {
         CALL_DATA_ROW_TYPE -> CallDataRowType(CALL_DATA_ROW_TYPE)
         CALL_HISTORY_ROW_TYPE -> CallSpinnerRowType(CALL_HISTORY_ROW_TYPE)
         CONTACT_ROW_TYPE -> ContactRowType(CONTACT_ROW_TYPE)
+        ALL_CALL_DATA_ROW_TYPE -> AllCallDataRowType(ALL_CALL_DATA_ROW_TYPE)
         else -> InvalidRowType(errorMessage = INVALID_ROW_ERROR)
     }
 }
@@ -24,4 +26,5 @@ fun getRowTypeInstance(rowType: Int): Row {
 const val CALL_DATA_ROW_TYPE = 0
 const val CALL_HISTORY_ROW_TYPE = 1
 const val CONTACT_ROW_TYPE = 2
+const val ALL_CALL_DATA_ROW_TYPE = 3
 const val INVALID_ROW_ERROR = "Invalid Row Type Found"

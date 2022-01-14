@@ -18,9 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CallsViewModel @Inject constructor(
     private val getCallsUseCase: GetCallsUseCase,
-    private val dispatcher: CoroutineDispatcher,
-    private val preferenceHandler: PreferenceHandler
-) : BaseViewModel() {
+    private val dispatcher: CoroutineDispatcher
+    ) : BaseViewModel() {
 
     private val _recentCallsLiveData: MutableLiveData<Resource<ArrayList<CallData>>> =
         MutableLiveData()
@@ -63,7 +62,15 @@ class CallsViewModel @Inject constructor(
 
     fun filterData(query: String) {
         _recentCallsLiveData.value?.data?.filter {
-            it.othercaller_company_id?.contains(query, ignoreCase = true) == true
+            it.othercaller_company?.contains(query, ignoreCase = true) == true
+        }?.let {
+            _searchCallsLiveData.postValue(it as ArrayList<CallData>)
+        }
+    }
+
+    fun filterAllCallData(query: String){
+        _allCallsLiveData.value?.data?.filter {
+            it.othercaller_department?.contains(query, ignoreCase = true) == true
         }?.let {
             _searchCallsLiveData.postValue(it as ArrayList<CallData>)
         }
