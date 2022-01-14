@@ -125,7 +125,8 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
             result?.let { response ->
                 when (response) {
                     is Success -> {
-                        callsViewModel.getAllCalls()
+                        if(callsViewModel.allCalls.value == null)
+                            callsViewModel.getAllCalls()
                         response.data?.let { callData ->
                             callsAdapter.updateData(prepareRowTypesFromCallData(callData, this))
                         }

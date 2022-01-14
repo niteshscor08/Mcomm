@@ -78,15 +78,6 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener {
     }
 
     private fun initListeners() {
-        binding?.homeNavBar?.setOnNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.action_chats -> navController.navigate(R.id.chatsFragment)
-                R.id.action_calls -> navController.navigate(R.id.callsFragment)
-                R.id.action_contacts -> navController.navigate(R.id.contactsFragment)
-            }
-            return@setOnNavigationItemSelectedListener true
-        }
-
         binding?.ivAppBarMenu?.setOnClickListener {
             binding?.tlSearch?.visibility = View.GONE
             navController.navigate(R.id.loginMenuFragment)
