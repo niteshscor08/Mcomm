@@ -50,12 +50,14 @@
                         app:layout_constraintTop_toTopOf="parent"
                         tools:ignore="contentDescription" />
 
-                    <ImageView
+                    <androidx.appcompat.widget.AppCompatToggleButton
                         android:id="@+id/iv_appBar_menu"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/space_14x"
+                        android:layout_height="@dimen/space_14x"
                         android:layout_gravity="start"
-                        android:src="@drawable/ic_menu"
+                        android:background="@drawable/ic_menu_toggle"
+                        android:textOff=""
+                        android:textOn=""
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:ignore="contentDescription" />

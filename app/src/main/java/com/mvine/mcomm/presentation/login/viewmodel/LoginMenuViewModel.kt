@@ -3,11 +3,15 @@ package com.mvine.mcomm.presentation.login.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.mvine.mcomm.data.model.response.PersonInfo
+import com.mvine.mcomm.domain.model.CredentialData
 import com.mvine.mcomm.domain.usecase.LogoutUseCase
 import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.presentation.common.base.BaseViewModel
 import com.mvine.mcomm.util.LOGIN_TOKEN
 import com.mvine.mcomm.util.PreferenceHandler
+import com.mvine.mcomm.util.USER_INFO
+import com.mvine.mcomm.util.getCredentials
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
@@ -37,5 +41,9 @@ class LoginMenuViewModel @Inject constructor(
 
     fun clearData(){
         preferenceHandler.clearData()
+    }
+
+    fun getUserData(): PersonInfo {
+        return preferenceHandler.get(USER_INFO)
     }
 }

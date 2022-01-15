@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
@@ -29,6 +30,7 @@ import com.mvine.mcomm.presentation.common.dialog.CallDialogListener
 import com.mvine.mcomm.util.EMPTY_STRING
 import com.mvine.mcomm.util.hideKeyboard
 import com.mvine.mcomm.util.showKeyboard
+import com.mvine.mcomm.util.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -68,6 +70,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener {
         initializeAudioScreen()
         subscribeObservers()
         startJanusSession()
+        showLoginSuccessMessage()
     }
 
     private fun setUpNavController() {
@@ -79,8 +82,17 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener {
 
     private fun initListeners() {
         binding?.ivAppBarMenu?.setOnClickListener {
-            binding?.tlSearch?.visibility = View.GONE
-            navController.navigate(R.id.loginMenuFragment)
+            binding?.etSearch?.hideKeyboard()
+            val state = binding?.ivAppBarMenu?.isChecked
+            state?.let {
+                binding?.tlSearch?.isVisible = !it
+                binding?.ivAppBarCreateGroup?.isVisible = !it
+                if(it){
+                    navController.navigate(R.id.loginMenuFragment)
+                }else{
+                    navController.popBackStack()
+                }
+            }
         }
 
         binding?.etSearch?.apply {
@@ -213,6 +225,11 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener {
 
     private fun endJanusSession(){
         janusManager.endJanusSession()
+    }
+
+    private fun showLoginSuccessMessage(){
+       if(intent.extras?.isEmpty == false)
+           binding?.let { showSnackBar(it.root, resources.getString(R.string.login_successful)) }
     }
 
     override fun onDestroy() {

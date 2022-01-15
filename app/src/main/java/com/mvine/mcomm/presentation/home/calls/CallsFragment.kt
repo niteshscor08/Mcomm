@@ -4,9 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Typeface
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
@@ -18,8 +16,6 @@ import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.FragmentCallsBinding
 import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.domain.util.Resource.*
-import com.mvine.mcomm.janus.commonvalues.CommonValues.Companion.OUTGOING
-import com.mvine.mcomm.janus.extension.toSIPRemoteAddress
 import com.mvine.mcomm.presentation.common.ListInteraction
 import com.mvine.mcomm.presentation.common.MultipleRowTypeAdapter
 import com.mvine.mcomm.presentation.common.base.BaseFragment
@@ -133,7 +129,9 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
                     }
                     is Error -> {
                         binding.progressCalls.visibility = View.GONE
-                        Toast.makeText(activity, response.message, Toast.LENGTH_LONG).show()
+                        response.message?.let {
+                            showSnackBar(binding.root, it, null, false)
+                        }
                     }
                     is Loading -> {
                         binding.progressCalls.visibility = View.VISIBLE
@@ -152,7 +150,9 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
                     }
                     is Error -> {
                         binding.progressCalls.visibility = View.GONE
-                        Toast.makeText(activity, res.message, Toast.LENGTH_LONG).show()
+                        res.message?.let {
+                            showSnackBar(binding.root, it, null, false)
+                        }
                     }
                     is Loading -> {
                         binding.progressCalls.visibility = View.VISIBLE

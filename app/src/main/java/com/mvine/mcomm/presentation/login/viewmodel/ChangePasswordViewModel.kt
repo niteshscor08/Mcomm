@@ -22,19 +22,20 @@ class ChangePasswordViewModel @Inject constructor(
 
     var newPassword = EMPTY_STRING
     var reEnteredPassword = EMPTY_STRING
-
+    var oldPassword = EMPTY_STRING
 
     private val _passwordUpdatedLiveData: MutableLiveData<Resource<String>> =
         MutableLiveData()
     val passwordUpdated: LiveData<Resource<String>> = _passwordUpdatedLiveData
 
-    fun submitButtonClick(){
-            viewModelScope.launch(dispatcher) {
-                _passwordUpdatedLiveData.apply {
-                    postValue(Resource.Loading())
-                    postValue(changePasswordUseCase.changePassword(newPassword,reEnteredPassword))
-                }
+
+     fun callPasswordUpdateAPI(){
+        viewModelScope.launch(dispatcher) {
+            _passwordUpdatedLiveData.apply {
+                postValue(Resource.Loading())
+                postValue(changePasswordUseCase.changePassword(newPassword,reEnteredPassword))
             }
+        }
     }
 
     fun updatePassword(newPassword : String){
@@ -43,7 +44,7 @@ class ChangePasswordViewModel @Inject constructor(
         saveCredentials(preferenceHandler,credentialData)
     }
 
-    private fun getCredentialData(): CredentialData {
+     fun getCredentialData(): CredentialData {
       return  getCredentials(preferenceHandler)
     }
 

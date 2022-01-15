@@ -36,4 +36,15 @@
     <string name="login_failure">Login Failure! Please try again.</string>
     <string name="something_wrong">Something went wrong, Please try again later.</string>
     <string name="login_successful">Login Successful!</string>
+    <string name="login_failed">Login Failed</string>
+    <string name="incorrect_email_pass">Incorrect Email Address / Password combination</string>
+
+
+    <string name="ok">OK</string>
+    <string name="password_change">Password has been changed successfully.</string>
+
+    <string name="empty_field_error">Empty Fields not allowed.</string>
+    <string name="old_pass_incorrect">Old password incorrect</string>
+    <string name="old_pass_not_match">Entered Old password does not match</string>
+
 </resources>
