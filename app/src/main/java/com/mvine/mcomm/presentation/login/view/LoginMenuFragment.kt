@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.mvine.mcomm.BuildConfig
 import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.FragmentLoginMenuBinding
 import com.mvine.mcomm.domain.util.Resource
@@ -47,6 +48,7 @@ class LoginMenuFragment : Fragment() {
     }
 
     private fun loadUiData(){
+        fragmentLoginMenuBinding.version.text = resources.getString(R.string.version).plus(" ").plus(BuildConfig.VERSION_NAME)
         fragmentLoginMenuBinding.userName.text = loginMenuViewModel.getUserData().view.contact?.name
     }
 

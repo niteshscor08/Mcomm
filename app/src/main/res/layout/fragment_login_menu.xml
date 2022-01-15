@@ -84,5 +84,16 @@
             app:layout_constraintTop_toBottomOf="@id/btn_changePassword"
             app:layout_constraintEnd_toEndOf="parent" />
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/version"
+            style="@style/text_open_san_grey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Version ##.##"
+            android:layout_marginBottom="@dimen/size_46dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

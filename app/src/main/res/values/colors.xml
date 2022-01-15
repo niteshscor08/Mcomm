@@ -12,5 +12,6 @@
     <color name="mcomm_green">#4DB966</color>
     <color name="mcomm_red">#b94d4d</color>
     <color name="mcomm_grey">#CCCCCC</color>
+    <color name="mcomm_grey_73">#737373</color>
     <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">#fff</color>
 </resources>

@@ -47,4 +47,6 @@
     <string name="old_pass_incorrect">Old password incorrect</string>
     <string name="old_pass_not_match">Entered Old password does not match</string>
 
+    <string name="version">Version</string>
+
 </resources>
