@@ -52,15 +52,23 @@
 
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/rv_calls_refresh"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_2x"
             android:paddingBottom="@dimen/space_2x"
-            android:id="@+id/rv_calls"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layout_recent_all"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/rv_calls"
+               />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"

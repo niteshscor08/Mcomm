@@ -46,7 +46,7 @@ class CallsViewModel @Inject constructor(
         getRecentCalls()
     }
 
-    private fun getRecentCalls() {
+    fun getRecentCalls() {
             viewModelScope.launch(dispatcher) {
                 _recentCallsLiveData.apply {
                     postValue(Resource.Loading())

@@ -2,6 +2,7 @@ package com.mvine.mcomm.presentation.home.calls
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.View
@@ -61,6 +62,7 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
             MCOMM_SHARED_PREFERENCES,
             Context.MODE_PRIVATE
         )
+        refreshRecentCallsData()
     }
 
     private fun setUpViews() {
@@ -123,6 +125,10 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
                     is Success -> {
                         if(callsViewModel.allCalls.value == null)
                             callsViewModel.getAllCalls()
+                        else{
+                            binding.rvCallsRefresh.isRefreshing = false
+                            binding.progressCalls.visibility = View.GONE
+                        }
                         response.data?.let { callData ->
                             callsAdapter.updateData(prepareRowTypesFromCallData(callData, this))
                         }
@@ -134,7 +140,7 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
                         }
                     }
                     is Loading -> {
-                        binding.progressCalls.visibility = View.VISIBLE
+                        binding.progressCalls.isVisible = !binding.rvCallsRefresh.isRefreshing
                     }
                 }
             }
@@ -203,6 +209,13 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
                     userName = item.othercaller_company_id,
                     uri = item.image_src?: EMPTY_STRING )
             }
+    }
+
+    private fun refreshRecentCallsData(){
+        binding.rvCallsRefresh.setOnRefreshListener {
+            binding.rvCallsRefresh.isRefreshing = true
+            callsViewModel.getRecentCalls()
+        }
     }
 
 }
