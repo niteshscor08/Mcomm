@@ -175,6 +175,14 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
                 callsViewModel.filterData(it)
             }
         })
+        homeViewModel.shouldRefreshData.observe(viewLifecycleOwner, {
+            it?.let {
+                if(it){
+                    homeViewModel.shouldRefreshData.postValue(false)
+                    callsViewModel.getRecentCalls()
+                }
+            }
+        })
         callsViewModel.searchCalls.observe(viewLifecycleOwner, {
             it?.let { callData ->
                 callsAdapter.updateData(prepareRowTypesFromCallData(callData, this))

@@ -12,5 +12,6 @@ class HomeViewModel @Inject constructor(
 ): ViewModel() {
 
     val searchLiveData: MutableLiveData<String> = MutableLiveData()
+    val shouldRefreshData : MutableLiveData<Boolean> = MutableLiveData(false)
 
 }

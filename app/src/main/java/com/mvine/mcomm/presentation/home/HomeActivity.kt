@@ -1,10 +1,13 @@
 package com.mvine.mcomm.presentation.home
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
@@ -143,12 +146,12 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener {
                     showCallsPopUp(EMPTY_STRING, INCOMING, callState.remoteDisplayName, callState.remoteUrl)
                 }
                 CallStatus.DECLINING.status, CallStatus.HANGUP.status -> {
+                    homeViewModel.shouldRefreshData.postValue(true)
                     dismissCallDialog()
                 }
                 CallStatus.ACCEPTED.status -> {
                     dismissCallDialog()
-                    val intent = Intent(this, AudioActivity::class.java)
-                    startActivity(intent)
+                    startAudioActivity()
                 }
                 CallStatus.REGISTERED.status -> {
                     isRegistered = true
@@ -239,6 +242,15 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener {
 
     fun hideBottomTabBar(){
         binding?.homeNavBar?.visibility = View.GONE
+    }
+
+    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        homeViewModel.shouldRefreshData.postValue(true)
+    }
+
+    private fun startAudioActivity(){
+        val intent = Intent(this, AudioActivity::class.java)
+        resultLauncher.launch(intent)
     }
 
 }
