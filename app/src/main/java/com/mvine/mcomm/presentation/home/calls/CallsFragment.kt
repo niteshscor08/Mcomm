@@ -55,6 +55,7 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        callsViewModel.getRecentCalls()
         subscribeObservers()
         setUpViews()
         initListeners()
@@ -131,6 +132,7 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
                         }
                         response.data?.let { callData ->
                             callsAdapter.updateData(prepareRowTypesFromCallData(callData, this))
+                            callsAdapter.notifyDataSetChanged()
                         }
                     }
                     is Error -> {

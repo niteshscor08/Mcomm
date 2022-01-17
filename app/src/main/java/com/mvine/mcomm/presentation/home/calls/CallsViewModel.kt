@@ -41,11 +41,6 @@ class CallsViewModel @Inject constructor(
         MutableLiveData()
     val searchAllCalls: LiveData<ArrayList<CallData>> = _searchAllCallsLiveData
 
-
-    init {
-        getRecentCalls()
-    }
-
     fun getRecentCalls() {
             viewModelScope.launch(dispatcher) {
                 _recentCallsLiveData.apply {
