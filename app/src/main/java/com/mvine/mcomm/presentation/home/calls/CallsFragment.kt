@@ -204,11 +204,13 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
     }
 
     override fun onVoiceCallSelected(item: CallData) {
-            item.othercaller_company_id?.let { companyId ->
-                (activity as HomeActivity).startOutgoingCall( sTX = companyId,
-                    userName = item.othercaller_company_id,
-                    uri = item.image_src?: EMPTY_STRING )
-            }
+        item.othercaller_stx?.let {
+            (activity as HomeActivity).startOutgoingCall(
+                sTX = it,
+                userName = item.othercaller_department ?: it,
+                uri = item.image_src?: EMPTY_STRING )
+        }
+
     }
 
     private fun refreshRecentCallsData(){
