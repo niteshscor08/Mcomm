@@ -9,6 +9,7 @@ import com.mvine.mcomm.presentation.common.ListInteraction
 import com.mvine.mcomm.presentation.common.RowType
 import com.mvine.mcomm.presentation.common.dialog.CallDialog
 import com.mvine.mcomm.presentation.common.dialog.CallDialogData
+import com.mvine.mcomm.presentation.common.viewtypes.AllCallDataRowType
 import com.mvine.mcomm.presentation.common.viewtypes.CallDataRowType
 import com.mvine.mcomm.presentation.common.viewtypes.CallSpinnerRowType
 
@@ -53,6 +54,18 @@ fun prepareRowTypesFromCallData(
     callData.forEach { callDataItem ->
         callDataItem.isExpanded = false // Set Default Expanded as false
         rowTypes.add(CallDataRowType(callDataItem, interaction))
+    }
+    return rowTypes
+}
+
+fun prepareRowTypesFromAllCallData(
+    callData: ArrayList<CallData>,
+    interaction: ListInteraction<CallData>
+): ArrayList<RowType> {
+    val rowTypes = arrayListOf<RowType>()
+    callData.forEach { callDataItem ->
+        callDataItem.isExpanded = false // Set Default Expanded as false
+        rowTypes.add(AllCallDataRowType(callDataItem, interaction))
     }
     return rowTypes
 }

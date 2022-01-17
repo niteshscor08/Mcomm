@@ -27,6 +27,7 @@ import com.mvine.mcomm.presentation.common.dialog.CallDialogData
 import com.mvine.mcomm.presentation.common.dialog.CallDialogListener
 import com.mvine.mcomm.presentation.login.view.ChangePasswordActivity
 import com.mvine.mcomm.util.EMPTY_STRING
+import com.mvine.mcomm.util.hideKeyboard
 import com.mvine.mcomm.util.showKeyboard
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -154,6 +155,8 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener {
     }
 
     fun showSearchBar() {
+        binding?.etSearch?.hideKeyboard()
+        binding?.etSearch?.text?.clear()
         binding?.tlSearch?.visibility = View.VISIBLE
     }
 

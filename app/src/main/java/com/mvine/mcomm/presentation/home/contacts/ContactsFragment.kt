@@ -72,7 +72,7 @@ class ContactsFragment : BaseFragment<FragmentContactsBinding,ContactsViewModel>
                     is Resource.Success -> {
                         binding.progressContacts.visibility = View.GONE
                         response.data?.let {
-                            contactsAdapter.updateData(prepareRowTypesFromContactsData(it, this))
+                            contactsAdapter.updateData(prepareRowTypesFromContactsData(contactsViewModel.sortAlphabetically(it), this))
                         }
                     }
                     is Resource.Error -> {

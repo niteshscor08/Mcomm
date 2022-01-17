@@ -4,9 +4,11 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,6 +28,7 @@ import com.mvine.mcomm.presentation.home.HomeViewModel
 import com.mvine.mcomm.util.*
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlin.Error
 
 @AndroidEntryPoint
 class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListInteraction<CallData> {
@@ -37,7 +40,9 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
 
     private val homeViewModel: HomeViewModel by activityViewModels()
 
-    private val callsAdapter: MultipleRowTypeAdapter = MultipleRowTypeAdapter(arrayListOf())
+    private val callsAdapter: MultipleRowTypeAdapter = MultipleRowTypeAdapter(arrayListOf()) // allCallsAdapter
+
+    private val allCallsAdapter: MultipleRowTypeAdapter = MultipleRowTypeAdapter(arrayListOf()) // allCallsAdapter
 
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -67,12 +72,18 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
             layoutManager = LinearLayoutManager(context)
             adapter = callsAdapter
         }
+        binding.rvAllCalls.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = allCallsAdapter
+        }
         (activity as HomeActivity).showSearchBar()
     }
 
     private fun initListeners() {
         binding.callsAll.apply {
             setOnClickListener {
+                binding.rvAllCalls.visibility = View.VISIBLE
+                binding.rvCalls.visibility = View.GONE
                 background = ContextCompat.getDrawable(context, R.drawable.ic_white_filled_rounded_rectangle)
                 setTextColor(ContextCompat.getColor(context, R.color.mcomm_blue))
                 setTypeface(typeface, Typeface.BOLD)
@@ -86,6 +97,8 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
 
         binding.callsRecents.apply {
             setOnClickListener {
+                binding.rvAllCalls.visibility = View.GONE
+                binding.rvCalls.visibility = View.VISIBLE
                 background = ContextCompat.getDrawable(context, R.drawable.ic_white_filled_rounded_rectangle)
                 setTextColor(ContextCompat.getColor(context, R.color.mcomm_blue))
                 setTypeface(typeface, Typeface.BOLD)
@@ -112,7 +125,7 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
             result?.let { response ->
                 when (response) {
                     is Success -> {
-                        binding.progressCalls.visibility = View.GONE
+                        callsViewModel.getAllCalls()
                         response.data?.let { callData ->
                             callsAdapter.updateData(prepareRowTypesFromCallData(callData, this))
                         }
@@ -127,22 +140,60 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
                 }
             }
         })
+        callsViewModel.allCalls.observe(viewLifecycleOwner, { result ->
+            result?.let { res ->
+                when(res){
+                    is Success -> {
+                        binding.progressCalls.visibility = View.GONE
+                        res.data?.let { callData ->
+                            allCallsAdapter.updateData(prepareRowTypesFromAllCallData(callData, this))
+                        }
+                    }
+                    is Error -> {
+                        binding.progressCalls.visibility = View.GONE
+                        Toast.makeText(activity, res.message, Toast.LENGTH_LONG).show()
+                    }
+                    is Loading -> {
+                        binding.progressCalls.visibility = View.VISIBLE
+                    }
+                }
+
+            }
+
+        })
         homeViewModel.searchLiveData.observe(viewLifecycleOwner, {
-            it?.let { callsViewModel.filterData(it) }
+            it?.let {
+                callsViewModel.filterData(it)
+            }
         })
         callsViewModel.searchCalls.observe(viewLifecycleOwner, {
             it?.let { callData ->
                 callsAdapter.updateData(prepareRowTypesFromCallData(callData, this))
             }
         })
+
+        callsViewModel.searchAllCalls.observe(viewLifecycleOwner, {
+            it?.let {
+                allCallsAdapter.updateData(prepareRowTypesFromAllCallData(it, this))
+            }
+        })
     }
 
     override fun onItemSelectedForExpansion(position: Int, item: CallData, isExpanded: Boolean) {
-        if (isExpanded) {
-            callsAdapter.expandCallHistory(position, item)
-        } else {
-            callsAdapter.dissolveCallHistory(position, item)
+        if(binding.rvCalls.isVisible){
+            if (isExpanded) {
+                callsAdapter.expandCallHistory(position, item)
+            } else {
+                callsAdapter.dissolveCallHistory(position, item)
+            }
+        }else{
+            if (isExpanded) {
+                allCallsAdapter.expandCallHistory(position, item)
+            } else {
+                allCallsAdapter.dissolveCallHistory(position, item)
+            }
         }
+
     }
 
     override fun onVoiceCallSelected(item: CallData) {

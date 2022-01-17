@@ -7,6 +7,8 @@ sealed class Row {
 
     class CallDataRowType(val dataRowType: Int) : Row()
 
+    class AllCallDataRowType(val dataRowType: Int) : Row()
+
     class CallSpinnerRowType(val spinnerRowType: Int) : Row()
 
     class ContactRowType(val contactRowType: Int) : Row()

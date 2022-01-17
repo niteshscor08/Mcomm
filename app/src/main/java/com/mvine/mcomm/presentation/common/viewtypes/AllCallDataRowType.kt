@@ -1,5 +1,6 @@
 package com.mvine.mcomm.presentation.common.viewtypes
 
+import android.view.View
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -10,22 +11,23 @@ import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.presentation.common.ListInteraction
 import com.mvine.mcomm.presentation.common.RowType
 import com.mvine.mcomm.presentation.common.viewholderfactory.ViewHolderFactory
+import com.mvine.mcomm.util.ALL_CALL_DATA_ROW_TYPE
 import com.mvine.mcomm.util.CALL_DATA_ROW_TYPE
 import com.mvine.mcomm.util.getCallIcon
 
-data class CallDataRowType(
+data class AllCallDataRowType(
     val callData: CallData,
     val interaction: ListInteraction<CallData>
 ) : RowType {
 
-    override fun getItemViewType() = CALL_DATA_ROW_TYPE
+    override fun getItemViewType() = ALL_CALL_DATA_ROW_TYPE
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         val rowViewHolder = viewHolder as ViewHolderFactory.CallDataViewHolder
         rowViewHolder.apply {
             callName?.text = callData.othercaller_department
-            lastCallHistory?.text = callData.timestamp
-            lastCallStatus?.setImageResource(getCallIcon(callData.type))
+            lastCallHistory?.text = callData.othercaller_stx
+            lastCallStatus?.visibility = View.GONE
             callData.image_src?.let {
                 loadImageUsingGlide("${BuildConfig.BASE_URL}$it", callProfileImage)
             }

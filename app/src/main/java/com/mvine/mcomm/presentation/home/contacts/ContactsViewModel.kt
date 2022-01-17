@@ -16,9 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ContactsViewModel @Inject constructor(
     private val getContactsUseCase: GetContactsUseCase,
-    private val dispatcher: CoroutineDispatcher,
-    private val preferenceHandler: PreferenceHandler
-): BaseViewModel() {
+    private val dispatcher: CoroutineDispatcher
+    ): BaseViewModel() {
 
     private val _contactsLiveData: MutableLiveData<Resource<ArrayList<ContactsData>>> =
         MutableLiveData()
@@ -48,5 +47,15 @@ class ContactsViewModel @Inject constructor(
         }?.let {
             _searchCallsLiveData.postValue(it as ArrayList<ContactsData>)
         }
+    }
+
+    fun sortAlphabetically(arrayList: ArrayList<ContactsData>): ArrayList< ContactsData >{
+        var returnList: ArrayList<ContactsData>
+        var list = arrayList as MutableList< ContactsData >
+        list.sortWith(Comparator { o1: ContactsData, o2: ContactsData ->
+            o1.username.toString().lowercase().compareTo(o2.username.toString().lowercase())
+        })
+        returnList = list as ArrayList< ContactsData >
+        return returnList
     }
 }

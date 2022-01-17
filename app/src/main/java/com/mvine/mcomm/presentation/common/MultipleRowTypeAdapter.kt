@@ -5,7 +5,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.util.CALL_DATA_ROW_TYPE
 import com.mvine.mcomm.presentation.common.viewholderfactory.ViewHolderFactory
+import com.mvine.mcomm.presentation.common.viewtypes.AllCallDataRowType
 import com.mvine.mcomm.presentation.common.viewtypes.CallDataRowType
+import com.mvine.mcomm.util.ALL_CALL_DATA_ROW_TYPE
 import com.mvine.mcomm.util.CALL_HISTORY_ROW_TYPE
 import com.mvine.mcomm.util.prepareHistoryRowTypesFromCallData
 
@@ -43,6 +45,11 @@ class MultipleRowTypeAdapter(private val dataSet: ArrayList<RowType>) :
                 if (it.isExpanded) return
                 it.isExpanded = true
             }
+        }else if(rowType.getItemViewType() == ALL_CALL_DATA_ROW_TYPE){
+            (rowType as AllCallDataRowType).callData.let {
+                if (it.isExpanded) return
+                it.isExpanded = true
+            }
         }
         var insertPosition = position + 1
         callData.callHistory?.let {
@@ -57,6 +64,11 @@ class MultipleRowTypeAdapter(private val dataSet: ArrayList<RowType>) :
         val rowType = dataSet[position]
         if (rowType.getItemViewType() == CALL_DATA_ROW_TYPE) {
             (rowType as CallDataRowType).callData.let {
+                if (!it.isExpanded) return
+                it.isExpanded = false
+            }
+        }else if (rowType.getItemViewType() == ALL_CALL_DATA_ROW_TYPE){
+            (rowType as AllCallDataRowType).callData.let {
                 if (!it.isExpanded) return
                 it.isExpanded = false
             }

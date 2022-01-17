@@ -17,3 +17,27 @@ data class SpinnerItem(
     val callImageSrc: Int,
     val itemText: String
 )
+
+
+data class AllCalls(
+    var callables: List<AllCallsClass>?=null,
+    var companies: List<AllCallsCompanyData>?=null
+)
+
+data class AllCallsClass(
+    val Company: String?,
+    val Department: String?,
+    val STX: String?,
+    val admin: String?,
+    val companyid: String?,
+    val email:String?,
+    val id: String?,
+    val image_src: String?,
+    val usename: String?,
+    val username: String?
+)
+data class AllCallsCompanyData(
+    val ID: String?,
+    val Value: String?,
+    val image_src: String
+)
