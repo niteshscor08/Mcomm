@@ -49,6 +49,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="textEmailAddress"
+                android:imeOptions="actionNext"
                 android:onTextChanged="@{loginViewModel::onEmailTextChange}"
                 style="@style/text_open_sans_medium"
                 android:textColorHint="@color/white"
@@ -85,6 +86,7 @@
                 android:inputType="textPassword"
                 android:textColorHint="@color/white"
                 android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
                 android:hint="@string/password" />
         </com.google.android.material.textfield.TextInputLayout>
 

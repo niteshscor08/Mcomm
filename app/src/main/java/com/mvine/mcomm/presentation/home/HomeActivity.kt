@@ -73,7 +73,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener {
         initializeAudioScreen()
         subscribeObservers()
         startJanusSession()
-        showLoginSuccessMessage()
+        //showLoginSuccessMessage()
     }
 
     private fun setUpNavController() {
