@@ -53,6 +53,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
                         } ?: showToastMessage(R.string.login_failed, R.string.incorrect_email_pass)
                     }
                     is Resource.Error -> {
+                        preferenceHandler.clearData()
                         showToastMessage(R.string.login_failure, null)
                     }
                     is Resource.Loading -> {
@@ -73,9 +74,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
                         activity?.finish()
                     }
                     is Resource.Error -> {
+                        preferenceHandler.clearData()
                         showToastMessage(R.string.login_failure)
                     }
                     else -> {
+                        preferenceHandler.clearData()
                         showToastMessage(R.string.login_failure)
                     }
                 }
@@ -84,8 +87,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
         })
 
         loginViewModel.loginError.observe(viewLifecycleOwner, {
-            if(it)
+            if(it) {
+                preferenceHandler.clearData()
                 showToastMessage(R.string.login_failure)
+            }
         })
     }
 
