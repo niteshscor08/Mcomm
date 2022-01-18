@@ -1,12 +1,7 @@
 package com.mvine.mcomm.presentation.home.contacts
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,9 +11,6 @@ import com.mvine.mcomm.databinding.FragmentContactsBinding
 import com.mvine.mcomm.domain.model.ContactsData
 import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.janus.JanusManager
-import com.mvine.mcomm.janus.extension.call
-import com.mvine.mcomm.janus.commonvalues.CommonValues.Companion.OUTGOING
-import com.mvine.mcomm.janus.extension.toSIPRemoteAddress
 import com.mvine.mcomm.presentation.common.ListInteraction
 import com.mvine.mcomm.presentation.common.MultipleRowTypeAdapter
 import com.mvine.mcomm.presentation.common.base.BaseFragment
@@ -26,6 +18,7 @@ import com.mvine.mcomm.presentation.home.HomeActivity
 import com.mvine.mcomm.presentation.home.HomeViewModel
 import com.mvine.mcomm.util.EMPTY_STRING
 import com.mvine.mcomm.util.prepareRowTypesFromContactsData
+import com.mvine.mcomm.util.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -77,7 +70,9 @@ class ContactsFragment : BaseFragment<FragmentContactsBinding,ContactsViewModel>
                     }
                     is Resource.Error -> {
                         binding.progressContacts.visibility = View.GONE
-                        Toast.makeText(activity, response.message, Toast.LENGTH_LONG).show()
+                        response.message?.let {
+                            showSnackBar(binding.root,response.message, null, false)
+                        }
                     }
                     is Resource.Loading -> {
                         binding.progressContacts.visibility = View.VISIBLE

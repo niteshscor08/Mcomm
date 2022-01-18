@@ -21,6 +21,7 @@
     <dimen name="space_8x">32dp</dimen>
     <dimen name="size_35dp">35dp</dimen>
     <dimen name="space_10x">40dp</dimen>
+    <dimen name="size_46dp">46dp</dimen>
     <dimen name="space_14x">56dp</dimen>
     <dimen name="space_16x">64dp</dimen>
     <dimen name="space_24x">96dp</dimen>
@@ -34,5 +35,7 @@
     <dimen name="size_3x">12sp</dimen>
     <dimen name="size_14sp">14sp</dimen>
     <dimen name="size_4x">16sp</dimen>
+    <dimen name="size_20sp">20sp</dimen>
+    <dimen name="size_24sp">24sp</dimen>
     <dimen name="size_10x">40sp</dimen>
 </resources>

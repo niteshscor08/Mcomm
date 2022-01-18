@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import com.google.gson.Gson
 import com.mvine.mcomm.BR
@@ -51,10 +50,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
                     is Success -> {
                         response.data?.let { token ->
                             loginViewModel.updateTokenAndLogin(token, binding.etEmail.text.toString(), binding.etPassword.text.toString())
-                        } ?: showToastMessage(R.string.login_failure)
+                        } ?: showToastMessage(R.string.login_failed, R.string.incorrect_email_pass)
                     }
                     is Resource.Error -> {
-                        showToastMessage(R.string.login_failure)
+                        showToastMessage(R.string.login_failure, null)
                     }
                     is Resource.Loading -> {
                         binding.loginProgress.visibility = View.VISIBLE
@@ -68,8 +67,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
                 when(response){
                     is Success -> {
                         preferenceHandler.save(USER_INFO, Gson().toJson(response.data))
-                        showToastMessage(R.string.login_successful)
                         val intent = Intent(activity, HomeActivity::class.java)
+                        intent.putExtra(LOGGED_IN, true)
                         startActivity(intent)
                         activity?.finish()
                     }
@@ -77,7 +76,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
                         showToastMessage(R.string.login_failure)
                     }
                     else -> {
-                        showToastMessage(R.string.something_wrong)
+                        showToastMessage(R.string.login_failure)
                     }
                 }
 
@@ -141,9 +140,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
         }
     }
 
-    private fun showToastMessage(msgId : Int){
+    private fun showToastMessage(title : Int, message : Int?= null, isPositiveMessage : Boolean? = false){
         binding.loginProgress.visibility = View.GONE
-        Toast.makeText(activity, resources.getString(msgId), Toast.LENGTH_LONG).show()
+        showSnackBar(binding.root,resources.getString(title),
+            message?.let { resources.getString(it) }, isPositiveMessage )
     }
 
 }

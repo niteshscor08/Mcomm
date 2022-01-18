@@ -7,8 +7,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.mvine.mcomm.R
@@ -20,15 +23,14 @@ import com.mvine.mcomm.janus.commonvalues.CommonValues.Companion.INCOMING
 import com.mvine.mcomm.janus.commonvalues.CommonValues.Companion.OUTGOING
 import com.mvine.mcomm.janus.extension.*
 import com.mvine.mcomm.presentation.audio.view.AudioActivity
-import com.mvine.mcomm.presentation.audio.view.AudioDialogListener
 import com.mvine.mcomm.presentation.common.base.BaseActivity
 import com.mvine.mcomm.presentation.common.dialog.CallDialog
 import com.mvine.mcomm.presentation.common.dialog.CallDialogData
 import com.mvine.mcomm.presentation.common.dialog.CallDialogListener
-import com.mvine.mcomm.presentation.login.view.ChangePasswordActivity
 import com.mvine.mcomm.util.EMPTY_STRING
 import com.mvine.mcomm.util.hideKeyboard
 import com.mvine.mcomm.util.showKeyboard
+import com.mvine.mcomm.util.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -68,6 +70,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener {
         initializeAudioScreen()
         subscribeObservers()
         startJanusSession()
+        showLoginSuccessMessage()
     }
 
     private fun setUpNavController() {
@@ -78,18 +81,18 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener {
     }
 
     private fun initListeners() {
-        binding?.homeNavBar?.setOnNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.action_chats -> navController.navigate(R.id.chatsFragment)
-                R.id.action_calls -> navController.navigate(R.id.callsFragment)
-                R.id.action_contacts -> navController.navigate(R.id.contactsFragment)
-            }
-            return@setOnNavigationItemSelectedListener true
-        }
-
         binding?.ivAppBarMenu?.setOnClickListener {
-            binding?.tlSearch?.visibility = View.GONE
-            navController.navigate(R.id.loginMenuFragment)
+            binding?.etSearch?.hideKeyboard()
+            val state = binding?.ivAppBarMenu?.isChecked
+            state?.let {
+                binding?.tlSearch?.isVisible = !it
+                binding?.ivAppBarCreateGroup?.isVisible = !it
+                if(it){
+                    navController.navigate(R.id.loginMenuFragment)
+                }else{
+                    navController.popBackStack()
+                }
+            }
         }
 
         binding?.etSearch?.apply {
@@ -155,6 +158,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener {
     }
 
     fun showSearchBar() {
+        binding?.homeNavBar?.visibility = View.VISIBLE
         binding?.etSearch?.hideKeyboard()
         binding?.etSearch?.text?.clear()
         binding?.tlSearch?.visibility = View.VISIBLE
@@ -223,9 +227,18 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener {
         janusManager.endJanusSession()
     }
 
+    private fun showLoginSuccessMessage(){
+       if(intent.extras?.isEmpty == false)
+           binding?.let { showSnackBar(it.root, resources.getString(R.string.login_successful)) }
+    }
+
     override fun onDestroy() {
         endJanusSession()
         super.onDestroy()
+    }
+
+    fun hideBottomTabBar(){
+        binding?.homeNavBar?.visibility = View.GONE
     }
 
 }

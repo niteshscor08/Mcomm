@@ -24,19 +24,51 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:visibility="gone" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/user_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_4x"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" >
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/user_img"
+                android:layout_width="@dimen/size_46dp"
+                android:layout_height="@dimen/size_46dp"
+                android:src="@drawable/ic_green_circle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/user_name"
+                style="@style/text_open_sans_medium"
+                android:layout_marginLeft="@dimen/size_11dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Yordan Uzunova"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/user_img"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <TextView
+            android:id="@+id/btn_changePassword"
+            android:layout_marginTop="@dimen/size_30dp"
+            style="@style/text_open_sans_medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/space_4x"
-            android:id="@+id/btn_changePassword"
-            android:gravity="center"
-            style="@style/text_open_sans_medium"
             android:background="@drawable/ic_tint_blue_rounded_rectangle"
-            android:layout_marginTop="@dimen/space_4x"
+            android:gravity="center"
+            android:padding="@dimen/space_4x"
             android:text="@string/change_password"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/user_info" />
 
         <TextView
             android:layout_width="match_parent"
@@ -51,6 +83,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btn_changePassword"
             app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/version"
+            style="@style/text_open_san_grey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Version ##.##"
+            android:layout_marginBottom="@dimen/size_46dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
