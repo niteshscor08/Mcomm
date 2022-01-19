@@ -10,8 +10,7 @@ import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.presentation.common.ListInteraction
 import com.mvine.mcomm.presentation.common.RowType
 import com.mvine.mcomm.presentation.common.viewholderfactory.ViewHolderFactory
-import com.mvine.mcomm.util.CALL_DATA_ROW_TYPE
-import com.mvine.mcomm.util.getCallIcon
+import com.mvine.mcomm.util.*
 
 data class CallDataRowType(
     val callData: CallData,
@@ -24,7 +23,7 @@ data class CallDataRowType(
         val rowViewHolder = viewHolder as ViewHolderFactory.CallDataViewHolder
         rowViewHolder.apply {
             callName?.text = callData.othercaller_department
-            lastCallHistory?.text = callData.timestamp
+            lastCallHistory?.text = callData.timestamp?.let { getDateFromTimestamp(it) }
             lastCallStatus?.setImageResource(getCallIcon(callData.type))
             callData.image_src?.let {
                 loadImageUsingGlide("${BuildConfig.BASE_URL}$it", callProfileImage)
