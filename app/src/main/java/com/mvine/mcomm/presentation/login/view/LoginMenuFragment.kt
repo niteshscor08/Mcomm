@@ -90,4 +90,9 @@ class LoginMenuFragment : Fragment() {
         activity?.finish()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        (activity as HomeActivity).resetAppbarMenuItem()
+    }
+
 }

@@ -253,4 +253,8 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener {
         resultLauncher.launch(intent)
     }
 
+    fun resetAppbarMenuItem(){
+        binding?.ivAppBarMenu?.isChecked = false
+    }
+
 }
