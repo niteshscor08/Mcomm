@@ -6,6 +6,8 @@ import android.widget.TextView
 import com.google.android.material.snackbar.Snackbar
 import com.mvine.mcomm.R
 import com.google.gson.Gson
+import com.mvine.mcomm.domain.model.CallData
+import com.mvine.mcomm.domain.model.ContactsData
 import com.mvine.mcomm.domain.model.CredentialData
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -96,6 +98,13 @@ fun getTimeDifference(receivedTimeStamp: String, receivedDateFormat: String, out
 
 fun getSimpleDateFormat(dateFormat : String): SimpleDateFormat {
     return SimpleDateFormat(dateFormat,Locale.ENGLISH)
+}
+
+fun <T> sortDataAlphabetically(arrayList: ArrayList<T>, compare: (T, T) -> Int): ArrayList<T>{
+        (arrayList as MutableList<T>).sortWith(Comparator { o1: T, o2: T ->
+            compare(o1,o2)
+        })
+    return arrayList
 }
 
 

@@ -4,12 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mvine.mcomm.data.model.response.PersonInfo
-import com.mvine.mcomm.domain.model.AllCalls
 import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.domain.usecase.GetCallsUseCase
 import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.presentation.common.base.BaseViewModel
-import com.mvine.mcomm.util.PreferenceHandler
+import com.mvine.mcomm.util.sortDataAlphabetically
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
@@ -71,6 +70,12 @@ class CallsViewModel @Inject constructor(
             it.othercaller_department?.contains(query, ignoreCase = true) == true
         }?.let {
             _searchAllCallsLiveData.postValue(it as ArrayList<CallData>)
+        }
+    }
+
+    fun sortAlphabetically(arrayList: ArrayList<CallData>): ArrayList<CallData>{
+        return sortDataAlphabetically(arrayList) { o1: CallData, o2: CallData ->
+            o1.othercaller_department.toString().lowercase().compareTo(o2.othercaller_department.toString().lowercase())
         }
     }
 

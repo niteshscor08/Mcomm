@@ -153,7 +153,7 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
                     is Success -> {
                         binding.progressCalls.visibility = View.GONE
                         res.data?.let { callData ->
-                            allCallsAdapter.updateData(prepareRowTypesFromAllCallData(callData, this))
+                            allCallsAdapter.updateData(prepareRowTypesFromAllCallData(callsViewModel.sortAlphabetically(callData), this))
                         }
                     }
                     is Error -> {
