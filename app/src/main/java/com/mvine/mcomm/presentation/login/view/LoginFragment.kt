@@ -3,6 +3,7 @@ package com.mvine.mcomm.presentation.login.view
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.fragment.app.viewModels
 import com.google.gson.Gson
@@ -41,6 +42,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
         subscribeObservers()
         initListeners()
         loadUserInformation()
+        setOnEditorActionListener()
     }
 
     private fun subscribeObservers() {
@@ -111,6 +113,18 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
                     )
                 } }
             }
+    }
+
+    private fun setOnEditorActionListener(){
+        binding.etPassword.setOnEditorActionListener { v, actionId, event ->
+            if(actionId == EditorInfo.IME_ACTION_DONE){
+                binding.etPassword.hideKeyboard()
+                loginViewModel.login(binding.etEmail.text.toString(), binding.etPassword.text.toString())
+                true
+            } else {
+                false
+            }
+        }
     }
 
     private fun initListeners() {
