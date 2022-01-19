@@ -65,7 +65,7 @@ class ContactsFragment : BaseFragment<FragmentContactsBinding,ContactsViewModel>
                     is Resource.Success -> {
                         binding.progressContacts.visibility = View.GONE
                         response.data?.let {
-                            contactsAdapter.updateData(prepareRowTypesFromContactsData(contactsViewModel.sortAlphabetically(it), this))
+                            contactsAdapter.updateData(prepareRowTypesFromContactsData(contactsViewModel.sortAlphabetically(it), this, true))
                         }
                     }
                     is Resource.Error -> {
@@ -96,5 +96,19 @@ class ContactsFragment : BaseFragment<FragmentContactsBinding,ContactsViewModel>
                     userName = item.username ?: EMPTY_STRING,
                     uri = item.image_src?: EMPTY_STRING )
             }
+    }
+
+    override fun onItemSelectedForExpansion(
+        position: Int,
+        item: ContactsData,
+        isExpanded: Boolean
+    ) {
+       val contactDataList : ArrayList<ContactsData>? = contactsViewModel.contacts.value?.data
+        contactDataList?.let {
+            it.forEachIndexed{index, contactsData ->
+                contactsData.isExpanded = if(index == position) isExpanded else false
+            }
+            contactsAdapter.updateData(prepareRowTypesFromContactsData(contactsViewModel.sortAlphabetically(it), this))
+        }
     }
 }

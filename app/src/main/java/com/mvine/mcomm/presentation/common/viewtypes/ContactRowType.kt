@@ -2,6 +2,7 @@ package com.mvine.mcomm.presentation.common.viewtypes
 
 import android.view.View
 import android.widget.ImageView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -24,19 +25,14 @@ data class ContactRowType(
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         val rowViewHolder = viewHolder as ViewHolderFactory.ContactViewHolder
         rowViewHolder.apply {
+            layoutContact?.isVisible = contactsData.isExpanded
+            nameContact?.isVisible = !contactsData.isExpanded
             contactsData.image_src?.let {
                 loadImageUsingGlide("${BuildConfig.BASE_URL}$it", contactProfile)
             }
             nameContact?.text = contactsData.username
             ivMoreContacts?.setOnClickListener {
-                if (!isContactsLayoutClicked) {
-                    layoutContact?.visibility = View.VISIBLE
-                    nameContact?.visibility = View.GONE
-                } else {
-                    layoutContact?.visibility = View.GONE
-                    nameContact?.visibility = View.VISIBLE
-                }
-                isContactsLayoutClicked = !isContactsLayoutClicked
+                interaction.onItemSelectedForExpansion(position, contactsData, isExpanded = !contactsData.isExpanded)
             }
             voiceCallContact?.setOnClickListener {
                 interaction.onVoiceCallSelected(contactsData)

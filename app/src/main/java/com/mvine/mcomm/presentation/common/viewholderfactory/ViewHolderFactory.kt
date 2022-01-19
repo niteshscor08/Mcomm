@@ -36,7 +36,6 @@ object ViewHolderFactory {
     }
 
     class ContactViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        var isContactsLayoutClicked = false
         val contactProfile: ImageView? = itemView.findViewById(R.id.iv_profilePic_contact)
         val videoCallContact: ImageView? = itemView.findViewById(R.id.iv_videoCall_contact)
         val voiceCallContact: ImageView? = itemView.findViewById(R.id.iv_voiceCall_contact)
