@@ -73,7 +73,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener {
         initializeAudioScreen()
         subscribeObservers()
         startJanusSession()
-        showLoginSuccessMessage()
+        //showLoginSuccessMessage()
     }
 
     private fun setUpNavController() {
@@ -251,6 +251,10 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener {
     private fun startAudioActivity(){
         val intent = Intent(this, AudioActivity::class.java)
         resultLauncher.launch(intent)
+    }
+
+    fun resetAppbarMenuItem(){
+        binding?.ivAppBarMenu?.isChecked = false
     }
 
 }

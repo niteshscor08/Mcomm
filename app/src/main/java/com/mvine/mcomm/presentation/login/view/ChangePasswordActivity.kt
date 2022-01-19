@@ -1,7 +1,10 @@
 package com.mvine.mcomm.presentation.login.view
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -14,7 +17,7 @@ import com.mvine.mcomm.util.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ChangePasswordActivity: AppCompatActivity() {
+class ChangePasswordActivity: AppCompatActivity(), TextView.OnEditorActionListener {
 
     private lateinit var activityChangePasswordBinding: ActivityChangePasswordBinding
 
@@ -61,9 +64,15 @@ class ChangePasswordActivity: AppCompatActivity() {
 
     private fun clickListener(){
         activityChangePasswordBinding.btnSubmit.setOnClickListener {
-            if(validateInput()){
-                changePasswordViewModel.callPasswordUpdateAPI()
-            }
+            callChangePasswordApi()
+        }
+        activityChangePasswordBinding.etReEnterPassword.setOnEditorActionListener(this)
+    }
+
+    private fun callChangePasswordApi(){
+        activityChangePasswordBinding.root.hideKeyboard()
+        if(validateInput()){
+            changePasswordViewModel.callPasswordUpdateAPI()
         }
     }
 
@@ -92,15 +101,28 @@ class ChangePasswordActivity: AppCompatActivity() {
             changePasswordViewModel.updatePassword(
                 activityChangePasswordBinding.etNewPassword.text.toString()
             )
-            showSnackBar(activityChangePasswordBinding.root, resources.getString(R.string.password_change) )
+            showSnackBar(
+                activityChangePasswordBinding.root,
+                resources.getString(R.string.pass_changed),
+                resources.getString(R.string.password_change)
+            )
         }else{
             showSnackBar(activityChangePasswordBinding.root, data, null, false)
         }
+        this.finish()
     }
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+        if(actionId == EditorInfo.IME_ACTION_DONE){
+            callChangePasswordApi()
+           return true
+        }
+        return false
     }
 
 }

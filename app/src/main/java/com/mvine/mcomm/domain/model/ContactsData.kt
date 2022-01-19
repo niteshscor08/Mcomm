@@ -11,5 +11,6 @@ data class ContactsData(
     val image_src: String?,
     val surname: String?,
     val usename: String?,
-    val username: String?
+    val username: String?,
+    var isExpanded: Boolean = false
 )

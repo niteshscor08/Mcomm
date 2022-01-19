@@ -8,6 +8,7 @@ import com.mvine.mcomm.domain.usecase.GetContactsUseCase
 import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.presentation.common.base.BaseViewModel
 import com.mvine.mcomm.util.PreferenceHandler
+import com.mvine.mcomm.util.sortDataAlphabetically
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
@@ -50,12 +51,8 @@ class ContactsViewModel @Inject constructor(
     }
 
     fun sortAlphabetically(arrayList: ArrayList<ContactsData>): ArrayList< ContactsData >{
-        var returnList: ArrayList<ContactsData>
-        var list = arrayList as MutableList< ContactsData >
-        list.sortWith(Comparator { o1: ContactsData, o2: ContactsData ->
+        return sortDataAlphabetically(arrayList) { o1: ContactsData, o2: ContactsData ->
             o1.username.toString().lowercase().compareTo(o2.username.toString().lowercase())
-        })
-        returnList = list as ArrayList< ContactsData >
-        return returnList
+        }
     }
 }
