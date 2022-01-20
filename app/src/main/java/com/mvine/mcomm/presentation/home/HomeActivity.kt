@@ -6,7 +6,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
@@ -42,7 +45,7 @@ import javax.inject.Inject
  */
 
 @AndroidEntryPoint
-class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener {
+class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, TextView.OnEditorActionListener  {
 
     @Inject
     lateinit var janusManager: JanusManager
@@ -73,6 +76,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener {
         initializeAudioScreen()
         subscribeObservers()
         startJanusSession()
+        binding?.etSearch?.setOnEditorActionListener(this)
         //showLoginSuccessMessage()
     }
 
@@ -255,6 +259,15 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener {
 
     fun resetAppbarMenuItem(){
         binding?.ivAppBarMenu?.isChecked = false
+    }
+
+    override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+        if(actionId == EditorInfo.IME_ACTION_DONE){
+            binding?.etSearch?.clearFocus()
+            binding?.etSearch?.hideKeyboard()
+            return true
+        }
+        return false
     }
 
 }
