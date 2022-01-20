@@ -6,10 +6,14 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
@@ -42,7 +46,7 @@ import javax.inject.Inject
  */
 
 @AndroidEntryPoint
-class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener {
+class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, TextView.OnEditorActionListener  {
 
     @Inject
     lateinit var janusManager: JanusManager
@@ -73,6 +77,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener {
         initializeAudioScreen()
         subscribeObservers()
         startJanusSession()
+        binding?.etSearch?.setOnEditorActionListener(this)
         //showLoginSuccessMessage()
     }
 
@@ -91,8 +96,10 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener {
                 binding?.tlSearch?.isVisible = !it
                 binding?.ivAppBarCreateGroup?.isVisible = !it
                 if(it){
+                    binding?.appBarHome?.setBackgroundColor(ContextCompat.getColor(this,R.color.mcomm_blue))
                     navController.navigate(R.id.loginMenuFragment)
                 }else{
+                    binding?.appBarHome?.setBackgroundColor(ContextCompat.getColor(this,R.color.mcomm_blue_light_tint))
                     navController.popBackStack()
                 }
             }
@@ -164,6 +171,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener {
         binding?.homeNavBar?.visibility = View.VISIBLE
         binding?.etSearch?.hideKeyboard()
         binding?.etSearch?.text?.clear()
+        binding?.etSearch?.clearFocus()
         binding?.tlSearch?.visibility = View.VISIBLE
     }
 
@@ -254,7 +262,17 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener {
     }
 
     fun resetAppbarMenuItem(){
+        binding?.appBarHome?.setBackgroundColor(ContextCompat.getColor(this,R.color.mcomm_blue_light_tint))
         binding?.ivAppBarMenu?.isChecked = false
+    }
+
+    override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+        if(actionId == EditorInfo.IME_ACTION_SEARCH){
+            binding?.etSearch?.clearFocus()
+            binding?.etSearch?.hideKeyboard()
+            return true
+        }
+        return false
     }
 
 }
