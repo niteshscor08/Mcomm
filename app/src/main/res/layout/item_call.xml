@@ -13,8 +13,10 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="@dimen/space_x"
+        android:paddingBottom="@dimen/space_x"
         android:background="@color/mcomm_blue_light_tint"
-        android:padding="@dimen/space_2x">
+        >
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_profilePic_call"
@@ -30,6 +32,7 @@
             android:id="@+id/tv_name_call"
             style="@style/text_open_sans_medium"
             android:layout_width="0dp"
+            android:singleLine="true"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="@dimen/space_x"

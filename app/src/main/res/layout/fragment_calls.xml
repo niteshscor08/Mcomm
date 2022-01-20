@@ -11,10 +11,11 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/space_2x"
+        android:paddingLeft="@dimen/size_20dp"
+        android:paddingRight="@dimen/size_20dp"
         android:background="@color/mcomm_blue_light_tint">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
@@ -23,63 +24,61 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/calls_recents"
                 style="@style/text_open_sans_medium"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/space_4x"
-                android:layout_marginTop="@dimen/space_4x"
-                android:textColor="@color/mcomm_blue"
-                android:textStyle="bold"
+                android:layout_width="152dp"
+                android:layout_height="@dimen/size_46dp"
                 android:background="@drawable/ic_white_filled_rounded_rectangle"
                 android:gravity="center"
-                android:padding="@dimen/space_4x"
                 android:text="@string/recents"
-                android:id="@+id/calls_recents"/>
+                android:textColor="@color/mcomm_blue"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                android:id="@+id/calls_all"
                 style="@style/text_open_sans_medium"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/space_4x"
-                android:layout_marginTop="@dimen/space_4x"
+                android:layout_width="152dp"
+                android:layout_height="@dimen/size_46dp"
                 android:background="@drawable/ic_mcomm_blue_light_rounded_rectangle"
                 android:gravity="center"
-                android:padding="@dimen/space_4x"
                 android:text="@string/all"
-                android:id="@+id/calls_all"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/rv_calls_refresh"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="visible"
             android:layout_marginTop="@dimen/space_2x"
-            android:paddingBottom="@dimen/space_2x"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_recent_all"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/layout_recent_all">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
                 android:id="@+id/rv_calls"
-               />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_2x"
-            android:paddingBottom="@dimen/space_2x"
             android:id="@+id/rv_all_calls"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/space_2x"
             android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_recent_all"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/layout_recent_all" />
 
 
         <ProgressBar

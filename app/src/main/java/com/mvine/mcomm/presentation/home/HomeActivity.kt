@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
@@ -95,8 +96,10 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Te
                 binding?.tlSearch?.isVisible = !it
                 binding?.ivAppBarCreateGroup?.isVisible = !it
                 if(it){
+                    binding?.appBarHome?.setBackgroundColor(ContextCompat.getColor(this,R.color.mcomm_blue))
                     navController.navigate(R.id.loginMenuFragment)
                 }else{
+                    binding?.appBarHome?.setBackgroundColor(ContextCompat.getColor(this,R.color.mcomm_blue_light_tint))
                     navController.popBackStack()
                 }
             }
@@ -259,6 +262,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Te
     }
 
     fun resetAppbarMenuItem(){
+        binding?.appBarHome?.setBackgroundColor(ContextCompat.getColor(this,R.color.mcomm_blue_light_tint))
         binding?.ivAppBarMenu?.isChecked = false
     }
 

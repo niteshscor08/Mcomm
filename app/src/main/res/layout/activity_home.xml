@@ -15,15 +15,20 @@
             android:id="@+id/appBar_home"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="@dimen/size_20dp"
+            android:paddingLeft="@dimen/size_20dp"
+            android:paddingRight="@dimen/size_20dp"
+            android:paddingBottom="@dimen/size_30dp"
             android:background="@color/mcomm_blue_light_tint"
             android:elevation="0dp"
-            android:padding="@dimen/space_2x"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolBar_home"
+                app:contentInsetLeft="0dp"
+                app:contentInsetStart="0dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -70,13 +75,13 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tl_search"
+            android:paddingRight="@dimen/size_20dp"
+            android:paddingLeft="@dimen/size_20dp"
+            android:paddingBottom="@dimen/size_20dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/mcomm_blue_light_tint"
-            android:padding="@dimen/space_2x"
-            android:paddingStart="@dimen/space_4x"
-            android:paddingEnd="@dimen/space_4x"
             app:boxStrokeColor="@color/mtrl_textinput_default_box_stroke_color"
             app:hintTextColor="@color/white"
             app:layout_constraintStart_toStartOf="parent"

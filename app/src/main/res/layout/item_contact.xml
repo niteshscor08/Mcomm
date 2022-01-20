@@ -11,12 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/mcomm_blue_light_tint"
-        android:padding="@dimen/space_2x">
+        >
 
         <ImageView
             android:id="@+id/iv_profilePic_contact"
             android:layout_width="@dimen/size_10x"
             android:layout_height="@dimen/size_10x"
+            android:layout_marginLeft="@dimen/size_11dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
