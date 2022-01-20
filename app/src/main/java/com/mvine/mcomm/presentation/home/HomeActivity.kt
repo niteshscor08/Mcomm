@@ -168,6 +168,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Te
         binding?.homeNavBar?.visibility = View.VISIBLE
         binding?.etSearch?.hideKeyboard()
         binding?.etSearch?.text?.clear()
+        binding?.etSearch?.clearFocus()
         binding?.tlSearch?.visibility = View.VISIBLE
     }
 
@@ -262,7 +263,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Te
     }
 
     override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
-        if(actionId == EditorInfo.IME_ACTION_DONE){
+        if(actionId == EditorInfo.IME_ACTION_SEARCH){
             binding?.etSearch?.clearFocus()
             binding?.etSearch?.hideKeyboard()
             return true
