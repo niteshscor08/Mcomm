@@ -39,25 +39,39 @@ class MultipleRowTypeAdapter(private val dataSet: ArrayList<RowType>) :
     }
 
     fun expandCallHistory(position: Int, callData: CallData) {
-        val rowType = dataSet[position]
-        if (rowType.getItemViewType() == CALL_DATA_ROW_TYPE) {
-            (rowType as CallDataRowType).callData.let {
-                if (it.isExpanded) return
-                it.isExpanded = true
-            }
-        }else if(rowType.getItemViewType() == ALL_CALL_DATA_ROW_TYPE){
-            (rowType as AllCallDataRowType).callData.let {
-                if (it.isExpanded) return
-                it.isExpanded = true
-            }
-        }
         var insertPosition = position + 1
+        var startHistoryRowPosition = insertPosition
+        var endHistoryRowPosition = insertPosition
         callData.callHistory?.let {
             prepareHistoryRowTypesFromCallData(it).forEach { rowType ->
-                dataSet.add(insertPosition++, rowType)
+                endHistoryRowPosition = insertPosition++
+                dataSet.add(endHistoryRowPosition, rowType)
             }
         }
-        notifyDataSetChanged()
+        val temporaryDataSet : ArrayList<RowType> = ArrayList()
+        dataSet.forEachIndexed { index, rowType ->
+            if(index == position){
+                addRowIntoTemporaryDataSet(rowType,temporaryDataSet, true)
+            }else if(index < startHistoryRowPosition || index > endHistoryRowPosition){
+                addRowIntoTemporaryDataSet(rowType,temporaryDataSet, false)
+            }else{
+                temporaryDataSet.add(rowType)
+            }
+        }
+        updateData(temporaryDataSet)
+    }
+
+   private fun addRowIntoTemporaryDataSet(rowType: RowType, temporaryDataSet: ArrayList<RowType>, expanded: Boolean){
+        when(rowType){
+            is CallDataRowType  -> {
+                rowType.callData.isExpanded = expanded
+                temporaryDataSet.add(rowType)
+            }
+            is AllCallDataRowType -> {
+                rowType.callData.isExpanded = expanded
+                temporaryDataSet.add(rowType)
+            }
+        }
     }
 
     fun dissolveCallHistory(position: Int, callData: CallData) {
