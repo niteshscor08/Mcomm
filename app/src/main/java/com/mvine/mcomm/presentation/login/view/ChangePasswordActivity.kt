@@ -1,5 +1,6 @@
 package com.mvine.mcomm.presentation.login.view
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
@@ -46,6 +47,7 @@ class ChangePasswordActivity: AppCompatActivity(), TextView.OnEditorActionListen
                     is Resource.Success -> {
                         response.data?.let {
                             handlePasswordChangeResponse(it)
+
                         }
                     }
                     is Resource.Error -> {
@@ -101,11 +103,7 @@ class ChangePasswordActivity: AppCompatActivity(), TextView.OnEditorActionListen
             changePasswordViewModel.updatePassword(
                 activityChangePasswordBinding.etNewPassword.text.toString()
             )
-            showSnackBar(
-                activityChangePasswordBinding.root,
-                resources.getString(R.string.pass_changed),
-                resources.getString(R.string.password_change)
-            )
+            this?.setResult(Activity.RESULT_OK)
         }else{
             showSnackBar(activityChangePasswordBinding.root, data, null, false)
         }

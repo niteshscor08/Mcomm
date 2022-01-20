@@ -1,10 +1,13 @@
 package com.mvine.mcomm.presentation.login.view
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -14,8 +17,10 @@ import com.mvine.mcomm.databinding.FragmentLoginMenuBinding
 import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.janus.JanusManager
 import com.mvine.mcomm.presentation.LoginActivity
+import com.mvine.mcomm.presentation.audio.view.AudioActivity
 import com.mvine.mcomm.presentation.home.HomeActivity
 import com.mvine.mcomm.presentation.login.viewmodel.LoginMenuViewModel
+import com.mvine.mcomm.util.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -54,8 +59,7 @@ class LoginMenuFragment : Fragment() {
 
     private fun initListeners() {
         fragmentLoginMenuBinding.btnChangePassword.setOnClickListener {
-            val intent = Intent(activity, ChangePasswordActivity::class.java)
-            startActivity(intent)
+            startChangePasswordActivity()
         }
         fragmentLoginMenuBinding.btnLogout.setOnClickListener {
             loginMenuViewModel.logout()
@@ -88,6 +92,21 @@ class LoginMenuFragment : Fragment() {
         val intent = Intent(activity, LoginActivity::class.java)
         startActivity(intent)
         activity?.finish()
+    }
+
+   private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if(result.resultCode == Activity.RESULT_OK){
+            showSnackBar(
+                fragmentLoginMenuBinding.root,
+                resources.getString(R.string.pass_changed),
+                resources.getString(R.string.password_change)
+            )
+        }
+    }
+
+    private fun startChangePasswordActivity(){
+        val intent = Intent(activity, ChangePasswordActivity::class.java)
+        resultLauncher.launch(intent)
     }
 
     override fun onDestroy() {
