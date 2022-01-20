@@ -39,24 +39,45 @@ class MultipleRowTypeAdapter(private val dataSet: ArrayList<RowType>) :
     }
 
     fun expandCallHistory(position: Int, callData: CallData) {
-        val rowType = dataSet[position]
-        if (rowType.getItemViewType() == CALL_DATA_ROW_TYPE) {
-            (rowType as CallDataRowType).callData.let {
-                if (it.isExpanded) return
-                it.isExpanded = true
-            }
-        }else if(rowType.getItemViewType() == ALL_CALL_DATA_ROW_TYPE){
-            (rowType as AllCallDataRowType).callData.let {
-                if (it.isExpanded) return
-                it.isExpanded = true
-            }
-        }
         var insertPosition = position + 1
+        var startHistoryRowPosition = insertPosition
+        var endHistoryRowPosition = insertPosition
         callData.callHistory?.let {
             prepareHistoryRowTypesFromCallData(it).forEach { rowType ->
-                dataSet.add(insertPosition++, rowType)
+                endHistoryRowPosition = insertPosition++
+                dataSet.add(endHistoryRowPosition, rowType)
             }
         }
+        val temporaryRowList : ArrayList<RowType> = ArrayList()
+        dataSet.forEachIndexed { index, rowType ->
+            if(index == position){
+                when(rowType){
+                    is CallDataRowType  -> {
+                        rowType.callData.isExpanded = true
+                        temporaryRowList.add(rowType)
+                    }
+                    is AllCallDataRowType -> {
+                        rowType.callData.isExpanded = true
+                        temporaryRowList.add(rowType)
+                    }
+                }
+            }else if(index < startHistoryRowPosition || index > endHistoryRowPosition){
+                when(rowType){
+                    is CallDataRowType -> {
+                        rowType.callData.isExpanded = false
+                        temporaryRowList.add(rowType)
+                    }
+                    is AllCallDataRowType -> {
+                        rowType.callData.isExpanded = false
+                        temporaryRowList.add(rowType)
+                    }
+                }
+            }else{
+                temporaryRowList.add(rowType)
+            }
+        }
+        dataSet.clear()
+        dataSet.addAll(temporaryRowList)
         notifyDataSetChanged()
     }
 
