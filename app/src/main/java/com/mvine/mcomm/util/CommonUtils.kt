@@ -17,3 +17,4 @@ const val YESTERDAY = "Yesterday"
 const val ONE_L = 1L
 const val DAY_LIMIT = 6
 const val HOUR_LIMIT = 23
+const val SPACE = " "
