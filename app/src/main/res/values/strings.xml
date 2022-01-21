@@ -47,6 +47,7 @@
     <string name="empty_field_error">Empty Fields not allowed.</string>
     <string name="old_pass_incorrect">Old password incorrect</string>
     <string name="old_pass_not_match">Entered Old password does not match</string>
+    <string name="pass_mismatch">Password mismatched,Please provide valid password.</string>
 
     <string name="version">Version</string>
 

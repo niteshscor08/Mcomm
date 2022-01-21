@@ -20,6 +20,7 @@ import com.mvine.mcomm.presentation.LoginActivity
 import com.mvine.mcomm.presentation.audio.view.AudioActivity
 import com.mvine.mcomm.presentation.home.HomeActivity
 import com.mvine.mcomm.presentation.login.viewmodel.LoginMenuViewModel
+import com.mvine.mcomm.util.SPACE
 import com.mvine.mcomm.util.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -53,7 +54,7 @@ class LoginMenuFragment : Fragment() {
     }
 
     private fun loadUiData(){
-        fragmentLoginMenuBinding.version.text = resources.getString(R.string.version).plus(" ").plus(BuildConfig.VERSION_NAME)
+        fragmentLoginMenuBinding.version.text = resources.getString(R.string.version).plus(SPACE).plus(BuildConfig.VERSION_NAME).plus("(").plus(BuildConfig.VERSION_CODE).plus(")")
         fragmentLoginMenuBinding.userName.text = loginMenuViewModel.getUserData().view.contact?.name
     }
 

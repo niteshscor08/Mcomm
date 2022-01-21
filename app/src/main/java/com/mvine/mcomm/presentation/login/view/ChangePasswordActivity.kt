@@ -85,7 +85,8 @@ class ChangePasswordActivity: AppCompatActivity(), TextView.OnEditorActionListen
             showSnackBar(activityChangePasswordBinding.root,
                 resources.getString(R.string.empty_field_error), null, false)
             return false
-        }else if( changePasswordViewModel.oldPassword != changePasswordViewModel.getCredentialData().password){
+        }
+        if( changePasswordViewModel.oldPassword != changePasswordViewModel.getCredentialData().password){
             showSnackBar(
                 activityChangePasswordBinding.root,
                 resources.getString(R.string.old_pass_incorrect),
@@ -94,6 +95,12 @@ class ChangePasswordActivity: AppCompatActivity(), TextView.OnEditorActionListen
             )
             return false
         }
+        if(changePasswordViewModel.newPassword != changePasswordViewModel.reEnteredPassword){
+            showSnackBar(activityChangePasswordBinding.root,
+                resources.getString(R.string.pass_mismatch), null, false)
+            return false
+        }
+
         return true
     }
 
@@ -104,10 +111,10 @@ class ChangePasswordActivity: AppCompatActivity(), TextView.OnEditorActionListen
                 activityChangePasswordBinding.etNewPassword.text.toString()
             )
             this?.setResult(Activity.RESULT_OK)
+            this.finish()
         }else{
             showSnackBar(activityChangePasswordBinding.root, data, null, false)
         }
-        this.finish()
     }
 
     override fun onSupportNavigateUp(): Boolean {

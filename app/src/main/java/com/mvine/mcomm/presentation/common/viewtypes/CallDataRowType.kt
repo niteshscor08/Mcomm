@@ -1,5 +1,6 @@
 package com.mvine.mcomm.presentation.common.viewtypes
 
+import android.util.Log
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -40,6 +41,7 @@ data class CallDataRowType(
     }
 
     private fun loadImageUsingGlide(imageURL: String, imageView: ImageView?) {
+        Log.i("GlideURL",imageURL)
         imageView?.let {
             Glide.with(imageView.context)
                 .load(imageURL)
