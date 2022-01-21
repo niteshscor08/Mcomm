@@ -10,6 +10,7 @@ import com.mvine.mcomm.R
 import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.presentation.common.ListInteraction
 import com.mvine.mcomm.presentation.common.RowType
+import com.mvine.mcomm.presentation.common.glide.GlideApp
 import com.mvine.mcomm.presentation.common.viewholderfactory.ViewHolderFactory
 import com.mvine.mcomm.util.*
 
@@ -41,9 +42,8 @@ data class CallDataRowType(
     }
 
     private fun loadImageUsingGlide(imageURL: String, imageView: ImageView?) {
-        Log.i("GlideURL",imageURL)
         imageView?.let {
-            Glide.with(imageView.context)
+            GlideApp.with(imageView.context)
                 .load(imageURL)
                 .circleCrop()
                 .apply(
