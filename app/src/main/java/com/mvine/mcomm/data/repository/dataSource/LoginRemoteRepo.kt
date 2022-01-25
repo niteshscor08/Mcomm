@@ -18,5 +18,4 @@ interface LoginRemoteRepo {
      */
     suspend fun login(username: String, password: String): Response<ResponseBody>
     suspend fun getUserInfo(cookie: String): Resource<PersonInfo>
-
 }

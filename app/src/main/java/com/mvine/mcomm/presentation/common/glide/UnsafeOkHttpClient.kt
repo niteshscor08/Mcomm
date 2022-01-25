@@ -4,7 +4,11 @@ import okhttp3.OkHttpClient
 import java.security.SecureRandom
 import java.security.cert.CertificateException
 import java.security.cert.X509Certificate
-import javax.net.ssl.*
+import javax.net.ssl.HostnameVerifier
+import javax.net.ssl.SSLContext
+import javax.net.ssl.SSLSession
+import javax.net.ssl.TrustManager
+import javax.net.ssl.X509TrustManager
 
 object UnsafeOkHttpClient {
     val unsafeOkHttpClient: OkHttpClient

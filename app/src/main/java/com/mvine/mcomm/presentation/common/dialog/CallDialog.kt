@@ -14,18 +14,19 @@ import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.DialogCallBinding
 import com.mvine.mcomm.domain.model.CallState
 
-
-class CallDialog(private val callDialogListener: CallDialogListener,
-                 private val callDialogData: CallDialogData,
-                private val dialogType: String,
-                private val callState: CallState) : DialogFragment() {
+class CallDialog(
+    private val callDialogListener: CallDialogListener,
+    private val callDialogData: CallDialogData,
+    private val dialogType: String,
+    private val callState: CallState
+) : DialogFragment() {
 
     private lateinit var dialogBaseBinding: DialogCallBinding
 
     override fun onStart() {
         super.onStart()
         val width = (resources.displayMetrics.widthPixels * DIALOG_WIDTH).toInt()
-        dialog?.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog?.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
     override fun onCreateView(
@@ -33,7 +34,7 @@ class CallDialog(private val callDialogListener: CallDialogListener,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-         dialogBaseBinding = DataBindingUtil.inflate<DialogCallBinding>(
+        dialogBaseBinding = DataBindingUtil.inflate<DialogCallBinding>(
             LayoutInflater.from(context),
             R.layout.dialog_call,
             container,
@@ -50,17 +51,17 @@ class CallDialog(private val callDialogListener: CallDialogListener,
         onButtonClickEvent()
     }
 
-    private fun setDialogTypeAndUi(){
+    private fun setDialogTypeAndUi() {
         callDialogData.callerName?.let {
             dialogBaseBinding.dialogCallerName.text = it
         }
         callDialogData.isIncomingDialog?.let {
             dialogBaseBinding.dialogCall.isVisible = it
-            dialogBaseBinding.dialogTitle.text = if(it){ context?.getString(R.string.incoming_call)} else{ context?.getString(R.string.outgoing_call) }
+            dialogBaseBinding.dialogTitle.text = if (it) { context?.getString(R.string.incoming_call) } else { context?.getString(R.string.outgoing_call) }
         }
     }
 
-    private fun setUiData(){
+    private fun setUiData() {
         callState.remoteDisplayName?.let {
             dialogBaseBinding.dialogCallerName.text = it
         }
@@ -74,7 +75,7 @@ class CallDialog(private val callDialogListener: CallDialogListener,
         }
     }
 
-    private fun onButtonClickEvent(){
+    private fun onButtonClickEvent() {
         dialogBaseBinding.dialogCall.setOnClickListener {
             callDialogListener?.onCallReceived()
         }
@@ -83,7 +84,7 @@ class CallDialog(private val callDialogListener: CallDialogListener,
         }
     }
 
-    companion object{
+    companion object {
         const val DIALOG_WIDTH = 0.80
     }
 }

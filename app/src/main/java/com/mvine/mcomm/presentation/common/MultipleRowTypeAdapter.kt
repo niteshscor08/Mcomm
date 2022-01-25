@@ -3,11 +3,11 @@ package com.mvine.mcomm.presentation.common
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mvine.mcomm.domain.model.CallData
-import com.mvine.mcomm.util.CALL_DATA_ROW_TYPE
 import com.mvine.mcomm.presentation.common.viewholderfactory.ViewHolderFactory
 import com.mvine.mcomm.presentation.common.viewtypes.AllCallDataRowType
 import com.mvine.mcomm.presentation.common.viewtypes.CallDataRowType
 import com.mvine.mcomm.util.ALL_CALL_DATA_ROW_TYPE
+import com.mvine.mcomm.util.CALL_DATA_ROW_TYPE
 import com.mvine.mcomm.util.CALL_HISTORY_ROW_TYPE
 import com.mvine.mcomm.util.prepareHistoryRowTypesFromCallData
 
@@ -48,22 +48,22 @@ class MultipleRowTypeAdapter(private val dataSet: ArrayList<RowType>) :
                 dataSet.add(endHistoryRowPosition, rowType)
             }
         }
-        val temporaryDataSet : ArrayList<RowType> = ArrayList()
+        val temporaryDataSet: ArrayList<RowType> = ArrayList()
         dataSet.forEachIndexed { index, rowType ->
-            if(index == position){
-                addRowIntoTemporaryDataSet(rowType,temporaryDataSet, true)
-            }else if(index < startHistoryRowPosition || index > endHistoryRowPosition){
-                addRowIntoTemporaryDataSet(rowType,temporaryDataSet, false)
-            }else{
+            if (index == position) {
+                addRowIntoTemporaryDataSet(rowType, temporaryDataSet, true)
+            } else if (index < startHistoryRowPosition || index > endHistoryRowPosition) {
+                addRowIntoTemporaryDataSet(rowType, temporaryDataSet, false)
+            } else {
                 temporaryDataSet.add(rowType)
             }
         }
         updateData(temporaryDataSet)
     }
 
-   private fun addRowIntoTemporaryDataSet(rowType: RowType, temporaryDataSet: ArrayList<RowType>, expanded: Boolean){
-        when(rowType){
-            is CallDataRowType  -> {
+    private fun addRowIntoTemporaryDataSet(rowType: RowType, temporaryDataSet: ArrayList<RowType>, expanded: Boolean) {
+        when (rowType) {
+            is CallDataRowType -> {
                 rowType.callData.isExpanded = expanded
                 temporaryDataSet.add(rowType)
             }
@@ -81,7 +81,7 @@ class MultipleRowTypeAdapter(private val dataSet: ArrayList<RowType>) :
                 if (!it.isExpanded) return
                 it.isExpanded = false
             }
-        }else if (rowType.getItemViewType() == ALL_CALL_DATA_ROW_TYPE){
+        } else if (rowType.getItemViewType() == ALL_CALL_DATA_ROW_TYPE) {
             (rowType as AllCallDataRowType).callData.let {
                 if (!it.isExpanded) return
                 it.isExpanded = false

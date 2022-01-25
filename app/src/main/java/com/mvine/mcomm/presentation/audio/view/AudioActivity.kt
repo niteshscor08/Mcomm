@@ -28,7 +28,6 @@ class AudioActivity : BaseActivity<ActivityAudioBinding>() {
     @Inject
     lateinit var audioFocusHandler: AudioFocusHandler
 
-
     override val layoutId: Int
         get() = R.layout.activity_audio
 
@@ -39,7 +38,7 @@ class AudioActivity : BaseActivity<ActivityAudioBinding>() {
         setUp()
     }
 
-    private fun setUp(){
+    private fun setUp() {
         setToggleButtonState()
         configureTimer()
         setCallerData()
@@ -47,14 +46,14 @@ class AudioActivity : BaseActivity<ActivityAudioBinding>() {
         subscribeObservers()
     }
 
-    private fun setToggleButtonState(){
+    private fun setToggleButtonState() {
         binding?.let {
             it.bottomBarCallLayout.bbMic.isChecked = audioFocusHandler.getMicState()
             it.bottomBarCallLayout.bbSpeaker.isChecked = audioFocusHandler.getSpeakerState()
         }
     }
 
-    private fun setCallerData(){
+    private fun setCallerData() {
         callState.remoteDisplayName?.let {
             binding?.audioCallerName?.text = it
         }
@@ -68,7 +67,7 @@ class AudioActivity : BaseActivity<ActivityAudioBinding>() {
         }
     }
 
-    private fun setClickListener(){
+    private fun setClickListener() {
         binding?.let {
             it.bottomBarCallLayout.bbEndCall.setOnClickListener {
                 janusManager.hangUp()
@@ -84,9 +83,9 @@ class AudioActivity : BaseActivity<ActivityAudioBinding>() {
         }
     }
 
-    private fun subscribeObservers(){
+    private fun subscribeObservers() {
         janusManager.janusConnectionStatus.observe(this, {
-            when(it){
+            when (it) {
                 CallStatus.DECLINING.status, CallStatus.HANGUP.status -> {
                     finish()
                 }
@@ -94,8 +93,8 @@ class AudioActivity : BaseActivity<ActivityAudioBinding>() {
         })
     }
 
-    private fun configureTimer(){
-        val timer = object: CountDownTimer(2000000000, 1000) {
+    private fun configureTimer() {
+        val timer = object : CountDownTimer(2000000000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 countdown()
             }
@@ -111,8 +110,8 @@ class AudioActivity : BaseActivity<ActivityAudioBinding>() {
         totalSecond += 1
         minutes = (totalSecond % 3600) / 60
         seconds = (totalSecond % 3600) % 60
-        var displayMin = String.format("%02d",minutes )
-        var displaySec = String.format("%02d",seconds )
+        var displayMin = String.format("%02d", minutes)
+        var displaySec = String.format("%02d", seconds)
         binding?.timer?.text = "$displayMin:$displaySec"
     }
 
@@ -125,6 +124,4 @@ class AudioActivity : BaseActivity<ActivityAudioBinding>() {
         }
         super.onDestroy()
     }
-
-
 }

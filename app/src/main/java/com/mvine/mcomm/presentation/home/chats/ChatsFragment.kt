@@ -11,7 +11,7 @@ import com.mvine.mcomm.presentation.home.HomeActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ChatsFragment : BaseFragment<FragmentChatsBinding,ChatsViewModel >() {
+class ChatsFragment : BaseFragment<FragmentChatsBinding, ChatsViewModel >() {
 
     private val chatsViewModel: ChatsViewModel by viewModels()
 
@@ -22,12 +22,11 @@ class ChatsFragment : BaseFragment<FragmentChatsBinding,ChatsViewModel >() {
         get() = R.layout.fragment_chats
 
     override fun getViewModel(): ChatsViewModel {
-       return chatsViewModel
+        return chatsViewModel
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as HomeActivity).showSearchBar()
     }
-
 }

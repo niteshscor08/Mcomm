@@ -23,7 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ContactsFragment : BaseFragment<FragmentContactsBinding,ContactsViewModel>(), ListInteraction<ContactsData> {
+class ContactsFragment : BaseFragment<FragmentContactsBinding, ContactsViewModel>(), ListInteraction<ContactsData> {
 
     private val contactsViewModel: ContactsViewModel by viewModels()
 
@@ -71,7 +71,7 @@ class ContactsFragment : BaseFragment<FragmentContactsBinding,ContactsViewModel>
                     is Resource.Error -> {
                         binding.progressContacts.visibility = View.GONE
                         response.message?.let {
-                            showSnackBar(binding.root,response.message, null, false)
+                            showSnackBar(binding.root, response.message, null, false)
                         }
                     }
                     is Resource.Loading -> {
@@ -91,11 +91,13 @@ class ContactsFragment : BaseFragment<FragmentContactsBinding,ContactsViewModel>
     }
 
     override fun onVoiceCallSelected(item: ContactsData) {
-            item.STX?.let { companyId ->
-                (activity as HomeActivity).startOutgoingCall( sTX = companyId,
-                    userName = item.username ?: EMPTY_STRING,
-                    uri = item.image_src?: EMPTY_STRING )
-            }
+        item.STX?.let { companyId ->
+            (activity as HomeActivity).startOutgoingCall(
+                sTX = companyId,
+                userName = item.username ?: EMPTY_STRING,
+                uri = item.image_src ?: EMPTY_STRING
+            )
+        }
     }
 
     override fun onItemSelectedForExpansion(
@@ -103,10 +105,10 @@ class ContactsFragment : BaseFragment<FragmentContactsBinding,ContactsViewModel>
         item: ContactsData,
         isExpanded: Boolean
     ) {
-       val contactDataList : ArrayList<ContactsData>? = contactsViewModel.contacts.value?.data
+        val contactDataList: ArrayList<ContactsData>? = contactsViewModel.contacts.value?.data
         contactDataList?.let {
-            it.forEachIndexed{index, contactsData ->
-                contactsData.isExpanded = if(index == position) isExpanded else false
+            it.forEachIndexed { index, contactsData ->
+                contactsData.isExpanded = if (index == position) isExpanded else false
             }
             contactsAdapter.updateData(prepareRowTypesFromContactsData(contactsViewModel.sortAlphabetically(it), this))
         }

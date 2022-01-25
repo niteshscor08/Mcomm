@@ -19,6 +19,5 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun providePreferenceHandler(@ApplicationContext context: Context) : PreferenceHandler = PreferenceHandler(context)
-
+    fun providePreferenceHandler(@ApplicationContext context: Context): PreferenceHandler = PreferenceHandler(context)
 }

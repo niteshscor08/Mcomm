@@ -9,7 +9,6 @@ import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.module.AppGlideModule
 import java.io.InputStream
 
-
 @GlideModule
 class GlideConfiguration : AppGlideModule() {
     override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
@@ -20,5 +19,4 @@ class GlideConfiguration : AppGlideModule() {
             OkHttpUrlLoader.Factory(okHttpClient)
         )
     }
-
 }

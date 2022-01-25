@@ -8,5 +8,4 @@ import javax.inject.Inject
 @HiltViewModel
 class AudioViewModel @Inject constructor(
     private val dispatcher: CoroutineDispatcher
-): ViewModel() {
-}
+) : ViewModel()

@@ -1,10 +1,8 @@
 package com.mvine.mcomm.presentation.common.viewtypes
 
-import android.view.View
 import android.widget.ImageView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.mvine.mcomm.BuildConfig
 import com.mvine.mcomm.R
@@ -14,7 +12,6 @@ import com.mvine.mcomm.presentation.common.RowType
 import com.mvine.mcomm.presentation.common.glide.GlideApp
 import com.mvine.mcomm.presentation.common.viewholderfactory.ViewHolderFactory
 import com.mvine.mcomm.util.CONTACT_ROW_TYPE
-
 
 data class ContactRowType(
     val contactsData: ContactsData,

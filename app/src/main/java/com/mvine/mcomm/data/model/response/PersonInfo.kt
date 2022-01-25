@@ -5,8 +5,8 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PersonInfo(
-val view: View
-): Parcelable
+    val view: View
+) : Parcelable
 
 @Parcelize
 data class View(
@@ -17,7 +17,7 @@ data class View(
     val roleId: String?,
     val nSTX: String?,
     val nastrpass: String?
-): Parcelable
+) : Parcelable
 
 @Parcelize
 data class Contact(
@@ -25,5 +25,4 @@ data class Contact(
     val firstName: String?,
     val surname: String?,
     val email: String?
-): Parcelable
-
+) : Parcelable

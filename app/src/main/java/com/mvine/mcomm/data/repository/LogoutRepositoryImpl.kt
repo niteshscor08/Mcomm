@@ -7,13 +7,12 @@ import javax.inject.Inject
 
 class LogoutRepositoryImpl @Inject constructor(
     private val logoutApiService: LogoutApiService
-) : LogoutRepository{
+) : LogoutRepository {
 
     override suspend fun logout(cookie: String): Resource<Boolean?> {
         val response = logoutApiService.logout(cookie)
         return if (response.isSuccessful || response.raw().isRedirect) {
             Resource.Success(data = true)
         } else Resource.Error(message = "Error in Logging out")
-
     }
 }

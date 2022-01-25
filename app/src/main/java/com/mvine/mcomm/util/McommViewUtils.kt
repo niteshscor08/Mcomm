@@ -3,7 +3,6 @@ package com.mvine.mcomm.util
 import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 
 /**
  * @desc this method is used to hide soft Keyboard

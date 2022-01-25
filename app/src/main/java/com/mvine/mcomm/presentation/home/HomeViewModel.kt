@@ -9,9 +9,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val dispatcher: CoroutineDispatcher
-): ViewModel() {
+) : ViewModel() {
 
     val searchLiveData: MutableLiveData<String> = MutableLiveData()
-    val shouldRefreshData : MutableLiveData<Boolean> = MutableLiveData(false)
-
+    val shouldRefreshData: MutableLiveData<Boolean> = MutableLiveData(false)
 }

@@ -6,10 +6,8 @@ import javax.inject.Inject
 
 class ChatsRepoImpl @Inject constructor(
     private val chatsRemoteRepo: ChatsRemoteRepo
-): ChatsRepository {
+) : ChatsRepository {
 
     override suspend fun getChats() {
-
     }
-
 }

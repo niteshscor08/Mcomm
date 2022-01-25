@@ -11,7 +11,7 @@ fun JanusManager.startSIPRegistration() {
     var obj: JSONObject?
     personInfo.let { personInfo ->
         personInfo.view.apply {
-            obj =  JSONObject().apply {
+            obj = JSONObject().apply {
                 put(CallStatus.REQUEST.status, CallStatus.REGISTER.status)
                 put("authuser", nSTX)
                 put("username", "sip:$nSTX@portaluat.mvine.com")

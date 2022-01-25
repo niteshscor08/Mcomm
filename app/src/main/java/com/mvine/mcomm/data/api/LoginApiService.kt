@@ -1,10 +1,13 @@
 package com.mvine.mcomm.data.api
 
 import com.mvine.mcomm.data.model.response.PersonInfo
-import okhttp3.FormBody
 import okhttp3.ResponseBody
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.POST
 
 /**
  * API service for Login Requests

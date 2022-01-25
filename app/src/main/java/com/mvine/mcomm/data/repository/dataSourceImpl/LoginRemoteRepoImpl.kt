@@ -16,9 +16,9 @@ import javax.inject.Inject
  */
 class LoginRemoteRepoImpl @Inject constructor(
     private val loginApiService: LoginApiService
-): LoginRemoteRepo {
+) : LoginRemoteRepo {
     override suspend fun login(username: String, password: String): Response<ResponseBody> {
-         return loginApiService.login(username, password, "", "Login")
+        return loginApiService.login(username, password, "", "Login")
     }
 
     override suspend fun getUserInfo(cookie: String): Resource<PersonInfo> {
@@ -26,5 +26,4 @@ class LoginRemoteRepoImpl @Inject constructor(
             loginApiService.getUserView(cookie)
         }
     }
-
 }

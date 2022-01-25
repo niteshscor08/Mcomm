@@ -7,10 +7,10 @@ import com.mvine.janusclient.TransactionType
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class JanusCreate (
+data class JanusCreate(
     val janus: String = JanusMessageType.create.toString(),
     val transaction: String = "Create"
-): Parcelable
+) : Parcelable
 
 @Parcelize
 data class JanusRegister(
@@ -20,14 +20,11 @@ data class JanusRegister(
     var username: String,
     var display_name: String,
     var secret: String
-    ): Parcelable
+) : Parcelable
 
 @Parcelize
 data class JanusAttach(
     val id: Long,
     val transaction: String = TransactionType.attach.toString(),
     val plugin: String = JanusSupportedPluginPackages.JANUS_SIP.toString()
-    ): Parcelable
-
-
-
+) : Parcelable

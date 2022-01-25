@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mvine.mcomm.R
 import com.mvine.mcomm.util.Row
 import com.mvine.mcomm.util.Row.CallDataRowType
-import com.mvine.mcomm.util.Row.InvalidRowType
 import com.mvine.mcomm.util.Row.CallSpinnerRowType
+import com.mvine.mcomm.util.Row.InvalidRowType
 import com.mvine.mcomm.util.getRowTypeInstance
 
 /**
@@ -26,7 +26,7 @@ object ViewHolderFactory {
         val callName: TextView? = itemView.findViewById(R.id.tv_name_call)
         val lastCallStatus: ImageView? = itemView.findViewById(R.id.iv_call_status)
         val lastCallHistory: TextView? = itemView.findViewById(R.id.tv_call_history)
-        val callDropDown : ImageView? = itemView.findViewById(R.id.iv_call_dropDown)
+        val callDropDown: ImageView? = itemView.findViewById(R.id.iv_call_dropDown)
         val voiceCall: ImageView? = itemView.findViewById(R.id.iv_voiceCall_call)
     }
 
@@ -35,7 +35,7 @@ object ViewHolderFactory {
         val callHistoryImageView: ImageView? = itemView.findViewById(R.id.iv_spinner_call_status)
     }
 
-    class ContactViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val contactProfile: ImageView? = itemView.findViewById(R.id.iv_profilePic_contact)
         val videoCallContact: ImageView? = itemView.findViewById(R.id.iv_videoCall_contact)
         val voiceCallContact: ImageView? = itemView.findViewById(R.id.iv_voiceCall_contact)

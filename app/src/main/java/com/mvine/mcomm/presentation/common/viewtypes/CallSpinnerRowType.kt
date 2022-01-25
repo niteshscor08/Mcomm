@@ -3,9 +3,8 @@ package com.mvine.mcomm.presentation.common.viewtypes
 import androidx.recyclerview.widget.RecyclerView
 import com.mvine.mcomm.domain.model.SpinnerItem
 import com.mvine.mcomm.presentation.common.RowType
-import com.mvine.mcomm.util.CALL_HISTORY_ROW_TYPE
 import com.mvine.mcomm.presentation.common.viewholderfactory.ViewHolderFactory
-
+import com.mvine.mcomm.util.CALL_HISTORY_ROW_TYPE
 
 data class CallSpinnerRowType(
     val spinnerItem: SpinnerItem

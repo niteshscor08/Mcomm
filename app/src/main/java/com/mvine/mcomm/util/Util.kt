@@ -4,18 +4,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.google.android.material.snackbar.Snackbar
-import com.mvine.mcomm.R
 import com.google.gson.Gson
-import com.mvine.mcomm.domain.model.CallData
-import com.mvine.mcomm.domain.model.ContactsData
+import com.mvine.mcomm.R
 import com.mvine.mcomm.domain.model.CredentialData
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
-
-fun showSnackBar(view: View, title : String, message : String?= null, isPositiveMessage : Boolean? = true) {
+fun showSnackBar(view: View, title: String, message: String? = null, isPositiveMessage: Boolean? = true) {
     var backGroundColor = R.color.mcomm_green
     if (isPositiveMessage == false)
         backGroundColor = R.color.mcomm_red
@@ -33,7 +31,7 @@ fun showSnackBar(view: View, title : String, message : String?= null, isPositive
     snackbar.show()
 }
 
-fun extractEpochTime(token : String): Long {
+fun extractEpochTime(token: String): Long {
     var epochTime = EMPTY_STRING
     token.forEach {
         epochTime += when {
@@ -48,63 +46,63 @@ fun extractEpochTime(token : String): Long {
     return epochTime.toLong()
 }
 
-fun getSubStringBasedOnIndex(input: String, index : Int): String {
-    return input.substring(0,index)
+fun getSubStringBasedOnIndex(input: String, index: Int): String {
+    return input.substring(0, index)
 }
 
-fun saveCredentials(preferenceHandler: PreferenceHandler, credentialData : CredentialData) {
+fun saveCredentials(preferenceHandler: PreferenceHandler, credentialData: CredentialData) {
     preferenceHandler.save(LOGIN_TOKEN, credentialData.token)
-    preferenceHandler.save( CREDENTIAL_DATA, Gson().toJson(credentialData))
+    preferenceHandler.save(CREDENTIAL_DATA, Gson().toJson(credentialData))
 }
 
 fun getCredentials(preferenceHandler: PreferenceHandler): CredentialData {
     preferenceHandler.getValue(CREDENTIAL_DATA)?.let {
-        return   Gson().fromJson(it, CredentialData::class.java)
-    }?:  return CredentialData()
+        return Gson().fromJson(it, CredentialData::class.java)
+    } ?: return CredentialData()
 }
 
-fun getDateFromTimestamp(timeStamp: String): String{
-   return getTimeDifference(timeStamp, RECENT_CALL_RECEIVED_DATE_FORMAT, RECENT_CALL_OUTPUT_FORMAT)
+fun getDateFromTimestamp(timeStamp: String): String {
+    return getTimeDifference(timeStamp, RECENT_CALL_RECEIVED_DATE_FORMAT, RECENT_CALL_OUTPUT_FORMAT)
 }
 
-fun getTimeDifference(receivedTimeStamp: String, receivedDateFormat: String, outputDateFormat: String ): String {
+fun getTimeDifference(receivedTimeStamp: String, receivedDateFormat: String, outputDateFormat: String): String {
     var convertedTimeStamp: String = receivedTimeStamp
-     try {
-         val receivedDate = getSimpleDateFormat(receivedDateFormat).parse(receivedTimeStamp)
-         val currentDate = Date()
-         val timeDifference = currentDate.time - receivedDate.time
-         val hourDifference = TimeUnit.MILLISECONDS.toHours(timeDifference)
-         val dayDifference = TimeUnit.MILLISECONDS.toDays(timeDifference)
-         val receivedDateTime = getSimpleDateFormat(TIME_FROM_DATE).format(receivedDate.time)
-         convertedTimeStamp = when {
-             hourDifference in ONE_L..HOUR_LIMIT -> {
-                 TODAY.plus(AT).plus(receivedDateTime)
-             }
-             dayDifference == ONE_L -> {
-                 YESTERDAY.plus(AT).plus(receivedDateTime)
-             }
-             dayDifference <= DAY_LIMIT -> {
-                 getSimpleDateFormat(MONTH_FROM_DATE).format(receivedDate.time).plus(AT).plus(receivedDateTime)
-             }
-             else -> {
-                 getSimpleDateFormat(outputDateFormat).format(receivedDate.time)
-             }
-         }
-        } catch (e: ParseException) {
-            e.printStackTrace()
+    try {
+        val receivedDate = getSimpleDateFormat(receivedDateFormat).parse(receivedTimeStamp)
+        val currentDate = Date()
+        val timeDifference = currentDate.time - receivedDate.time
+        val hourDifference = TimeUnit.MILLISECONDS.toHours(timeDifference)
+        val dayDifference = TimeUnit.MILLISECONDS.toDays(timeDifference)
+        val receivedDateTime = getSimpleDateFormat(TIME_FROM_DATE).format(receivedDate.time)
+        convertedTimeStamp = when {
+            hourDifference in ONE_L..HOUR_LIMIT -> {
+                TODAY.plus(AT).plus(receivedDateTime)
+            }
+            dayDifference == ONE_L -> {
+                YESTERDAY.plus(AT).plus(receivedDateTime)
+            }
+            dayDifference <= DAY_LIMIT -> {
+                getSimpleDateFormat(MONTH_FROM_DATE).format(receivedDate.time).plus(AT).plus(receivedDateTime)
+            }
+            else -> {
+                getSimpleDateFormat(outputDateFormat).format(receivedDate.time)
+            }
         }
+    } catch (e: ParseException) {
+        e.printStackTrace()
+    }
     return convertedTimeStamp
 }
 
-fun getSimpleDateFormat(dateFormat : String): SimpleDateFormat {
-    return SimpleDateFormat(dateFormat,Locale.ENGLISH)
+fun getSimpleDateFormat(dateFormat: String): SimpleDateFormat {
+    return SimpleDateFormat(dateFormat, Locale.ENGLISH)
 }
 
-fun <T> sortDataAlphabetically(arrayList: ArrayList<T>, compare: (T, T) -> Int): ArrayList<T>{
-        (arrayList as MutableList<T>).sortWith(Comparator { o1: T, o2: T ->
-            compare(o1,o2)
-        })
+fun <T> sortDataAlphabetically(arrayList: ArrayList<T>, compare: (T, T) -> Int): ArrayList<T> {
+    (arrayList as MutableList<T>).sortWith(
+        Comparator { o1: T, o2: T ->
+            compare(o1, o2)
+        }
+    )
     return arrayList
 }
-
-

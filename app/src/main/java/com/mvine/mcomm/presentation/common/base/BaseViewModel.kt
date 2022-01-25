@@ -2,8 +2,6 @@ package com.mvine.mcomm.presentation.common.base
 
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.ViewModel
-import java.lang.ref.WeakReference
-
 
 abstract class BaseViewModel : ViewModel() {
 

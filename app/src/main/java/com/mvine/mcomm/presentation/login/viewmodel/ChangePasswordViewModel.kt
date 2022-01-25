@@ -7,7 +7,10 @@ import androidx.lifecycle.viewModelScope
 import com.mvine.mcomm.domain.model.CredentialData
 import com.mvine.mcomm.domain.usecase.ChangePasswordUseCase
 import com.mvine.mcomm.domain.util.Resource
-import com.mvine.mcomm.util.*
+import com.mvine.mcomm.util.EMPTY_STRING
+import com.mvine.mcomm.util.PreferenceHandler
+import com.mvine.mcomm.util.getCredentials
+import com.mvine.mcomm.util.saveCredentials
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
@@ -18,7 +21,7 @@ class ChangePasswordViewModel @Inject constructor(
     private val changePasswordUseCase: ChangePasswordUseCase,
     private val dispatcher: CoroutineDispatcher,
     private val preferenceHandler: PreferenceHandler
-    ): ViewModel(){
+) : ViewModel() {
 
     var newPassword = EMPTY_STRING
     var reEnteredPassword = EMPTY_STRING
@@ -28,24 +31,22 @@ class ChangePasswordViewModel @Inject constructor(
         MutableLiveData()
     val passwordUpdated: LiveData<Resource<String>> = _passwordUpdatedLiveData
 
-
-     fun callPasswordUpdateAPI(){
+    fun callPasswordUpdateAPI() {
         viewModelScope.launch(dispatcher) {
             _passwordUpdatedLiveData.apply {
                 postValue(Resource.Loading())
-                postValue(changePasswordUseCase.changePassword(newPassword,reEnteredPassword))
+                postValue(changePasswordUseCase.changePassword(newPassword, reEnteredPassword))
             }
         }
     }
 
-    fun updatePassword(newPassword : String){
-        val credentialData : CredentialData= getCredentialData()
+    fun updatePassword(newPassword: String) {
+        val credentialData: CredentialData = getCredentialData()
         credentialData.password = newPassword
-        saveCredentials(preferenceHandler,credentialData)
+        saveCredentials(preferenceHandler, credentialData)
     }
 
-     fun getCredentialData(): CredentialData {
-      return  getCredentials(preferenceHandler)
+    fun getCredentialData(): CredentialData {
+        return getCredentials(preferenceHandler)
     }
-
 }
