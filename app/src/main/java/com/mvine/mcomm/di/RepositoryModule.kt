@@ -15,16 +15,6 @@ import com.mvine.mcomm.data.repository.ChatsRepoImpl
 import com.mvine.mcomm.data.repository.ContactsRepoImpl
 import com.mvine.mcomm.data.repository.LoginRepoImpl
 import com.mvine.mcomm.data.repository.LogoutRepositoryImpl
-import com.mvine.mcomm.data.repository.dataSource.CallsRemoteRepo
-import com.mvine.mcomm.data.repository.dataSource.ChangePasswordRemoteRepo
-import com.mvine.mcomm.data.repository.dataSource.ChatsRemoteRepo
-import com.mvine.mcomm.data.repository.dataSource.ContactsRemoteRepo
-import com.mvine.mcomm.data.repository.dataSource.LoginRemoteRepo
-import com.mvine.mcomm.data.repository.dataSourceImpl.CallsRemoteRepoImpl
-import com.mvine.mcomm.data.repository.dataSourceImpl.ChangePasswordRemoteRepoImpl
-import com.mvine.mcomm.data.repository.dataSourceImpl.ChatsRemoteRepoImpl
-import com.mvine.mcomm.data.repository.dataSourceImpl.ContactsRemoteRepoImpl
-import com.mvine.mcomm.data.repository.dataSourceImpl.LoginRemoteRepoImpl
 import com.mvine.mcomm.domain.repository.CallsRepository
 import com.mvine.mcomm.domain.repository.ChangePasswordRepository
 import com.mvine.mcomm.domain.repository.ChatsRepository
@@ -44,53 +34,28 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideLoginRemoteRepository(loginApiService: LoginApiService): LoginRemoteRepo =
-        LoginRemoteRepoImpl(loginApiService)
+    fun provideLoginRepository(loginApiService: LoginApiService): LoginRepository =
+        LoginRepoImpl(loginApiService)
 
     @Singleton
     @Provides
-    fun provideCallsRemoteRepository(callsApiService: CallsApiService): CallsRemoteRepo =
-        CallsRemoteRepoImpl(callsApiService)
+    fun provideCallsRepository(callsApiService: CallsApiService, callsMapper: CallsMapper, preferenceHandler: PreferenceHandler, allCallsMapper: AllCallsMapper): CallsRepository =
+        CallsRepoImpl(callsApiService, callsMapper, preferenceHandler, allCallsMapper)
 
     @Singleton
     @Provides
-    fun provideContactsRemoteRepository(contactsApiService: ContactsApiService): ContactsRemoteRepo =
-        ContactsRemoteRepoImpl(contactsApiService)
+    fun provideContactsRepository(contactsApiService: ContactsApiService, contactsMapper: ContactsMapper, prefrenceHandler: PreferenceHandler): ContactsRepository =
+        ContactsRepoImpl(contactsApiService, contactsMapper, prefrenceHandler)
 
     @Singleton
     @Provides
-    fun provideChatsRemoteRepository(chatsApiService: ChatsApiService): ChatsRemoteRepo =
-        ChatsRemoteRepoImpl(chatsApiService)
+    fun provideChatsRepository(chatsApiService: ChatsApiService): ChatsRepository =
+        ChatsRepoImpl(chatsApiService)
 
     @Singleton
     @Provides
-    fun provideLoginRepository(loginRemoteRepo: LoginRemoteRepo): LoginRepository =
-        LoginRepoImpl(loginRemoteRepo)
-
-    @Singleton
-    @Provides
-    fun provideCallsRepository(callsRemoteRepo: CallsRemoteRepo, callsMapper: CallsMapper, preferenceHandler: PreferenceHandler, allCallsMapper: AllCallsMapper): CallsRepository =
-        CallsRepoImpl(callsRemoteRepo, callsMapper, preferenceHandler, allCallsMapper)
-
-    @Singleton
-    @Provides
-    fun provideContactsRepository(contactsRemoteRepo: ContactsRemoteRepo, contactsMapper: ContactsMapper, prefrenceHandler: PreferenceHandler): ContactsRepository =
-        ContactsRepoImpl(contactsRemoteRepo, contactsMapper, prefrenceHandler)
-
-    @Singleton
-    @Provides
-    fun provideChatsRepository(chatsRemoteRepo: ChatsRemoteRepo): ChatsRepository =
-        ChatsRepoImpl(chatsRemoteRepo)
-
-    @Singleton
-    @Provides
-    fun provideChangePasswordRemoteRepo(changePasswordApiService: ChangePasswordApiService): ChangePasswordRemoteRepo =
-        ChangePasswordRemoteRepoImpl(changePasswordApiService)
-
-    @Singleton
-    @Provides
-    fun provideChangePasswordRepositoryImpl(changePasswordRemoteRepo: ChangePasswordRemoteRepo, preferenceHandler: PreferenceHandler): ChangePasswordRepository =
-        ChangePasswordRepositoryImpl(changePasswordRemoteRepo, preferenceHandler)
+    fun provideChangePasswordRepositoryImpl(changePasswordApiService: ChangePasswordApiService, preferenceHandler: PreferenceHandler): ChangePasswordRepository =
+        ChangePasswordRepositoryImpl(changePasswordApiService, preferenceHandler)
 
     @Singleton
     @Provides
