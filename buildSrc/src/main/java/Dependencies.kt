@@ -49,6 +49,8 @@ object Versions {
     const val arch_core_testing = "2.1.0"
     const val coroutines_testing = "1.3.4"
     // endregion Testing
+    const val mockkVersion = "1.11.0"
+
 }
 
 object Dependencies {
@@ -112,4 +114,6 @@ object Dependencies {
     const val arch_core_testing = "androidx.arch.core:core-testing:${Versions.arch_core_testing}"
     const val coroutines_testing = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.coroutines_testing}"
     // endregion Testing
+
+    const val mockk = "io.mockk:mockk:${Versions.mockkVersion}"
 }
