@@ -1,6 +1,6 @@
 package com.mvine.mcomm.presentation.login.viewmodel
 
-import android.util.Patterns
+import androidx.core.util.PatternsCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -75,7 +75,7 @@ class LoginViewModel @Inject constructor(
     }
 
     fun onEmailTextChange(s: CharSequence, start: Int, before: Int, count: Int) {
-        _hideEmailErrorMsg.postValue(Patterns.EMAIL_ADDRESS.matcher(s.toString()).matches())
+        _hideEmailErrorMsg.postValue(PatternsCompat.EMAIL_ADDRESS.matcher(s.toString()).matches())
     }
 
     fun updateTokenAndLogin(token: String, username: String, password: String) {

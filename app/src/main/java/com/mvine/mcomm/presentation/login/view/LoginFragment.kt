@@ -52,12 +52,16 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, LoginViewModel >() {
     }
 
     private fun subscribeObservers() {
-        loginViewModel.cookieLiveData.observe(viewLifecycleOwner, { result ->
+        loginViewModel.cookieLiveData.observe(viewLifecycleOwner) { result ->
             result?.let { response ->
                 when (response) {
                     is Success -> {
                         response.data?.let { token ->
-                            loginViewModel.updateTokenAndLogin(token, binding.etEmail.text.toString(), binding.etPassword.text.toString())
+                            loginViewModel.updateTokenAndLogin(
+                                token,
+                                binding.etEmail.text.toString(),
+                                binding.etPassword.text.toString()
+                            )
                         } ?: showToastMessage(R.string.login_failed, R.string.incorrect_email_pass)
                     }
                     is Resource.Error -> {
@@ -69,9 +73,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, LoginViewModel >() {
                     }
                 }
             }
-        })
+        }
 
-        loginViewModel.userInfo.observe(viewLifecycleOwner, { result ->
+        loginViewModel.userInfo.observe(viewLifecycleOwner) { result ->
             result?.let { response ->
                 when (response) {
                     is Success -> {
@@ -91,14 +95,14 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, LoginViewModel >() {
                     }
                 }
             }
-        })
+        }
 
-        loginViewModel.loginError.observe(viewLifecycleOwner, {
+        loginViewModel.loginError.observe(viewLifecycleOwner) {
             if (it) {
                 preferenceHandler.clearData()
                 showToastMessage(R.string.login_failure)
             }
-        })
+        }
     }
 
     private fun loadUserInformation() {
