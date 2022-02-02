@@ -1,10 +1,10 @@
 package com.mvine.mcomm.util
 
+import com.mvine.mcomm.util.Row.AllCallDataRowType
 import com.mvine.mcomm.util.Row.CallDataRowType
+import com.mvine.mcomm.util.Row.CallSpinnerRowType
 import com.mvine.mcomm.util.Row.ContactRowType
 import com.mvine.mcomm.util.Row.InvalidRowType
-import com.mvine.mcomm.util.Row.CallSpinnerRowType
-import com.mvine.mcomm.util.Row.AllCallDataRowType
 
 /**
  * A Util function to return a [Row] Instance

@@ -18,10 +18,9 @@ data class SpinnerItem(
     val itemText: String
 )
 
-
 data class AllCalls(
-    var callables: List<AllCallsClass>?=null,
-    var companies: List<AllCallsCompanyData>?=null
+    var callables: List<AllCallsClass>? = null,
+    var companies: List<AllCallsCompanyData>? = null
 )
 
 data class AllCallsClass(
@@ -30,7 +29,7 @@ data class AllCallsClass(
     val STX: String?,
     val admin: String?,
     val companyid: String?,
-    val email:String?,
+    val email: String?,
     val id: String?,
     val image_src: String?,
     val usename: String?,

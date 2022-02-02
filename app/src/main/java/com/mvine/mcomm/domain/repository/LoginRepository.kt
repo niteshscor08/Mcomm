@@ -16,6 +16,5 @@ interface LoginRepository {
      */
     suspend fun login(username: String, password: String): Resource<String?>
 
-    suspend fun getUserInfo(cookie: String):  Resource<PersonInfo>
-
+    suspend fun getUserInfo(cookie: String): Resource<PersonInfo>
 }

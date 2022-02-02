@@ -8,9 +8,13 @@ import com.mvine.mcomm.data.model.response.PersonInfo
 import com.mvine.mcomm.domain.model.CredentialData
 import com.mvine.mcomm.domain.usecase.LoginUseCase
 import com.mvine.mcomm.domain.util.Resource
-import com.mvine.mcomm.domain.util.Resource.*
+import com.mvine.mcomm.domain.util.Resource.Loading
 import com.mvine.mcomm.presentation.common.base.BaseViewModel
-import com.mvine.mcomm.util.*
+import com.mvine.mcomm.util.PreferenceHandler
+import com.mvine.mcomm.util.extractEpochTime
+import com.mvine.mcomm.util.getCredentials
+import com.mvine.mcomm.util.getSubStringBasedOnIndex
+import com.mvine.mcomm.util.saveCredentials
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
@@ -27,7 +31,7 @@ class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val dispatcher: CoroutineDispatcher,
     private val preferenceHandler: PreferenceHandler
-): BaseViewModel() {
+) : BaseViewModel() {
 
     private val _loginError: MutableLiveData<Boolean> =
         MutableLiveData(false)
@@ -41,12 +45,12 @@ class LoginViewModel @Inject constructor(
         MutableLiveData()
     val userInfo: LiveData<Resource<PersonInfo>> = _userInfo
 
-    private val _hidePasswordErrorMsg : MutableLiveData<Boolean> = MutableLiveData(true)
-     val hidePasswordErrorMsg: LiveData<Boolean> =
+    private val _hidePasswordErrorMsg: MutableLiveData<Boolean> = MutableLiveData(true)
+    val hidePasswordErrorMsg: LiveData<Boolean> =
         _hidePasswordErrorMsg
 
-    private val _hideEmailErrorMsg : MutableLiveData<Boolean> = MutableLiveData(true)
-     val hideEmailErrorMsg: LiveData<Boolean> =
+    private val _hideEmailErrorMsg: MutableLiveData<Boolean> = MutableLiveData(true)
+    val hideEmailErrorMsg: LiveData<Boolean> =
         _hideEmailErrorMsg
 
     fun login(username: String, password: String) {
@@ -58,7 +62,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun getUserInfo(cookie: String){
+    private fun getUserInfo(cookie: String) {
         viewModelScope.launch(dispatcher) {
             _userInfo.apply {
                 postValue(loginUseCase.getUserInfo(cookie))
@@ -70,60 +74,62 @@ class LoginViewModel @Inject constructor(
         _hidePasswordErrorMsg.postValue(s.toString().length > PASSWORD_LENGTH)
     }
 
-    fun onEmailTextChange(s: CharSequence, start: Int, before: Int, count: Int){
+    fun onEmailTextChange(s: CharSequence, start: Int, before: Int, count: Int) {
         _hideEmailErrorMsg.postValue(Patterns.EMAIL_ADDRESS.matcher(s.toString()).matches())
     }
 
-    fun updateTokenAndLogin(token: String, username: String, password: String){
+    fun updateTokenAndLogin(token: String, username: String, password: String) {
         getCredentials(preferenceHandler).token?.let { oldToken ->
             loginWithOldToken(token, oldToken, username, password)
-        }?: loginWithNewToken(token, username, password)
+        } ?: loginWithNewToken(token, username, password)
     }
 
-    private fun loginWithNewToken(token: String, username: String, password: String){
+    private fun loginWithNewToken(token: String, username: String, password: String) {
         saveUserCredentials(token, username, password)
     }
 
-    private fun loginWithOldToken(token: String, savedToken : String, username: String, password: String){
-        if(isTokenValid(savedToken)){
+    private fun loginWithOldToken(token: String, savedToken: String, username: String, password: String) {
+        if (isTokenValid(savedToken)) {
             getUserInfo(savedToken)
-        }else{
-            if(getCredentials(preferenceHandler).isRefresh == false){
-                saveUserCredentials(token,username, password,true)
-            }else {
+        } else {
+            if (getCredentials(preferenceHandler).isRefresh == false) {
+                saveUserCredentials(token, username, password, true)
+            } else {
                 preferenceHandler.clearData()
                 _loginError.postValue(true)
             }
         }
     }
 
-    private fun saveUserCredentials(token: String, username: String, password: String, isRefresh : Boolean = false) {
-        saveCredentials(preferenceHandler, CredentialData(
-            userName = username,
-            password = password,
-            token = token,
-            isRefresh = isRefresh
-        ))
+    private fun saveUserCredentials(token: String, username: String, password: String, isRefresh: Boolean = false) {
+        saveCredentials(
+            preferenceHandler,
+            CredentialData(
+                userName = username,
+                password = password,
+                token = token,
+                isRefresh = isRefresh
+            )
+        )
         getUserInfo(token)
     }
 
-   private fun isTokenValid(token : String?): Boolean{
-         if(token.isNullOrEmpty()){
-             return false
-         }
+    private fun isTokenValid(token: String?): Boolean {
+        if (token.isNullOrEmpty()) {
+            return false
+        }
         val tokenTime: Long = extractEpochTime(token.substringAfter(TIME_EXTRACTOR))
-        val currentTime: Long = getSubStringBasedOnIndex(System.currentTimeMillis().toString(), tokenTime.toString().length ).toLong()
+        val currentTime: Long = getSubStringBasedOnIndex(System.currentTimeMillis().toString(), tokenTime.toString().length).toLong()
         val timeDifference = currentTime - tokenTime
-        if(timeDifference >= TIME_DIFF ){
+        if (timeDifference >= TIME_DIFF) {
             return false
         }
         return true
     }
 
-    companion object{
+    companion object {
         const val PASSWORD_LENGTH = 5
         const val TIME_EXTRACTOR = "time:"
         const val TIME_DIFF = 14040L
     }
-
 }

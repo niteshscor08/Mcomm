@@ -1,38 +1,38 @@
 package com.mvine.mcomm.janus.commonvalues
 
 enum class CallStatus(
-     val status: String
+    val status: String
 ) {
 
     CREATE("create"),
 
-    REGISTERED ("registered"),
+    REGISTERED("registered"),
 
-    REGISTERING ("registering"),
+    REGISTERING("registering"),
 
     REGISTER("register"),
 
-    REGISTRATION_FAILED ("registration_failed"),
+    REGISTRATION_FAILED("registration_failed"),
 
     ACCEPT("accept"),
 
-    ACCEPTED ("accepted"),
+    ACCEPTED("accepted"),
 
     CALL("call"),
 
-    CALLING ("calling"),
+    CALLING("calling"),
 
-    RINGING ("ringing"),
+    RINGING("ringing"),
 
-    PROCEEDING (  "proceeding"),
+    PROCEEDING("proceeding"),
 
-    DECLINING (  "declining"),
+    DECLINING("declining"),
 
-    HANGINGUP ("hangingup"),
+    HANGINGUP("hangingup"),
 
-    HANGUP ("hangup"),
+    HANGUP("hangup"),
 
-    INCOMING_CALL ("incomingcall"),
+    INCOMING_CALL("incomingcall"),
 
     REQUEST("request"),
 

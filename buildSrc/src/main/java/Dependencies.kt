@@ -1,6 +1,7 @@
 object Versions {
     // region kotlin
     const val kotlin_version = "1.5.31"
+    const val ktlint_version = "10.2.1"
     const val core_ktx = "1.3.2"
     // endregion Kotlin
 

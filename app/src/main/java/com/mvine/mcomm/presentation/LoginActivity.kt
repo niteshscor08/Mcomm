@@ -1,7 +1,7 @@
 package com.mvine.mcomm.presentation
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.mvine.mcomm.R
 import dagger.hilt.android.AndroidEntryPoint
 

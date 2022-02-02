@@ -18,7 +18,7 @@ import com.mvine.mcomm.util.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ChangePasswordActivity: AppCompatActivity(), TextView.OnEditorActionListener {
+class ChangePasswordActivity : AppCompatActivity(), TextView.OnEditorActionListener {
 
     private lateinit var activityChangePasswordBinding: ActivityChangePasswordBinding
 
@@ -30,7 +30,7 @@ class ChangePasswordActivity: AppCompatActivity(), TextView.OnEditorActionListen
         setUp()
     }
 
-    private fun setUp(){
+    private fun setUp() {
         setSupportActionBar(activityChangePasswordBinding.toolBarChangePwd)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         activityChangePasswordBinding.changePasswordViewModel = changePasswordViewModel
@@ -39,54 +39,54 @@ class ChangePasswordActivity: AppCompatActivity(), TextView.OnEditorActionListen
         clickListener()
     }
 
-    private fun subscribeObservers(){
-        changePasswordViewModel.passwordUpdated.observe(this, {result ->
+    private fun subscribeObservers() {
+        changePasswordViewModel.passwordUpdated.observe(this, { result ->
             activityChangePasswordBinding.etNewPassword.hideKeyboard()
             result?.let { response ->
-                when(response){
+                when (response) {
                     is Resource.Success -> {
                         response.data?.let {
                             handlePasswordChangeResponse(it)
-
                         }
                     }
                     is Resource.Error -> {
                         activityChangePasswordBinding.progressBar.visibility = View.GONE
                         response.message?.let { showSnackBar(activityChangePasswordBinding.root, it, null, false) }
                     }
-                    is Resource.Loading-> {
+                    is Resource.Loading -> {
                         activityChangePasswordBinding.progressBar.visibility = View.VISIBLE
                     }
                 }
-
             }
-
         })
     }
 
-    private fun clickListener(){
+    private fun clickListener() {
         activityChangePasswordBinding.btnSubmit.setOnClickListener {
             callChangePasswordApi()
         }
         activityChangePasswordBinding.etReEnterPassword.setOnEditorActionListener(this)
     }
 
-    private fun callChangePasswordApi(){
+    private fun callChangePasswordApi() {
         activityChangePasswordBinding.root.hideKeyboard()
-        if(validateInput()){
+        if (validateInput()) {
             changePasswordViewModel.callPasswordUpdateAPI()
         }
     }
 
-    private fun validateInput(): Boolean{
-        if(changePasswordViewModel.oldPassword.isNullOrEmpty() ||
-            changePasswordViewModel.newPassword.isNullOrEmpty()||
-            changePasswordViewModel.reEnteredPassword.isNullOrEmpty()){
-            showSnackBar(activityChangePasswordBinding.root,
-                resources.getString(R.string.empty_field_error), null, false)
+    private fun validateInput(): Boolean {
+        if (changePasswordViewModel.oldPassword.isNullOrEmpty() ||
+            changePasswordViewModel.newPassword.isNullOrEmpty() ||
+            changePasswordViewModel.reEnteredPassword.isNullOrEmpty()
+        ) {
+            showSnackBar(
+                activityChangePasswordBinding.root,
+                resources.getString(R.string.empty_field_error), null, false
+            )
             return false
         }
-        if( changePasswordViewModel.oldPassword != changePasswordViewModel.getCredentialData().password){
+        if (changePasswordViewModel.oldPassword != changePasswordViewModel.getCredentialData().password) {
             showSnackBar(
                 activityChangePasswordBinding.root,
                 resources.getString(R.string.old_pass_incorrect),
@@ -95,9 +95,11 @@ class ChangePasswordActivity: AppCompatActivity(), TextView.OnEditorActionListen
             )
             return false
         }
-        if(changePasswordViewModel.newPassword != changePasswordViewModel.reEnteredPassword){
-            showSnackBar(activityChangePasswordBinding.root,
-                resources.getString(R.string.pass_mismatch), null, false)
+        if (changePasswordViewModel.newPassword != changePasswordViewModel.reEnteredPassword) {
+            showSnackBar(
+                activityChangePasswordBinding.root,
+                resources.getString(R.string.pass_mismatch), null, false
+            )
             return false
         }
 
@@ -106,13 +108,13 @@ class ChangePasswordActivity: AppCompatActivity(), TextView.OnEditorActionListen
 
     private fun handlePasswordChangeResponse(data: String) {
         activityChangePasswordBinding.progressBar.visibility = View.GONE
-        if(data == resources.getString(R.string.ok)){
+        if (data == resources.getString(R.string.ok)) {
             changePasswordViewModel.updatePassword(
                 activityChangePasswordBinding.etNewPassword.text.toString()
             )
             this?.setResult(Activity.RESULT_OK)
             this.finish()
-        }else{
+        } else {
             showSnackBar(activityChangePasswordBinding.root, data, null, false)
         }
     }
@@ -123,11 +125,10 @@ class ChangePasswordActivity: AppCompatActivity(), TextView.OnEditorActionListen
     }
 
     override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
-        if(actionId == EditorInfo.IME_ACTION_DONE){
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
             callChangePasswordApi()
-           return true
+            return true
         }
         return false
     }
-
 }

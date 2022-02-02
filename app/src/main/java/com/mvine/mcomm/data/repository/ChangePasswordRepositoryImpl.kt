@@ -9,20 +9,20 @@ import javax.inject.Inject
 
 class ChangePasswordRepositoryImpl @Inject constructor(
     private val changePasswordRemoteRepo: ChangePasswordRemoteRepo,
-    private val preferenceHandler : PreferenceHandler
-) : ChangePasswordRepository{
+    private val preferenceHandler: PreferenceHandler
+) : ChangePasswordRepository {
     override suspend fun changePassword(newPassword: String, reEnteredPassword: String): Resource<String> {
         preferenceHandler.getValue(LOGIN_TOKEN)?.let { cookie ->
-            val response =  try {
+            val response = try {
                 changePasswordRemoteRepo.changePassword(cookie, newPassword, reEnteredPassword)
             } catch (exception: Exception) {
                 return Resource.Error(message = "Error in Password Update")
             }
-            if(response.isSuccessful){
-                val passwordUpdatedMessage : String?=  response.body()?.update_password
-                return  passwordUpdatedMessage?.let {
+            if (response.isSuccessful) {
+                val passwordUpdatedMessage: String? = response.body()?.update_password
+                return passwordUpdatedMessage?.let {
                     Resource.Success(data = it)
-                }?: Resource.Error(message = "Error in Password Update")
+                } ?: Resource.Error(message = "Error in Password Update")
             }
         }
         return Resource.Error(message = "Error in Password Update")

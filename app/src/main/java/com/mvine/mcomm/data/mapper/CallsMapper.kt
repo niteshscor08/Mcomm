@@ -7,7 +7,7 @@ import com.mvine.mcomm.util.getSpinnerItems
 
 class CallsMapper {
 
-    fun entityToModel(callsResponse: CallsResponse?) : Resource<ArrayList<CallData>> {
+    fun entityToModel(callsResponse: CallsResponse?): Resource<ArrayList<CallData>> {
         val recentCalls = arrayListOf<CallData>()
         callsResponse?.recents?.forEach { recent ->
             recentCalls.add(

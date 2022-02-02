@@ -8,4 +8,4 @@ data class CallState(
     var remoteUsername: String? = null,
     var remoteDisplayName: String? = null,
     var remoteUrl: String? = null
-    ): Parcelable
+) : Parcelable

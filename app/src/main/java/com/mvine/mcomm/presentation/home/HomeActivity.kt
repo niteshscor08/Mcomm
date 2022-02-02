@@ -1,11 +1,9 @@
 package com.mvine.mcomm.presentation.home
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -16,9 +14,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
-import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.mvine.mcomm.R
@@ -28,7 +24,11 @@ import com.mvine.mcomm.janus.JanusManager
 import com.mvine.mcomm.janus.commonvalues.CallStatus
 import com.mvine.mcomm.janus.commonvalues.CommonValues.Companion.INCOMING
 import com.mvine.mcomm.janus.commonvalues.CommonValues.Companion.OUTGOING
-import com.mvine.mcomm.janus.extension.*
+import com.mvine.mcomm.janus.extension.call
+import com.mvine.mcomm.janus.extension.decline
+import com.mvine.mcomm.janus.extension.hangUp
+import com.mvine.mcomm.janus.extension.pickup
+import com.mvine.mcomm.janus.extension.toSIPRemoteAddress
 import com.mvine.mcomm.presentation.audio.view.AudioActivity
 import com.mvine.mcomm.presentation.common.base.BaseActivity
 import com.mvine.mcomm.presentation.common.dialog.CallDialog
@@ -46,7 +46,7 @@ import javax.inject.Inject
  */
 
 @AndroidEntryPoint
-class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, TextView.OnEditorActionListener  {
+class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, TextView.OnEditorActionListener {
 
     @Inject
     lateinit var janusManager: JanusManager
@@ -60,17 +60,17 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Te
 
     lateinit var callDialog: CallDialog
 
-    private var isRegistered : Boolean = false
+    private var isRegistered: Boolean = false
 
     override val layoutId: Int
-        get() =  R.layout.activity_home
+        get() = R.layout.activity_home
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUp()
     }
 
-    private fun setUp(){
+    private fun setUp() {
         setUpNavController()
         initListeners()
         checkPermissionsAndStartService()
@@ -78,7 +78,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Te
         subscribeObservers()
         startJanusSession()
         binding?.etSearch?.setOnEditorActionListener(this)
-        //showLoginSuccessMessage()
+        // showLoginSuccessMessage()
     }
 
     private fun setUpNavController() {
@@ -95,11 +95,11 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Te
             state?.let {
                 binding?.tlSearch?.isVisible = !it
                 binding?.ivAppBarCreateGroup?.isVisible = !it
-                if(it){
-                    binding?.appBarHome?.setBackgroundColor(ContextCompat.getColor(this,R.color.mcomm_blue))
+                if (it) {
+                    binding?.appBarHome?.setBackgroundColor(ContextCompat.getColor(this, R.color.mcomm_blue))
                     navController.navigate(R.id.loginMenuFragment)
-                }else{
-                    binding?.appBarHome?.setBackgroundColor(ContextCompat.getColor(this,R.color.mcomm_blue_light_tint))
+                } else {
+                    binding?.appBarHome?.setBackgroundColor(ContextCompat.getColor(this, R.color.mcomm_blue_light_tint))
                     navController.popBackStack()
                 }
             }
@@ -139,13 +139,13 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Te
         return true
     }
 
-    private fun initializeAudioScreen(){
-       // audioDialog = AudioDialogFragment(this, callState)
+    private fun initializeAudioScreen() {
+        // audioDialog = AudioDialogFragment(this, callState)
     }
 
-    private fun subscribeObservers(){
+    private fun subscribeObservers() {
         janusManager.janusConnectionStatus.observe(this, {
-            when(it){
+            when (it) {
                 CallStatus.REGISTRATION_FAILED.status -> {
                     dismissCallDialog()
                 }
@@ -175,18 +175,17 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Te
         binding?.tlSearch?.visibility = View.VISIBLE
     }
 
-    fun startOutgoingCall(sTX: String, userName : String, uri : String) {
-        if(isRegistered) {
+    fun startOutgoingCall(sTX: String, userName: String, uri: String) {
+        if (isRegistered) {
             showCallsPopUp(sTX, OUTGOING, userName, uri)
             janusManager.call(sTX.toSIPRemoteAddress())
         }
     }
 
-
-    private fun showCallsPopUp(callerName: String, dialogType: String, displayName: String?, url : String?){
-        if(dialogType == INCOMING){
+    private fun showCallsPopUp(callerName: String, dialogType: String, displayName: String?, url: String?) {
+        if (dialogType == INCOMING) {
             callDialog = CallDialog(
-                callDialogListener= this,
+                callDialogListener = this,
                 callDialogData = CallDialogData(callerName = callerName, isIncomingDialog = true),
                 dialogType = INCOMING,
                 callState = callState.apply {
@@ -194,9 +193,9 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Te
                     remoteUrl = url
                 }
             )
-        }else{
+        } else {
             callDialog = CallDialog(
-                callDialogListener= this,
+                callDialogListener = this,
                 callDialogData = CallDialogData(callerName = callerName, isIncomingDialog = false),
                 dialogType = OUTGOING,
                 callState = callState.apply {
@@ -214,33 +213,33 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Te
     }
 
     override fun onCallEnded(dialogType: String) {
-        if(dialogType == INCOMING){
+        if (dialogType == INCOMING) {
             janusManager.decline()
-        }else{
+        } else {
             janusManager.hangUp()
         }
         dismissCallDialog()
     }
 
-    private fun dismissCallDialog(){
+    private fun dismissCallDialog() {
         callDialog?.let {
-            if(it.isVisible){
+            if (it.isVisible) {
                 it.dismiss()
             }
         }
     }
 
-    private fun startJanusSession(){
+    private fun startJanusSession() {
         janusManager.connect()
     }
 
-    private fun endJanusSession(){
+    private fun endJanusSession() {
         janusManager.endJanusSession()
     }
 
-    private fun showLoginSuccessMessage(){
-       if(intent.extras?.isEmpty == false)
-           binding?.let { showSnackBar(it.root, resources.getString(R.string.login_successful)) }
+    private fun showLoginSuccessMessage() {
+        if (intent.extras?.isEmpty == false)
+            binding?.let { showSnackBar(it.root, resources.getString(R.string.login_successful)) }
     }
 
     override fun onDestroy() {
@@ -248,7 +247,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Te
         super.onDestroy()
     }
 
-    fun hideBottomTabBar(){
+    fun hideBottomTabBar() {
         binding?.homeNavBar?.visibility = View.GONE
     }
 
@@ -256,23 +255,22 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Te
         homeViewModel.shouldRefreshData.postValue(true)
     }
 
-    private fun startAudioActivity(){
+    private fun startAudioActivity() {
         val intent = Intent(this, AudioActivity::class.java)
         resultLauncher.launch(intent)
     }
 
-    fun resetAppbarMenuItem(){
-        binding?.appBarHome?.setBackgroundColor(ContextCompat.getColor(this,R.color.mcomm_blue_light_tint))
+    fun resetAppbarMenuItem() {
+        binding?.appBarHome?.setBackgroundColor(ContextCompat.getColor(this, R.color.mcomm_blue_light_tint))
         binding?.ivAppBarMenu?.isChecked = false
     }
 
     override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
-        if(actionId == EditorInfo.IME_ACTION_SEARCH){
+        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
             binding?.etSearch?.clearFocus()
             binding?.etSearch?.hideKeyboard()
             return true
         }
         return false
     }
-
 }

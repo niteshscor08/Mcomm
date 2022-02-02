@@ -2,7 +2,8 @@ package com.mvine.mcomm.data.api
 
 import okhttp3.ResponseBody
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.GET
+import retrofit2.http.Header
 
 /**
  * API service for Login Requests

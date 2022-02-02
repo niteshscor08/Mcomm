@@ -18,7 +18,7 @@ import javax.inject.Inject
 class CallsViewModel @Inject constructor(
     private val getCallsUseCase: GetCallsUseCase,
     private val dispatcher: CoroutineDispatcher
-    ) : BaseViewModel() {
+) : BaseViewModel() {
 
     private val _recentCallsLiveData: MutableLiveData<Resource<ArrayList<CallData>>> =
         MutableLiveData()
@@ -41,23 +41,22 @@ class CallsViewModel @Inject constructor(
     val searchAllCalls: LiveData<ArrayList<CallData>> = _searchAllCallsLiveData
 
     fun getRecentCalls() {
-            viewModelScope.launch(dispatcher) {
-                _recentCallsLiveData.apply {
-                    postValue(Resource.Loading())
-                    postValue(getCallsUseCase.getRecentCalls())
-                }
+        viewModelScope.launch(dispatcher) {
+            _recentCallsLiveData.apply {
+                postValue(Resource.Loading())
+                postValue(getCallsUseCase.getRecentCalls())
+            }
         }
     }
 
     fun getAllCalls() {
-            viewModelScope.launch(dispatcher) {
-                _allCallsLiveData.apply {
-                    postValue(Resource.Loading())
-                    postValue(getCallsUseCase.getAllCalls())
-                }
+        viewModelScope.launch(dispatcher) {
+            _allCallsLiveData.apply {
+                postValue(Resource.Loading())
+                postValue(getCallsUseCase.getAllCalls())
             }
+        }
     }
-
 
     fun filterData(query: String) {
         _recentCallsLiveData.value?.data?.filter {
@@ -73,10 +72,9 @@ class CallsViewModel @Inject constructor(
         }
     }
 
-    fun sortAlphabetically(arrayList: ArrayList<CallData>): ArrayList<CallData>{
+    fun sortAlphabetically(arrayList: ArrayList<CallData>): ArrayList<CallData> {
         return sortDataAlphabetically(arrayList) { o1: CallData, o2: CallData ->
             o1.othercaller_department.toString().lowercase().compareTo(o2.othercaller_department.toString().lowercase())
         }
     }
-
 }

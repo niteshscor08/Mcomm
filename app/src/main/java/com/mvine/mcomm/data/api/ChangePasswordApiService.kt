@@ -11,5 +11,4 @@ interface ChangePasswordApiService {
 
     @POST("json/member/self/update_password")
     suspend fun changePassword(@Header("Cookie") cookie: String, @Body body: RequestBody): Response<ChangePasswordResponse>
-
 }

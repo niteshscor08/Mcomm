@@ -13,33 +13,36 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-
 @InstallIn(SingletonComponent::class)
 @Module
 object ServiceModule {
 
     @Singleton
     @Provides
-    fun provideMediaPlayerHandler(@ApplicationContext context: Context) : MediaPlayerHandler = MediaPlayerHandler(context)
+    fun provideMediaPlayerHandler(@ApplicationContext context: Context): MediaPlayerHandler = MediaPlayerHandler(context)
 
     @Singleton
     @Provides
-    fun provideAudioFocusHandler(@ApplicationContext context: Context) : AudioFocusHandler = AudioFocusHandler(context)
+    fun provideAudioFocusHandler(@ApplicationContext context: Context): AudioFocusHandler = AudioFocusHandler(context)
 
     @Singleton
     @Provides
-    fun provideCallState() : CallState= CallState()
+    fun provideCallState(): CallState = CallState()
 
     @Singleton
     @Provides
-    fun provideJanusManager(@ApplicationContext context: Context,
-                            preferenceHandler: PreferenceHandler,
-                            mediaPlayerHandler: MediaPlayerHandler,
-                            audioFocusHandler: AudioFocusHandler,
-                            callState: CallState) : JanusManager =
-        JanusManager(context,
+    fun provideJanusManager(
+        @ApplicationContext context: Context,
+        preferenceHandler: PreferenceHandler,
+        mediaPlayerHandler: MediaPlayerHandler,
+        audioFocusHandler: AudioFocusHandler,
+        callState: CallState
+    ): JanusManager =
+        JanusManager(
+            context,
             preferenceHandler,
             mediaPlayerHandler,
             callState,
-            audioFocusHandler)
+            audioFocusHandler
+        )
 }

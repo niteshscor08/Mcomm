@@ -4,7 +4,7 @@ import android.content.Context
 import android.media.MediaPlayer
 import android.media.RingtoneManager
 
-class MediaPlayerHandler (private val context: Context) {
+class MediaPlayerHandler(private val context: Context) {
 
     private var mediaPlayer: MediaPlayer? = null
 
@@ -12,7 +12,7 @@ class MediaPlayerHandler (private val context: Context) {
         initializeMediaPlayer()
     }
 
-    private fun initializeMediaPlayer(){
+    private fun initializeMediaPlayer() {
         val fd = context.assets.openFd("dialing.ogg")
         mediaPlayer = MediaPlayer().apply {
             setDataSource(fd.fileDescriptor, fd.startOffset, fd.length)
@@ -22,7 +22,7 @@ class MediaPlayerHandler (private val context: Context) {
         }
     }
 
-    fun startCallDialing(){
+    fun startCallDialing() {
         val fd = context.assets.openFd("dialing.ogg")
         mediaPlayer = MediaPlayer().apply {
             setDataSource(fd.fileDescriptor, fd.startOffset, fd.length)
@@ -49,6 +49,4 @@ class MediaPlayerHandler (private val context: Context) {
         }
         mediaPlayer = null
     }
-
-
 }

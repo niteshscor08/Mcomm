@@ -2,12 +2,11 @@ package com.mvine.mcomm.presentation.common.base
 
 import android.os.Bundle
 import androidx.annotation.LayoutRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.appcompat.app.AppCompatActivity
 
-
-abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity(){
+abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity() {
 
     var binding: T? = null
 
@@ -21,8 +20,7 @@ abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity(){
 
     private fun performDataBinding() {
         binding = DataBindingUtil.setContentView(this, layoutId)
-        binding!!.lifecycleOwner=this
+        binding!!.lifecycleOwner = this
         binding!!.executePendingBindings()
     }
-
 }

@@ -1,8 +1,8 @@
 package com.mvine.mcomm.janus.utils
 
-import java.util.*
+import java.util.Random
 
- class RandomString {
+class RandomString {
     val str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
     val rnd = Random()
     fun randomString(length: Int): String {

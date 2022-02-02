@@ -4,9 +4,6 @@ import com.mvine.mcomm.data.model.response.PersonInfo
 import com.mvine.mcomm.data.repository.dataSource.LoginRemoteRepo
 import com.mvine.mcomm.domain.repository.LoginRepository
 import com.mvine.mcomm.domain.util.Resource
-import okhttp3.Cookie
-import okhttp3.ResponseBody
-import retrofit2.Response
 import javax.inject.Inject
 
 /**
@@ -16,9 +13,9 @@ import javax.inject.Inject
  */
 class LoginRepoImpl @Inject constructor(
     private val loginRemoteRepo: LoginRemoteRepo
-): LoginRepository {
+) : LoginRepository {
     override suspend fun login(username: String, password: String): Resource<String?> {
-        val response =  try {
+        val response = try {
             loginRemoteRepo.login(username, password)
         } catch (exception: Exception) {
             return Resource.Error(message = "Error in Logging in")
@@ -36,5 +33,4 @@ class LoginRepoImpl @Inject constructor(
     private fun validCookie(cookies: List<String>): String? {
         return cookies.firstOrNull { !it.contains("HTTP_MVine_Session") && !it.contains("user:anon") }
     }
-
 }

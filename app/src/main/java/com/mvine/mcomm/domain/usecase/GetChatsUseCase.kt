@@ -5,5 +5,4 @@ import javax.inject.Inject
 
 class GetChatsUseCase @Inject constructor(
     private val chatsRepository: ChatsRepository
-) {
-}
+)

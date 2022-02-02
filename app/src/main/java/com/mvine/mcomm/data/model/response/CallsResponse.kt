@@ -31,10 +31,10 @@ data class CallableClass(
     val STX: String?,
     val admin: String?,
     val companyid: String?,
-    val email:String?,
+    val email: String?,
     val id: String?,
     val image_src: String?,
-    val surname : String?,
+    val surname: String?,
     val usename: String?,
     val username: String?
 )

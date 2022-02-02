@@ -1,16 +1,13 @@
 package com.mvine.mcomm.data.mapper
 
 import com.mvine.mcomm.data.model.response.CallablesResponse
-import com.mvine.mcomm.domain.model.AllCalls
-import com.mvine.mcomm.domain.model.AllCallsClass
-import com.mvine.mcomm.domain.model.AllCallsCompanyData
 import com.mvine.mcomm.domain.model.CallData
 import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.util.getSpinnerItems
 
 class AllCallsMapper {
 
-    fun entityToModel(callsResponse: CallablesResponse?) : Resource<ArrayList<CallData>> {
+    fun entityToModel(callsResponse: CallablesResponse?): Resource<ArrayList<CallData>> {
         val allCalls = arrayListOf<CallData>()
         callsResponse?.let {
             it.callables?.forEach { callable ->
@@ -33,5 +30,4 @@ class AllCallsMapper {
         }
         return Resource.Success(data = allCalls)
     }
-
 }

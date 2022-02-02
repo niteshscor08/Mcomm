@@ -9,8 +9,6 @@ class GetCallsUseCase @Inject constructor(
     suspend fun getAllCalls() =
         callsRepository.getAllCalls()
 
-
     suspend fun getRecentCalls() =
         callsRepository.getRecentCalls()
-
 }

@@ -1,9 +1,7 @@
 package com.mvine.mcomm.presentation.common.viewtypes
 
-import android.util.Log
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.mvine.mcomm.BuildConfig
 import com.mvine.mcomm.R
@@ -12,7 +10,9 @@ import com.mvine.mcomm.presentation.common.ListInteraction
 import com.mvine.mcomm.presentation.common.RowType
 import com.mvine.mcomm.presentation.common.glide.GlideApp
 import com.mvine.mcomm.presentation.common.viewholderfactory.ViewHolderFactory
-import com.mvine.mcomm.util.*
+import com.mvine.mcomm.util.CALL_DATA_ROW_TYPE
+import com.mvine.mcomm.util.getCallIcon
+import com.mvine.mcomm.util.getDateFromTimestamp
 
 data class CallDataRowType(
     val callData: CallData,

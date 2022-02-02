@@ -3,7 +3,6 @@ package com.mvine.mcomm.presentation.login.view
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,6 @@ import com.mvine.mcomm.databinding.FragmentLoginMenuBinding
 import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.janus.JanusManager
 import com.mvine.mcomm.presentation.LoginActivity
-import com.mvine.mcomm.presentation.audio.view.AudioActivity
 import com.mvine.mcomm.presentation.home.HomeActivity
 import com.mvine.mcomm.presentation.login.viewmodel.LoginMenuViewModel
 import com.mvine.mcomm.util.SPACE
@@ -33,7 +31,7 @@ class LoginMenuFragment : Fragment() {
 
     private lateinit var fragmentLoginMenuBinding: FragmentLoginMenuBinding
 
-    private val loginMenuViewModel : LoginMenuViewModel by viewModels()
+    private val loginMenuViewModel: LoginMenuViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,7 +51,7 @@ class LoginMenuFragment : Fragment() {
         (activity as HomeActivity).hideBottomTabBar()
     }
 
-    private fun loadUiData(){
+    private fun loadUiData() {
         fragmentLoginMenuBinding.version.text = resources.getString(R.string.version).plus(SPACE).plus(BuildConfig.VERSION_NAME).plus("(").plus(BuildConfig.VERSION_CODE).plus(")")
         fragmentLoginMenuBinding.userName.text = loginMenuViewModel.getUserData().view.contact?.name
     }
@@ -67,10 +65,10 @@ class LoginMenuFragment : Fragment() {
         }
     }
 
-    private fun subscribeObservers(){
+    private fun subscribeObservers() {
         loginMenuViewModel.isLoggedOut.observe(viewLifecycleOwner, { result ->
             result?.let { response ->
-                when(response){
+                when (response) {
                     is Resource.Success -> {
                         performLogout()
                     }
@@ -81,12 +79,11 @@ class LoginMenuFragment : Fragment() {
                         fragmentLoginMenuBinding.logoutProgress.visibility = View.VISIBLE
                     }
                 }
-
             }
         })
     }
 
-    private fun performLogout(){
+    private fun performLogout() {
         loginMenuViewModel.clearData()
         janusManager.endJanusSession()
         fragmentLoginMenuBinding.logoutProgress.visibility = View.GONE
@@ -95,8 +92,8 @@ class LoginMenuFragment : Fragment() {
         activity?.finish()
     }
 
-   private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if(result.resultCode == Activity.RESULT_OK){
+    private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
             showSnackBar(
                 fragmentLoginMenuBinding.root,
                 resources.getString(R.string.pass_changed),
@@ -105,7 +102,7 @@ class LoginMenuFragment : Fragment() {
         }
     }
 
-    private fun startChangePasswordActivity(){
+    private fun startChangePasswordActivity() {
         val intent = Intent(activity, ChangePasswordActivity::class.java)
         resultLauncher.launch(intent)
     }
@@ -114,5 +111,4 @@ class LoginMenuFragment : Fragment() {
         super.onDestroy()
         (activity as HomeActivity).resetAppbarMenuItem()
     }
-
 }

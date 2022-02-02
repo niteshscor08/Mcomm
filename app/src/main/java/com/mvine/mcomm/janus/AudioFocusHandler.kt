@@ -6,7 +6,7 @@ import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.os.Build
 
-class AudioFocusHandler (private val context: Context) {
+class AudioFocusHandler(private val context: Context) {
 
     private var audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     private var previousAudioMode: Int? = audioManager.mode
@@ -71,7 +71,7 @@ class AudioFocusHandler (private val context: Context) {
         configureAudio(false)
     }
 
-    fun setSpeakerOn(isChecked : Boolean){
+    fun setSpeakerOn(isChecked: Boolean) {
         audioManager.isSpeakerphoneOn = isChecked
     }
 
@@ -79,12 +79,11 @@ class AudioFocusHandler (private val context: Context) {
         return audioManager.isSpeakerphoneOn
     }
 
-    fun setMicMuted(isChecked: Boolean){
+    fun setMicMuted(isChecked: Boolean) {
         audioManager.isMicrophoneMute = isChecked
     }
 
-    fun getMicState() : Boolean {
+    fun getMicState(): Boolean {
         return audioManager.isMicrophoneMute
     }
-
 }

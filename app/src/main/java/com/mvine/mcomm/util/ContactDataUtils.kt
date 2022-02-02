@@ -12,7 +12,7 @@ fun prepareRowTypesFromContactsData(
 ): ArrayList<RowType> {
     val rowTypes = arrayListOf<RowType>()
     contactsData.forEach { contactsDataItem ->
-        if(setDefaultData) contactsDataItem.isExpanded = false
+        if (setDefaultData) contactsDataItem.isExpanded = false
         rowTypes.add(ContactRowType(contactsDataItem, interaction))
     }
     return rowTypes

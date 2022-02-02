@@ -2,7 +2,6 @@ package com.mvine.mcomm.presentation.home.calls
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.View
@@ -16,19 +15,26 @@ import com.mvine.mcomm.BR
 import com.mvine.mcomm.R
 import com.mvine.mcomm.databinding.FragmentCallsBinding
 import com.mvine.mcomm.domain.model.CallData
-import com.mvine.mcomm.domain.util.Resource.*
+import com.mvine.mcomm.domain.util.Resource.Loading
+import com.mvine.mcomm.domain.util.Resource.Success
 import com.mvine.mcomm.presentation.common.ListInteraction
 import com.mvine.mcomm.presentation.common.MultipleRowTypeAdapter
 import com.mvine.mcomm.presentation.common.base.BaseFragment
 import com.mvine.mcomm.presentation.home.HomeActivity
 import com.mvine.mcomm.presentation.home.HomeViewModel
-import com.mvine.mcomm.util.*
+import com.mvine.mcomm.util.EMPTY_STRING
+import com.mvine.mcomm.util.MCOMM_SHARED_PREFERENCES
+import com.mvine.mcomm.util.PreferenceHandler
+import com.mvine.mcomm.util.USER_INFO
+import com.mvine.mcomm.util.prepareRowTypesFromAllCallData
+import com.mvine.mcomm.util.prepareRowTypesFromCallData
+import com.mvine.mcomm.util.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlin.Error
 
 @AndroidEntryPoint
-class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListInteraction<CallData> {
+class CallsFragment : BaseFragment<FragmentCallsBinding, CallsViewModel>(), ListInteraction<CallData> {
 
     @Inject
     lateinit var preferenceHandler: PreferenceHandler
@@ -102,18 +108,18 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
                 setTextColor(ContextCompat.getColor(context, R.color.mcomm_blue))
                 setTypeface(typeface, Typeface.BOLD)
                 binding.apply {
-                   callsAll.background = ContextCompat.getDrawable(context, R.drawable.ic_mcomm_blue_light_rounded_rectangle)
-                   callsAll.setTextColor(ContextCompat.getColor(context, R.color.white))
-                   callsAll.setTypeface(typeface, Typeface.NORMAL)
+                    callsAll.background = ContextCompat.getDrawable(context, R.drawable.ic_mcomm_blue_light_rounded_rectangle)
+                    callsAll.setTextColor(ContextCompat.getColor(context, R.color.white))
+                    callsAll.setTypeface(typeface, Typeface.NORMAL)
                 }
             }
         }
     }
 
     private fun subscribeObservers() {
-        callsViewModel.userInfo.observe(viewLifecycleOwner, {result ->
+        callsViewModel.userInfo.observe(viewLifecycleOwner, { result ->
             result?.let { res ->
-                when(res){
+                when (res) {
                     is Success -> {
                         preferenceHandler.save(USER_INFO, Gson().toJson(res.data))
                     }
@@ -124,9 +130,9 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
             result?.let { response ->
                 when (response) {
                     is Success -> {
-                        if(callsViewModel.allCalls.value == null)
+                        if (callsViewModel.allCalls.value == null)
                             callsViewModel.getAllCalls()
-                        else{
+                        else {
                             binding.rvCallsRefresh.isRefreshing = false
                             binding.progressCalls.visibility = View.GONE
                         }
@@ -149,7 +155,7 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
         })
         callsViewModel.allCalls.observe(viewLifecycleOwner, { result ->
             result?.let { res ->
-                when(res){
+                when (res) {
                     is Success -> {
                         binding.progressCalls.visibility = View.GONE
                         res.data?.let { callData ->
@@ -166,9 +172,7 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
                         binding.progressCalls.visibility = View.VISIBLE
                     }
                 }
-
             }
-
         })
         homeViewModel.searchLiveData.observe(viewLifecycleOwner, {
             it?.let {
@@ -177,7 +181,7 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
         })
         homeViewModel.shouldRefreshData.observe(viewLifecycleOwner, {
             it?.let {
-                if(it){
+                if (it) {
                     homeViewModel.shouldRefreshData.postValue(false)
                     callsViewModel.getRecentCalls()
                 }
@@ -197,20 +201,19 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
     }
 
     override fun onItemSelectedForExpansion(position: Int, item: CallData, isExpanded: Boolean) {
-        if(binding.rvCalls.isVisible){
+        if (binding.rvCalls.isVisible) {
             if (isExpanded) {
                 callsAdapter.expandCallHistory(position, item)
             } else {
                 callsAdapter.dissolveCallHistory(position, item)
             }
-        }else{
+        } else {
             if (isExpanded) {
                 allCallsAdapter.expandCallHistory(position, item)
             } else {
                 allCallsAdapter.dissolveCallHistory(position, item)
             }
         }
-
     }
 
     override fun onVoiceCallSelected(item: CallData) {
@@ -218,16 +221,15 @@ class CallsFragment : BaseFragment<FragmentCallsBinding,CallsViewModel>(), ListI
             (activity as HomeActivity).startOutgoingCall(
                 sTX = it,
                 userName = item.othercaller_department ?: it,
-                uri = item.image_src?: EMPTY_STRING )
+                uri = item.image_src ?: EMPTY_STRING
+            )
         }
-
     }
 
-    private fun refreshRecentCallsData(){
+    private fun refreshRecentCallsData() {
         binding.rvCallsRefresh.setOnRefreshListener {
             binding.rvCallsRefresh.isRefreshing = true
             callsViewModel.getRecentCalls()
         }
     }
-
 }

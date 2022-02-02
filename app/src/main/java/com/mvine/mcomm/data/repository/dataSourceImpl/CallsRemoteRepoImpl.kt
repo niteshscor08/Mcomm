@@ -15,7 +15,7 @@ import javax.inject.Inject
  */
 class CallsRemoteRepoImpl @Inject constructor(
     private val callsApiService: CallsApiService
-): CallsRemoteRepo {
+) : CallsRemoteRepo {
     override suspend fun getRecentCalls(cookie: String): Resource<CallsResponse> {
         return safeApiCall {
             callsApiService.getRecentCalls(cookie)
@@ -27,5 +27,4 @@ class CallsRemoteRepoImpl @Inject constructor(
             callsApiService.getAllCalls(cookie)
         }
     }
-
 }

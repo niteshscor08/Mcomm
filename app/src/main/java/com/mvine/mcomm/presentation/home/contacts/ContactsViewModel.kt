@@ -7,7 +7,6 @@ import com.mvine.mcomm.domain.model.ContactsData
 import com.mvine.mcomm.domain.usecase.GetContactsUseCase
 import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.presentation.common.base.BaseViewModel
-import com.mvine.mcomm.util.PreferenceHandler
 import com.mvine.mcomm.util.sortDataAlphabetically
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -18,7 +17,7 @@ import javax.inject.Inject
 class ContactsViewModel @Inject constructor(
     private val getContactsUseCase: GetContactsUseCase,
     private val dispatcher: CoroutineDispatcher
-    ): BaseViewModel() {
+) : BaseViewModel() {
 
     private val _contactsLiveData: MutableLiveData<Resource<ArrayList<ContactsData>>> =
         MutableLiveData()
@@ -33,12 +32,11 @@ class ContactsViewModel @Inject constructor(
     }
 
     private fun getContacts() {
-            viewModelScope.launch(dispatcher) {
-                _contactsLiveData.apply {
-                    postValue(Resource.Loading())
-                    postValue(getContactsUseCase.getContacts())
-                }
-
+        viewModelScope.launch(dispatcher) {
+            _contactsLiveData.apply {
+                postValue(Resource.Loading())
+                postValue(getContactsUseCase.getContacts())
+            }
         }
     }
 
@@ -50,7 +48,7 @@ class ContactsViewModel @Inject constructor(
         }
     }
 
-    fun sortAlphabetically(arrayList: ArrayList<ContactsData>): ArrayList< ContactsData >{
+    fun sortAlphabetically(arrayList: ArrayList<ContactsData>): ArrayList< ContactsData > {
         return sortDataAlphabetically(arrayList) { o1: ContactsData, o2: ContactsData ->
             o1.username.toString().lowercase().compareTo(o2.username.toString().lowercase())
         }

@@ -1,22 +1,21 @@
 package com.mvine.mcomm.presentation.common.base
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import com.mvine.mcomm.janus.JanusManager
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel> : Fragment() {
 
-   private lateinit var rootView: View
+    private lateinit var rootView: View
 
-   protected lateinit var binding: T
+    protected lateinit var binding: T
 
-   private lateinit var viewModel: V
+    private lateinit var viewModel: V
 
     /**
      * @desc Override for set binding variable
@@ -36,9 +35,8 @@ abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel> : Fragment()
      */
     abstract fun getViewModel(): V
 
-
     /**
-     *@desc  called to do initial creation of the fragment.
+     *@desc called to do initial creation of the fragment.
      **/
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +52,6 @@ abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel> : Fragment()
         return rootView
     }
 
-
     /**
      * @desc Called immediately after onCreateView has returned,
      * but before any saved state has been restored in to the view.
@@ -65,5 +62,4 @@ abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel> : Fragment()
         binding.lifecycleOwner = this
         binding.executePendingBindings()
     }
-
 }

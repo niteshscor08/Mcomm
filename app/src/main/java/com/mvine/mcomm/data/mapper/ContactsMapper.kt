@@ -6,7 +6,7 @@ import com.mvine.mcomm.domain.util.Resource
 
 class ContactsMapper {
 
-    fun entityToModel(contactsResponse: ContactsResponse?) : Resource<ArrayList<ContactsData>> {
+    fun entityToModel(contactsResponse: ContactsResponse?): Resource<ArrayList<ContactsData>> {
         val contacts = arrayListOf<ContactsData>()
         contactsResponse?.callables?.forEach { contact ->
             contacts.add(

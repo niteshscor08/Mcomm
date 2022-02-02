@@ -2,15 +2,13 @@ package com.mvine.mcomm.util
 
 import android.content.Context
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.mvine.mcomm.data.model.response.PersonInfo
-import com.mvine.mcomm.domain.model.CredentialData
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class PreferenceHandler @Inject constructor(@ApplicationContext val context: Context) {
 
-    private val  sharedPreferences = context.getSharedPreferences(
+    private val sharedPreferences = context.getSharedPreferences(
         MCOMM_SHARED_PREFERENCES,
         Context.MODE_PRIVATE
     )
@@ -27,15 +25,14 @@ class PreferenceHandler @Inject constructor(@ApplicationContext val context: Con
     }
 
     fun get(key: String): PersonInfo {
-       val value = sharedPreferences.getString(key, null)
-       return Gson().fromJson(value, PersonInfo::class.java)
+        val value = sharedPreferences.getString(key, null)
+        return Gson().fromJson(value, PersonInfo::class.java)
     }
 
-    fun clearData(){
+    fun clearData() {
         sharedPreferences.edit()?.let {
-           it.clear()
-           it.commit()
+            it.clear()
+            it.commit()
         }
     }
-
 }

@@ -20,7 +20,7 @@ class CallsRepoImpl @Inject constructor(
 
     override suspend fun getRecentCalls(): Resource<ArrayList<CallData>> {
         preferenceHandler.getValue(LOGIN_TOKEN)?.let { cookie ->
-            val recentCalls =  callsRemoteRepo.getRecentCalls(cookie)
+            val recentCalls = callsRemoteRepo.getRecentCalls(cookie)
             return callsMapper.entityToModel(recentCalls.data)
         }
         return Resource.Error(NO_LOGIN_KEY_ERROR)
@@ -33,5 +33,4 @@ class CallsRepoImpl @Inject constructor(
         }
         return Resource.Error(NO_LOGIN_KEY_ERROR)
     }
-
 }

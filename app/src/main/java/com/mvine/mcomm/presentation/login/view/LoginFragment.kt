@@ -15,12 +15,18 @@ import com.mvine.mcomm.domain.util.Resource.Success
 import com.mvine.mcomm.presentation.common.base.BaseFragment
 import com.mvine.mcomm.presentation.home.HomeActivity
 import com.mvine.mcomm.presentation.login.viewmodel.LoginViewModel
-import com.mvine.mcomm.util.*
+import com.mvine.mcomm.util.LOGGED_IN
+import com.mvine.mcomm.util.PreferenceHandler
+import com.mvine.mcomm.util.USER_INFO
+import com.mvine.mcomm.util.getCredentials
+import com.mvine.mcomm.util.hideKeyboard
+import com.mvine.mcomm.util.showKeyboard
+import com.mvine.mcomm.util.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
+class LoginFragment : BaseFragment<FragmentLoginBinding, LoginViewModel >() {
 
     @Inject
     lateinit var preferenceHandler: PreferenceHandler
@@ -67,7 +73,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
 
         loginViewModel.userInfo.observe(viewLifecycleOwner, { result ->
             result?.let { response ->
-                when(response){
+                when (response) {
                     is Success -> {
                         preferenceHandler.save(USER_INFO, Gson().toJson(response.data))
                         val intent = Intent(activity, HomeActivity::class.java)
@@ -84,12 +90,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
                         showToastMessage(R.string.login_failure)
                     }
                 }
-
             }
         })
 
         loginViewModel.loginError.observe(viewLifecycleOwner, {
-            if(it) {
+            if (it) {
                 preferenceHandler.clearData()
                 showToastMessage(R.string.login_failure)
             }
@@ -98,26 +103,29 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
 
     private fun loadUserInformation() {
         val credentialData = getCredentials(preferenceHandler)
-            val username = credentialData.userName
-            val password = credentialData.password
-            username?.let {
-                binding.etEmail.setText(it, TextView.BufferType.EDITABLE)
-            }
-            password?.let {
-                binding.etPassword.setText(it, TextView.BufferType.EDITABLE)
-            }
-            credentialData.token?.let {
-                username?.let { userName -> password?.let { password ->
-                    loginViewModel?.login(userName,
+        val username = credentialData.userName
+        val password = credentialData.password
+        username?.let {
+            binding.etEmail.setText(it, TextView.BufferType.EDITABLE)
+        }
+        password?.let {
+            binding.etPassword.setText(it, TextView.BufferType.EDITABLE)
+        }
+        credentialData.token?.let {
+            username?.let { userName ->
+                password?.let { password ->
+                    loginViewModel?.login(
+                        userName,
                         password
                     )
-                } }
+                }
             }
+        }
     }
 
-    private fun setOnEditorActionListener(){
+    private fun setOnEditorActionListener() {
         binding.etPassword.setOnEditorActionListener { v, actionId, event ->
-            if(actionId == EditorInfo.IME_ACTION_DONE){
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
                 binding.etPassword.hideKeyboard()
                 loginViewModel.login(binding.etEmail.text.toString(), binding.etPassword.text.toString())
                 true
@@ -146,23 +154,24 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel >() {
                 binding.etEmail.hideKeyboard()
                 val username = etEmail.text.toString()
                 val password = etPassword.text.toString()
-                if(username.isEmpty() || password.isEmpty() ){
+                if (username.isEmpty() || password.isEmpty()) {
                     showToastMessage(R.string.empty_credential)
-                }else if(loginViewModel?.hideEmailErrorMsg?.value == false){
+                } else if (loginViewModel?.hideEmailErrorMsg?.value == false) {
                     showToastMessage(R.string.invalid_email)
-                } else if(loginViewModel?.hidePasswordErrorMsg?.value == false){
+                } else if (loginViewModel?.hidePasswordErrorMsg?.value == false) {
                     showToastMessage(R.string.invalid_password)
-                }else{
+                } else {
                     loginViewModel?.login(username, password)
                 }
             }
         }
     }
 
-    private fun showToastMessage(title : Int, message : Int?= null, isPositiveMessage : Boolean? = false){
+    private fun showToastMessage(title: Int, message: Int? = null, isPositiveMessage: Boolean? = false) {
         binding.loginProgress.visibility = View.GONE
-        showSnackBar(binding.root,resources.getString(title),
-            message?.let { resources.getString(it) }, isPositiveMessage )
+        showSnackBar(
+            binding.root, resources.getString(title),
+            message?.let { resources.getString(it) }, isPositiveMessage
+        )
     }
-
 }

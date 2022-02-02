@@ -14,14 +14,13 @@ class ContactsRepoImpl @Inject constructor(
     private val contactsRemoteRepo: ContactsRemoteRepo,
     private val contactsMapper: ContactsMapper,
     private val preferenceHandler: PreferenceHandler
-): ContactsRepository {
+) : ContactsRepository {
 
     override suspend fun getContacts(): Resource<ArrayList<ContactsData>> {
         preferenceHandler.getValue(LOGIN_TOKEN)?.let { cookie ->
             val contacts = contactsRemoteRepo.getContacts(cookie)
             return contactsMapper.entityToModel(contacts.data)
         }
-       return Resource.Error(NO_LOGIN_KEY_ERROR)
+        return Resource.Error(NO_LOGIN_KEY_ERROR)
     }
-
 }

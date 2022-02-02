@@ -5,6 +5,6 @@ import javax.inject.Inject
 
 class GetContactsUseCase @Inject constructor(
     private val contactsRepository: ContactsRepository
-){
+) {
     suspend fun getContacts() = contactsRepository.getContacts()
 }
