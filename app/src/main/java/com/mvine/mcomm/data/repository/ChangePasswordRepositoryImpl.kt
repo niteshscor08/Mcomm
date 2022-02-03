@@ -1,20 +1,22 @@
 package com.mvine.mcomm.data.repository
 
-import com.mvine.mcomm.data.repository.dataSource.ChangePasswordRemoteRepo
+import com.mvine.mcomm.data.api.ChangePasswordApiService
 import com.mvine.mcomm.domain.repository.ChangePasswordRepository
 import com.mvine.mcomm.domain.util.Resource
 import com.mvine.mcomm.util.LOGIN_TOKEN
 import com.mvine.mcomm.util.PreferenceHandler
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import javax.inject.Inject
 
 class ChangePasswordRepositoryImpl @Inject constructor(
-    private val changePasswordRemoteRepo: ChangePasswordRemoteRepo,
+    private val changePasswordApiService: ChangePasswordApiService,
     private val preferenceHandler: PreferenceHandler
 ) : ChangePasswordRepository {
     override suspend fun changePassword(newPassword: String, reEnteredPassword: String): Resource<String> {
         preferenceHandler.getValue(LOGIN_TOKEN)?.let { cookie ->
             val response = try {
-                changePasswordRemoteRepo.changePassword(cookie, newPassword, reEnteredPassword)
+                changePasswordApiService.changePassword(cookie, getRequestBody(newPassword, reEnteredPassword))
             } catch (exception: Exception) {
                 return Resource.Error(message = "Error in Password Update")
             }
@@ -26,5 +28,15 @@ class ChangePasswordRepositoryImpl @Inject constructor(
             }
         }
         return Resource.Error(message = "Error in Password Update")
+    }
+
+    fun getRequestBody(
+        newPassword: String,
+        reEnteredPassword: String
+    ): RequestBody {
+        return MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart(newPassword, reEnteredPassword)
+            .build()
     }
 }

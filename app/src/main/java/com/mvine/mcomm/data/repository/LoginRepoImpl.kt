@@ -1,9 +1,11 @@
 package com.mvine.mcomm.data.repository
 
+import com.mvine.mcomm.data.api.LoginApiService
 import com.mvine.mcomm.data.model.response.PersonInfo
-import com.mvine.mcomm.data.repository.dataSource.LoginRemoteRepo
+import com.mvine.mcomm.data.utils.safeApiCall
 import com.mvine.mcomm.domain.repository.LoginRepository
 import com.mvine.mcomm.domain.util.Resource
+import com.mvine.mcomm.util.EMPTY_STRING
 import javax.inject.Inject
 
 /**
@@ -12,11 +14,11 @@ import javax.inject.Inject
  * @param loginRemoteRepo The [LoginRemoteRepo] instance to handle remote Login calls
  */
 class LoginRepoImpl @Inject constructor(
-    private val loginRemoteRepo: LoginRemoteRepo
+    private val loginApiService: LoginApiService
 ) : LoginRepository {
     override suspend fun login(username: String, password: String): Resource<String?> {
         val response = try {
-            loginRemoteRepo.login(username, password)
+            loginApiService.login(username, password, EMPTY_STRING, LOGIN)
         } catch (exception: Exception) {
             return Resource.Error(message = "Error in Logging in")
         }
@@ -27,10 +29,14 @@ class LoginRepoImpl @Inject constructor(
     }
 
     override suspend fun getUserInfo(cookie: String): Resource<PersonInfo> {
-        return loginRemoteRepo.getUserInfo(cookie)
+        return safeApiCall { loginApiService.getUserView(cookie) }
     }
 
     private fun validCookie(cookies: List<String>): String? {
         return cookies.firstOrNull { !it.contains("HTTP_MVine_Session") && !it.contains("user:anon") }
+    }
+
+    companion object {
+        const val LOGIN = "Login"
     }
 }
