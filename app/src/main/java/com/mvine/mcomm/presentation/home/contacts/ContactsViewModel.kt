@@ -31,7 +31,7 @@ class ContactsViewModel @Inject constructor(
         getContacts()
     }
 
-    private fun getContacts() {
+    fun getContacts() {
         viewModelScope.launch(dispatcher) {
             _contactsLiveData.apply {
                 postValue(Resource.Loading())

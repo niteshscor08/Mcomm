@@ -144,13 +144,18 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Te
     }
 
     private fun subscribeObservers() {
-        janusManager.janusConnectionStatus.observe(this, {
+        janusManager.janusConnectionStatus.observe(this) {
             when (it) {
                 CallStatus.REGISTRATION_FAILED.status -> {
                     dismissCallDialog()
                 }
                 CallStatus.INCOMING_CALL.status -> {
-                    showCallsPopUp(EMPTY_STRING, INCOMING, callState.remoteDisplayName, callState.remoteUrl)
+                    showCallsPopUp(
+                        EMPTY_STRING,
+                        INCOMING,
+                        callState.remoteDisplayName,
+                        callState.remoteUrl
+                    )
                 }
                 CallStatus.DECLINING.status, CallStatus.HANGUP.status -> {
                     homeViewModel.shouldRefreshData.postValue(true)
@@ -164,7 +169,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CallDialogListener, Te
                     isRegistered = true
                 }
             }
-        })
+        }
     }
 
     fun showSearchBar() {
